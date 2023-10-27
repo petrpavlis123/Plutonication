@@ -29,4 +29,6 @@ The package will contain 2 main things:
 
 Needs to be compatible with polkadot.js api
 
+Follow the specs [here](https://github.com/w3f/Grants-Program/blob/master/applications/Plutonication.md#milestone-3-plutonication-typescript-version). If you are unable to complete any of the things mentioned in the grant proposal, please tell me asap. 
 
+Also take inspiration from c# version, which is very well documented: https://github.com/cisar2218/Plutonication
