@@ -1,5 +1,4 @@
-export function add(a: number, b: number): number {
-  return a + b;
-}
+import { AccessCredentials } from "./AccesCredentials";
 
-console.log(add(3, 5)); //output: 8
+const newCredential = new AccessCredentials();
+console.log(newCredential.key);

@@ -50,6 +50,10 @@
     "typescript": "^5.2.2"
   },
   "dependencies": {
-    "pluralize": "^8.0.0"
+    "@polkadot/api": "^10.10.1",
+    "@substrate/connect": "^0.7.34",
+    "pluralize": "^8.0.0",
+    "socket.io": "^4.7.2",
+    "socket.io-client": "^4.7.2"
   }
 }

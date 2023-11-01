@@ -50,19 +50,19 @@ module.exports = {
     '@typescript-eslint/quotes': ['error', 'double'],
     '@typescript-eslint/no-var-requires': 'error',
     '@typescript-eslint/prefer-namespace-keyword': 'error',
-    "max-len": [
-      "warn",
-      {
-        "code": 80,
-        "tabWidth": 2,
-        "comments": 80,
-        "ignoreComments": false,
-        "ignoreTrailingComments": true,
-        "ignoreUrls": true,
-        "ignoreStrings": true,
-        "ignoreTemplateLiterals": true,
-        "ignoreRegExpLiterals": true
-      }
-    ]
+    // "max-len": [
+    //   "warn",
+    //   {
+    //     "code": 80,
+    //     "tabWidth": 2,
+    //     "comments": 80,
+    //     "ignoreComments": false,
+    //     "ignoreTrailingComments": true,
+    //     "ignoreUrls": true,
+    //     "ignoreStrings": true,
+    //     "ignoreTemplateLiterals": true,
+    //     "ignoreRegExpLiterals": true
+    //   }
+    // ]
   },
 };
