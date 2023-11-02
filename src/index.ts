@@ -1,4 +1,5 @@
 import { AccessCredentials } from "./AccesCredentials";
+import { PlutonicationDAppClient } from "./PlutonicationDAppClient";
+import { PlutonicationWalletClient } from "./PlutonicationWalletClient";
 
-const newCredential = new AccessCredentials();
-console.log(newCredential.key);
+export { AccessCredentials, PlutonicationDAppClient, PlutonicationWalletClient };

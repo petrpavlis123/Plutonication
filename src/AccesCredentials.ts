@@ -37,7 +37,7 @@ export class AccessCredentials {
 
 const accessCredentials = new AccessCredentials(
   "wss://plutonication-53tvi.ondigitalocean.app/plutonication",
-  AccessCredentials.GenerateKey(),
+  "5FQtFhSYHyGggu9NZJiHyjUvoCuJxJoHkBLRfwQemPYzg41V",
   "Galaxy Logic Game", 
   "https://rostislavlitovkin.pythonanywhere.com/logo"
 );
