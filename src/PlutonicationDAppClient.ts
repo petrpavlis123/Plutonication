@@ -25,7 +25,7 @@ class PlutonicationDAppClient {
 
     this.socket.emit("access_credentials", accessCredentials);
     
-    this.socket.on("pubkey", (pubkey: string) => {
+    this.socket.on("receivepubkey", (pubkey: string) => {
       callback(pubkey);
     });
   }
