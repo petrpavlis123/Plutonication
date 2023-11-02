@@ -13,21 +13,26 @@ class PlutonicationDAppClient {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   public static async InitializeAsync(accessCredentials: AccessCredentials, callback: (pubkey: string) => void, substrateClient: WsProvider): Promise<void> {
     
-    this.socket = io(accessCredentials.url);
-
-    this.socket.on("connect", () => {
-      console.log("Connected to ", this.socket);
-    });
-
-    this.socket.on("message", function (data) {
-      console.log("Received message:", data);
-    });
-
-    this.socket.emit("access_credentials", accessCredentials);
-    
-    this.socket.on("receivepubkey", (pubkey: string) => {
-      callback(pubkey);
-    });
+    try {
+      this.socket = io(accessCredentials.url);
+  
+      this.socket.on("connect", () => {
+        console.log("Connected to ", this.socket);
+      });
+  
+      this.socket.on("message", function (data) {
+        console.log("Received message:", data);
+      });
+  
+      this.socket.emit("access_credentials", accessCredentials);
+  
+      this.socket.on("pubkey", (pubkey: string) => {
+        callback(pubkey);
+      });
+      
+    } catch (error) {
+      console.error("Error:", error);
+    }
   }
 
   public static async SendPayloadAsync(collectionId: number, itemId: number, parameters: number[]) : Promise<void> {
