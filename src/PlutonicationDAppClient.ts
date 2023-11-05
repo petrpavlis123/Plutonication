@@ -6,9 +6,10 @@ import { ApiPromise, WsProvider } from "@polkadot/api";
 import { AccessCredentials } from "./AccesCredentials";
 import { Socket, io } from "socket.io-client";
 import type { Injected, InjectedAccount, Unsubcall } from '@polkadot/extension-inject/types';
-import type { SignerPayloadJSON } from '@polkadot/types/types';
+import type { SignerPayloadJSON, SignerPayloadRaw  } from '@polkadot/types/types';
 import type { SignerResult } from '@polkadot/api/types/index.js';
 import type { HexString } from "@polkadot/util/types";
+import { stringToHex } from "@polkadot/util";
 export interface Transaction {
   to: string,
   amount: number
@@ -68,6 +69,7 @@ class PlutonicationDAppClient {
           },
           signer: {
             signPayload: async (payloadJson: SignerPayloadJSON): Promise<SignerResult> => {
+              // requesting signature from wallet
               this.socket.emit("sign_payload", { Data: payloadJson, Room: accessCredentials.key });
               const result: SignerResult = {
                 /**
@@ -82,13 +84,44 @@ class PlutonicationDAppClient {
       
               return result;
             },
-            // signRaw: async (raw: SignerPayloadRaw): Promise<SignerResult> => {
-            // }
+            signRaw: async (raw: SignerPayloadRaw): Promise<SignerResult> => {
+              // requesting signature from wallet
+              this.socket.emit("sign_raw", { Data: raw, Room: accessCredentials.key });
+
+              const result: SignerResult = {
+                /**
+                 * @description The id for this request
+                 */
+                id: 0,
+                /**
+                 * @description The resulting signature in hex
+                 */
+                signature: await waitForSignature()
+              };
+
+              return result;
+            }
           }
         };
+
+        // wallet sign a payload
         this.socket.on("payload_signature", (signature: string) => {
-          console.log("Received signature:", signature);
+          console.log("signed_payload: ", signature);
         });
+        
+        this.socket.on("payload_signature_rejected", (errorData: unknown) => {
+          console.error("Signature rejected:", errorData);
+        });
+
+        this.socket.on("raw_signature", (signature: string) => {
+          console.log("signed_raw: ", signature);
+        });
+
+        this.socket.on("raw_signature_rejected", (errorData: unknown) => {
+          console.error("Signature rejected:", errorData);
+        });
+
+        
         resolve(injected);
       });
     });
@@ -98,6 +131,7 @@ class PlutonicationDAppClient {
     try {
       const injector = await PlutonicationDAppClient.InitializeAsync(accessCredentials, pubKey =>  console.log(pubKey));
       console.log("injector", injector);
+
   
       const provider = new WsProvider("wss://ws.test.azero.dev");
       const api = await ApiPromise.create({ provider });
@@ -105,6 +139,8 @@ class PlutonicationDAppClient {
       console.log("apiGenesis", api.genesisHash.toHex());
       const signer = injector.signer;
       const sender = this.pubKey;
+      console.log("sender", sender);
+      const signRaw = injector?.signer?.signRaw;
       // console.log("igner, sender", signer, sender);
   
       const transferExtrinsic = api.tx.balances.transfer(transactionDetails.to, transactionDetails.amount);
@@ -120,6 +156,14 @@ class PlutonicationDAppClient {
       }).catch((error: unknown) => {
         console.log(':( transaction failed', error);
       });
+    
+      if (signRaw) {
+        await signRaw({
+          address: sender,
+          data: stringToHex('message to sign'),
+          type: 'bytes'
+        });
+      }
 
     } catch (err) {
       console.error("Error:", err);

@@ -35,28 +35,28 @@ export class AccessCredentials {
 }
 
 
-const accessCredentials = new AccessCredentials(
-  "wss://plutonication-53tvi.ondigitalocean.app/plutonication",
-  "5FQtFhSYHyGggu9NZJiHyjUvoCuJxJoHkBLRfwQemPYzg41V",
-  "Galaxy Logic Game", 
-  "https://rostislavlitovkin.pythonanywhere.com/logo"
-);
+// const accessCredentials = new AccessCredentials(
+//   "wss://plutonication-53tvi.ondigitalocean.app/plutonication",
+//   "5FQtFhSYHyGggu9NZJiHyjUvoCuJxJoHkBLRfwQemPYzg41V",
+//   "Galaxy Logic Game", 
+//   "https://rostislavlitovkin.pythonanywhere.com/logo"
+// );
 
-const connectionUrl = accessCredentials.url;
-console.log("connectionUrl", connectionUrl);
+// const connectionUrl = accessCredentials.url;
+// console.log("connectionUrl", connectionUrl);
 
-const accessKey = accessCredentials.key;
-console.log("accessKey", accessKey);
+// const accessKey = accessCredentials.key;
+// console.log("accessKey", accessKey);
 
-if (accessCredentials.name) {
-  const dAppName = accessCredentials.name;
-  console.log("Nombre de la dApp:", dAppName);
-}
+// if (accessCredentials.name) {
+//   const dAppName = accessCredentials.name;
+//   console.log("Nombre de la dApp:", dAppName);
+// }
 
-if (accessCredentials.icon) {
-  const dAppIcon = accessCredentials.icon;
-  console.log("Ícono de la dApp:", dAppIcon);
-}
+// if (accessCredentials.icon) {
+//   const dAppIcon = accessCredentials.icon;
+//   console.log("Ícono de la dApp:", dAppIcon);
+// }
 
-const fullUrl = accessCredentials.ToUri();
-console.log("URL completa:", fullUrl);
+// const fullUrl = accessCredentials.ToUri();
+// console.log("URL completa:", fullUrl);
