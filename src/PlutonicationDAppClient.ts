@@ -9,7 +9,7 @@ import type { Injected, InjectedAccount, Unsubcall } from '@polkadot/extension-i
 import type { SignerPayloadJSON, SignerPayloadRaw  } from '@polkadot/types/types';
 import type { SignerResult } from '@polkadot/api/types/index.js';
 import type { HexString } from "@polkadot/util/types";
-import { stringToHex } from "@polkadot/util";
+
 export interface Transaction {
   to: string,
   amount: number
@@ -81,7 +81,6 @@ class PlutonicationDAppClient {
                  */
                 signature: await waitForSignature()
               };
-      
               return result;
             },
             signRaw: async (raw: SignerPayloadRaw): Promise<SignerResult> => {
@@ -105,8 +104,9 @@ class PlutonicationDAppClient {
         };
 
         // wallet sign a payload
-        this.socket.on("payload_signature", (signature: string) => {
-          console.log("signed_payload: ", signature);
+        this.socket.on("payload_signature", (data: SignerResult) => {
+          console.log("signed_payload: ", data);
+          signature = data.signature;
         });
         
         this.socket.on("payload_signature_rejected", (errorData: unknown) => {
@@ -130,24 +130,15 @@ class PlutonicationDAppClient {
   public static async SendPayloadAsync(accessCredentials: AccessCredentials, transactionDetails: Transaction): Promise<void> {
     try {
       const injector = await PlutonicationDAppClient.InitializeAsync(accessCredentials, pubKey =>  console.log(pubKey));
-      console.log("injector", injector);
-
   
       const provider = new WsProvider("wss://ws.test.azero.dev");
       const api = await ApiPromise.create({ provider });
-      // Do something
-      console.log("apiGenesis", api.genesisHash.toHex());
       const signer = injector.signer;
       const sender = this.pubKey;
-      console.log("sender", sender);
-      const signRaw = injector?.signer?.signRaw;
-      // console.log("igner, sender", signer, sender);
-  
+      console.log("REALIZANDO EXTRINSIC");
       const transferExtrinsic = api.tx.balances.transfer(transactionDetails.to, transactionDetails.amount);
-      // console.log("transferExtrinsic", transferExtrinsic);
   
       transferExtrinsic.signAndSend(sender, { signer: signer }, ({ status }) => {
-        console.log("status", status);
         if (status.isInBlock) {
           console.log(`Completed at block hash #${status.asInBlock.toString()}`);
         } else {
@@ -156,14 +147,7 @@ class PlutonicationDAppClient {
       }).catch((error: unknown) => {
         console.log(':( transaction failed', error);
       });
-    
-      if (signRaw) {
-        await signRaw({
-          address: sender,
-          data: stringToHex('message to sign'),
-          type: 'bytes'
-        });
-      }
+
 
     } catch (err) {
       console.error("Error:", err);
@@ -184,7 +168,7 @@ const accessCredentials = new AccessCredentials(
 
 const transactionDetails: Transaction = {
   to: '5C5555yEXUcmEJ5kkcCMvdZjUo7NGJiQJMS7vZXEeoMhj3VQ',
-  amount: 1000,
+  amount: 1000 * 10**12,
 };
 
 // void PlutonicationDAppClient.InitializeAsync(
