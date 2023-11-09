@@ -22,6 +22,20 @@ module.exports = {
         test: /\.css$/,
         use: ['style-loader', 'css-loader'], // Usar style-loader y css-loader para archivos .css
       },
+      {
+        test: /\.(png|jpe?g|gif|svg)$/i,
+        use: [
+          {
+            loader: 'file-loader',
+            options: {
+              outputPath: 'images', // Carpeta de salida para las imágenes
+            },
+          },
+          {
+            loader: 'image-webpack-loader', // Opcional: para optimizar imágenes
+          },
+        ],
+      },
     ]
   },
   plugins: [

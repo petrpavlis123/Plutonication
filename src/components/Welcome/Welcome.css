@@ -5,6 +5,23 @@
   height: 100vh;
 }
 
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgb(39,44,74) !important;
+  z-index: 10;
+  transition: background 0.3s ease, opacity 0.3s ease; 
+}
+
+.overlay.active {
+  background: rgba(64, 64, 64, 0.7); 
+  opacity: 1; 
+  pointer-events: auto; 
+}
+
 .welcome__btn-container {
   display: flex;
   align-items: center;
@@ -32,27 +49,42 @@
   justify-content: center;
   border-radius: 1rem;
   padding: 3.5rem;
-  background-color: rgb(24, 27, 26);
-  opacity: 0;
-  transform: scale(0.8);
+  /* background-color: rgb(24, 27, 26); */
+  background-color: rgb(14, 16, 16);
+  opacity: 1;
+  transform: scale(1);
   transition: opacity 1s ease, transform 1s ease;
+  position: relative;
+}
+
+.welcome__QR-img {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  /* opacity: 0.8; */ /* revisar opacity para que el qr no pierda funcionalidad*/
 }
 
 .welcome__QR-show {
-  opacity: 1;
-  transform: scale(1);
+  opacity: 0;
+  transform: scale(0.8);
 }
 
 .welcome__QR {
-  height: 300px !important;
-  width: 300px !important;
+  /* height: 300px !important;
+  width: 300px !important; */
   border-radius: 1rem;
-  padding: 1rem;
+  padding: 2rem;
   background-color: white;
 }
 
-.welcome__QR-text {
+.welcome__QR-text, .welcome__QR-text-connected {
   text-align: center;
+  margin: 0;
+}
+
+.welcome__QR-text-connected {
+  margin-top: 3.125rem;
 }
 
 .welcome__QR-headaer {
@@ -65,13 +97,34 @@
 }
 
 .welcome__QR-text-container {
-  display: flex;
+  /* display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: center; */
+  display: inline;
   position: relative;
-  top: 3rem;
+  top: 4.2rem;
   z-index: 1;
-  left: 1rem;
+  /* left: 1rem; */
+}
+
+.welcome__QR-back-arrow {
+  display: inline;
+  position: relative;
+  left: 22.8rem;
+  top: 2.8rem;
+  z-index: 1;
+  transition: transform 0.4s ease;
+}
+
+.welcome__QR-back-arrow:hover {
+  transform: scale(1.1);
+  cursor: pointer;
+}
+
+.welcome__QR-text-button-container {
+  position: relative;
+  bottom: 2.2rem;
+  z-index: 1;
 }
 
 
@@ -100,3 +153,12 @@
   top: 2rem;
   left: 8rem;
 } */
+
+@media (max-width: 767px) {
+  .welcome__QR-headaer {
+    font-size: 1.5rem;
+  }
+  .welcome__QR-text-container, .welcome__QR-container, .welcome__QR-text {
+    display: none;
+  }
+}
