@@ -9,6 +9,8 @@ import type { Injected, InjectedAccount, Unsubcall } from '@polkadot/extension-i
 import type { SignerPayloadJSON, SignerPayloadRaw  } from '@polkadot/types/types';
 import type { SignerResult } from '@polkadot/api/types/index.js';
 import type { HexString } from "@polkadot/util/types";
+// import * as qrcode from "qrcode";
+// import * as fs from "fs";
 
 export interface Transaction {
   to: string,
@@ -26,6 +28,7 @@ async function waitForSignature(): Promise<HexString> {
 class PlutonicationDAppClient {
   private static socket: Socket;
   private static pubKey: string;
+  private static qrUri: string | Buffer;
 
   // constructor() {
 
@@ -33,7 +36,6 @@ class PlutonicationDAppClient {
   
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   public static async InitializeAsync(accessCredentials: AccessCredentials, callback: (pubkey: string) => void): Promise<Injected> {
-
 
     return new Promise<Injected>((resolve) => {
       this.socket = io(accessCredentials.url);
@@ -153,6 +155,11 @@ class PlutonicationDAppClient {
       console.error("Error:", err);
     }
   }
+
+  public static generateQR(accessCredentials: AccessCredentials ): string {
+    const uriQr = accessCredentials.ToUri();
+    return uriQr;
+  } 
   
 }
 

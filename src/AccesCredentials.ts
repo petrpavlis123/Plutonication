@@ -1,4 +1,4 @@
-import { randomBytes } from "crypto";
+// import { randomBytes } from "crypto";
 
 export class AccessCredentials {
   public url: string;
@@ -14,7 +14,9 @@ export class AccessCredentials {
   }
   
   static GenerateKey(length: number = 32): string {
-    return randomBytes(length).toString("hex");
+    // return randomBytes(length).toString("hex");
+    console.log("lenght", length);
+    return "";
   }
 
   ToUri(): string {

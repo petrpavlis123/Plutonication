@@ -8,7 +8,7 @@ const generateQR = async (accesCredentialUri: string | qrcode.QRCodeSegment[], o
     const qrCodeDataUrl = await qrcode.toDataURL(accesCredentialUri);
     const base64Data = qrCodeDataUrl.split(",")[1];
     const buffer = Buffer.from(base64Data, "base64");
-
+    console.log("buffer", buffer);
     fs.writeFileSync(outputPath, buffer);
     console.log("QR code saved to", outputPath);
   } catch (err) {
@@ -16,7 +16,6 @@ const generateQR = async (accesCredentialUri: string | qrcode.QRCodeSegment[], o
   }
 };
 
-// const text = "Hello, World!";
 
 // void generateQR(text, outputPath);
 

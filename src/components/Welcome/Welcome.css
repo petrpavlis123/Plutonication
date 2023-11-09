@@ -1,0 +1,102 @@
+.welcome__container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.welcome__btn-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.welcome__btn {
+  background-color: #f0f0f0;
+  padding: 0.5rem;
+  color: rgb(14, 16, 16);
+  font-weight: 500;
+  font-family: 'Lexend', serif;
+  border-radius: 0.3rem;
+  transition: transform 0.2s ease;
+}
+
+.welcome__btn:hover {
+  transform: scale(1.05);
+  cursor: pointer;
+}
+
+.welcome__QR-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 1rem;
+  padding: 3.5rem;
+  background-color: rgb(24, 27, 26);
+  opacity: 0;
+  transform: scale(0.8);
+  transition: opacity 1s ease, transform 1s ease;
+}
+
+.welcome__QR-show {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.welcome__QR {
+  height: 300px !important;
+  width: 300px !important;
+  border-radius: 1rem;
+  padding: 1rem;
+  background-color: white;
+}
+
+.welcome__QR-text {
+  text-align: center;
+}
+
+.welcome__QR-headaer {
+  font-size: 32px;
+  line-height: 44px;
+  font-weight: 500;
+  padding-bottom: 50px;
+  padding-left: 30px;
+  padding-right: 30px;
+}
+
+.welcome__QR-text-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  top: 3rem;
+  z-index: 1;
+  left: 1rem;
+}
+
+
+.welcome__btn-close {
+  color: #FFF;
+  /* left: 12rem;
+  top: 2rem;
+  right: 10px;
+  z-index: 1; */
+  left: 5rem;
+  position: relative;
+  background-color: rgb(24, 27, 26);
+  border: none;
+  transition: transform 0.4s ease;
+}
+
+.welcome__btn-close:hover {
+  transform: scale(1.1);
+  cursor: pointer;
+}
+/* 
+.welcome__QR-text:first-of-type  {
+  display: inline;
+  z-index: 1;
+  position: relative;
+  top: 2rem;
+  left: 8rem;
+} */
