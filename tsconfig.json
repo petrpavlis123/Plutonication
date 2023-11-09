@@ -66,5 +66,5 @@
     "skipLibCheck": true,
   },
   "include": ["src", "test", "tsup.config.ts", "crypto-browserify.d.ts"], // which files to compile
-  "exclude": ["node_modules", ], // which files to skip
+  "exclude": ["node_modules","webpack.config.js"], // which files to skip
 }
