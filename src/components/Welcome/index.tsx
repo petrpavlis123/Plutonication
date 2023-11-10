@@ -3,8 +3,8 @@ import "./Welcome.css";
 import { AccessCredentials, PlutonicationDAppClient } from "../../index";
 import { QRCodeCanvas } from "qrcode.react";
 import img from "../../assets/images/testing-image.png";
-// import backArrowIcon from "../../assets/svg/Arrow Back.svg";
-import backArrowIcon from "../../assets/images/arrow-back.png";
+import backArrowIcon from "../../assets/svg/Arrow Back.svg";
+// import backArrowIcon from "../../assets/images/arrow-back.png";
 
 
 const Welcome = (): React.JSX.Element => {
@@ -20,15 +20,13 @@ const Welcome = (): React.JSX.Element => {
     "https://rostislavlitovkin.pythonanywhere.com/logo"
   );
   const initializeDapp = async () => {
-
-    // await PlutonicationDAppClient.InitializeAsync(accessCredentials, (pubkey: string) => {
-    //   console.log("App initialized with publicKey:", pubkey);
-    // });
-
     const uriValue = PlutonicationDAppClient.generateQR(accessCredentials);
+    setQRCodeImage(uriValue);
+
+
+
     // setIsWalletConnected(true);
     console.log("uriValue", uriValue);
-    setQRCodeImage(uriValue);
   };
 
   const disconnect = () => {
@@ -60,8 +58,18 @@ const Welcome = (): React.JSX.Element => {
             </div>
             <img className="welcome__QR-back-arrow" alt="close" onClick={closeQR} src={backArrowIcon} width={25} height={25}/>
             <div className="welcome__QR-container" >
-              <QRCodeCanvas size={250} className="welcome__QR" value={qrCodeImage} />
-              <img className="welcome__QR-img" src={img} alt={"Logo"} width={60} height={60}/>
+              <QRCodeCanvas size={250} className="welcome__QR" value={qrCodeImage}  imageSettings={{
+                  src: `${img}`,
+                  x: undefined,
+                  y: undefined,
+                  height: 30,
+                  width: 30,
+                  excavate: true,
+                }}
+                bgColor="#FFFFFF"
+                level={"H"}
+                />
+              {/* <img className="welcome__QR-img" src={img} alt={"Logo"} width={60} height={60}/> */}
             </div>
             <div className="welcome__QR-text-button-container">
               <p className="welcome__QR-text">Scan this QR with your phone</p>

@@ -11,7 +11,7 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgb(39,44,74) !important;
+  background: #88000000 !important;
   z-index: 10;
   transition: background 0.3s ease, opacity 0.3s ease; 
 }
@@ -49,8 +49,8 @@
   justify-content: center;
   border-radius: 1rem;
   padding: 3.5rem;
-  /* background-color: rgb(24, 27, 26); */
-  background-color: rgb(14, 16, 16);
+  background-color: rgb(24, 27, 26);
+  /* background-color: rgb(14, 16, 16); */
   opacity: 1;
   transform: scale(1);
   transition: opacity 1s ease, transform 1s ease;
@@ -103,6 +103,7 @@
   display: inline;
   position: relative;
   top: 4.2rem;
+
   z-index: 1;
   /* left: 1rem; */
 }
@@ -110,7 +111,7 @@
 .welcome__QR-back-arrow {
   display: inline;
   position: relative;
-  left: 22.8rem;
+  left: 3rem;
   top: 2.8rem;
   z-index: 1;
   transition: transform 0.4s ease;
@@ -158,7 +159,7 @@
   .welcome__QR-headaer {
     font-size: 1.5rem;
   }
-  .welcome__QR-text-container, .welcome__QR-container, .welcome__QR-text {
+  .welcome__QR-text-container, .welcome__QR-container, .welcome__QR-text, .welcome__QR-back-arrow {
     display: none;
   }
 }
