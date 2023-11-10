@@ -11,7 +11,7 @@ import { error } from "console";
 const Welcome = (): React.JSX.Element => {
   const [qrCodeImage, setQRCodeImage] = useState("");
   const [isWalletConnected, setIsWalletConnected] = useState(false);
-  const [pubKey, setPubkey] = useState("5xE555555ds5d5s6adsafasa658d6s");
+  const [pubKey, setPubkey] = useState("");
   const overlayRef = useRef(null);
 
   const accessCredentials = new AccessCredentials(
