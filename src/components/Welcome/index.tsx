@@ -1,15 +1,16 @@
-import React, { useState, useRef  } from "react";
+import React, { useState, useRef, useEffect  } from "react";
 import "./Welcome.css";
 import { AccessCredentials, PlutonicationDAppClient } from "../../index";
 import { QRCodeCanvas } from "qrcode.react";
 import img from "../../assets/images/testing-image.png";
 import backArrowIcon from "../../assets/svg/Arrow Back.svg";
+import { error } from "console";
 // import backArrowIcon from "../../assets/images/arrow-back.png";
 
 
 const Welcome = (): React.JSX.Element => {
   const [qrCodeImage, setQRCodeImage] = useState("");
-  const [isWalletConnected, setIsWalletConnected] = useState(true);
+  const [isWalletConnected, setIsWalletConnected] = useState(false);
   const [pubKey, setPubkey] = useState("5xE555555ds5d5s6adsafasa658d6s");
   const overlayRef = useRef(null);
 
@@ -20,13 +21,28 @@ const Welcome = (): React.JSX.Element => {
     "https://rostislavlitovkin.pythonanywhere.com/logo"
   );
   const initializeDapp = async () => {
+    try {
+      showQRCode();
+      const injected = await PlutonicationDAppClient.InitializeAsync(accessCredentials, (pubKey) => {
+        console.log("Pubkey recibida:", pubKey);
+        setPubkey(pubKey);
+      });
+
+    } catch (e) {
+      // console.log("Error al inicializar:", error)
+    }
+  };
+
+  useEffect(() => {
+    if (pubKey !== "") {
+      setQRCodeImage("");
+    }
+  }, [pubKey])
+
+  const showQRCode = () => {
     const uriValue = PlutonicationDAppClient.generateQR(accessCredentials);
     setQRCodeImage(uriValue);
-
-
-
-    // setIsWalletConnected(true);
-    console.log("uriValue", uriValue);
+    setIsWalletConnected(true);
   };
 
   const disconnect = () => {
