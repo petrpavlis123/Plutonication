@@ -1,5 +1,7 @@
-// import { randomBytes } from "crypto";
+// @packages
+import { randomBytes } from "crypto";
 
+// Class to use correct acces credential information in the wallet
 export class AccessCredentials {
   public url: string;
   public key: string;
@@ -14,9 +16,7 @@ export class AccessCredentials {
   }
   
   static GenerateKey(length: number = 32): string {
-    // return randomBytes(length).toString("hex");
-    console.log("lenght", length);
-    return "";
+    return randomBytes(length).toString("hex");
   }
 
   ToUri(): string {
@@ -35,30 +35,3 @@ export class AccessCredentials {
     return `plutonication:?${queryParams.join("&")}`;
   }
 }
-
-
-// const accessCredentials = new AccessCredentials(
-//   "wss://plutonication-53tvi.ondigitalocean.app/plutonication",
-//   "5FQtFhSYHyGggu9NZJiHyjUvoCuJxJoHkBLRfwQemPYzg41V",
-//   "Galaxy Logic Game", 
-//   "https://rostislavlitovkin.pythonanywhere.com/logo"
-// );
-
-// const connectionUrl = accessCredentials.url;
-// console.log("connectionUrl", connectionUrl);
-
-// const accessKey = accessCredentials.key;
-// console.log("accessKey", accessKey);
-
-// if (accessCredentials.name) {
-//   const dAppName = accessCredentials.name;
-//   console.log("Nombre de la dApp:", dAppName);
-// }
-
-// if (accessCredentials.icon) {
-//   const dAppIcon = accessCredentials.icon;
-//   console.log("Ícono de la dApp:", dAppIcon);
-// }
-
-// const fullUrl = accessCredentials.ToUri();
-// console.log("URL completa:", fullUrl);

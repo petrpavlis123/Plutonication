@@ -5,7 +5,7 @@ module.exports = {
   plugins: ['@typescript-eslint'],
   overrides: [
     {
-      files: ['*.ts'],
+      files: ['*.ts', '*.tsx'],
       extends: [
         'plugin:@typescript-eslint/recommended',
         'plugin:@typescript-eslint/recommended-requiring-type-checking',
@@ -29,10 +29,8 @@ module.exports = {
     // TypeScript Rules
     '@typescript-eslint/explicit-function-return-type': 'error',
     "@typescript-eslint/no-floating-promises": "error",
-    // "@typescript-eslint/naming-convention": "error",
     '@typescript-eslint/no-unused-vars': 'error',
     '@typescript-eslint/no-explicit-any': 'error',
-    // "@typescript-eslint/no-unnecessary-condition": "error",
     '@typescript-eslint/no-unsafe-member-access': 'error',
     '@typescript-eslint/no-unsafe-assignment': 'error',
     '@typescript-eslint/no-unsafe-call': 'error',
@@ -50,19 +48,19 @@ module.exports = {
     '@typescript-eslint/quotes': ['error', 'double'],
     '@typescript-eslint/no-var-requires': 'error',
     '@typescript-eslint/prefer-namespace-keyword': 'error',
-    // "max-len": [
-    //   "warn",
-    //   {
-    //     "code": 80,
-    //     "tabWidth": 2,
-    //     "comments": 80,
-    //     "ignoreComments": false,
-    //     "ignoreTrailingComments": true,
-    //     "ignoreUrls": true,
-    //     "ignoreStrings": true,
-    //     "ignoreTemplateLiterals": true,
-    //     "ignoreRegExpLiterals": true
-    //   }
-    // ]
+    "max-len": [
+      "warn",
+      {
+        "code": 80,
+        "tabWidth": 2,
+        "comments": 80,
+        "ignoreComments": false,
+        "ignoreTrailingComments": true,
+        "ignoreUrls": true,
+        "ignoreStrings": true,
+        "ignoreTemplateLiterals": true,
+        "ignoreRegExpLiterals": true
+      }
+    ]
   },
 };

@@ -1,0 +1,10 @@
+node_modules/
+dist/
+build/
+coverage/
+*.log
+*.md
+*.bak
+test/
+tests/
+__tests__/
