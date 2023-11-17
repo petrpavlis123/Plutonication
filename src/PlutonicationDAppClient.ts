@@ -14,7 +14,7 @@ class PlutonicationDAppClient {
   private static socket: Socket;
   private static pubKey: string;
   private static signature: string;
-  private static qrUri: string | Buffer;
+  private static qrUri: string;
   
   public static async InitializeAsync(accessCredentials: AccessCredentials, callback: (pubkey: string) => void): Promise<Injected> {
 
