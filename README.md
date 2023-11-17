@@ -11,7 +11,7 @@ Plutonication is a TypeScript library for create a communication between dapps a
 ## Instalation
 
 ```javascript
-npm install plutonication-dapp-client
+npm install Plutonication
 
 ```
 
