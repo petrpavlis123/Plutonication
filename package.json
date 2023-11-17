@@ -1,6 +1,6 @@
 {
   "name": "@plutonication/plutonication",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "description": "TypeScript version of C# plutonication library",
   "main": "index.js",
   "module": "./dist/index.mjs",
@@ -15,7 +15,7 @@
     "globalStyles.css",
     "images.d.ts",
     "index.html",
-    "index.js",
+    "index.ts",
     "index.tsx",
     "package.json",
     "tsconfig.json",
