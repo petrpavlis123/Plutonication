@@ -6,7 +6,11 @@
   "module": "./dist/index.mjs",
   "types": "dist/index.d.ts",
   "files": [
-    "dist"
+    "src",
+    "README.md",
+    ".babelrc",
+    "index.html",
+    "index.tsx"
   ],
   "scripts": {
     "test": "jest",
