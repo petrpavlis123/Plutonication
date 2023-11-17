@@ -1,4 +1,4 @@
-import { AccessCredentials } from "../src";
+import { AccessCredentials } from "..";
 
 describe("AccessCredentials", () => {
   test("No parameters", () => {

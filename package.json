@@ -1,12 +1,12 @@
 {
   "name": "@plutonication/plutonication",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "TypeScript version of C# plutonication library",
   "main": "dist/index.js",
   "module": "./dist/index.mjs",
   "types": "dist/index.d.ts",
   "files": [
-    "src",
+    "src/components",
     "README.md",
     ".babelrc",
     ".eslintrc.cjs",
