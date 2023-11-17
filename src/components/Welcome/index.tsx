@@ -5,7 +5,8 @@ import React, { useState, useRef, useEffect  } from "react";
 import { QRCodeCanvas } from "qrcode.react";
 
 // @scripts
-import { AccessCredentials, PlutonicationDAppClient } from "../../../index";
+import { AccessCredentials } from "../../AccesCredentials";
+import { PlutonicationDAppClient } from "../../PlutonicationDAppClient";
 import img from "../../assets/images/testing-image.png";
 import backArrowIcon from "../../assets/svg/Arrow Back.svg";
 
