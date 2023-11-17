@@ -9,8 +9,15 @@
     "src",
     "README.md",
     ".babelrc",
+    ".eslintrc.cjs",
+    "crypto-browserify.d.ts",
+    "globalStyles.css",
+    "images.d.ts",
     "index.html",
-    "index.tsx"
+    "index.tsx",
+    "package.json",
+    "tsconfig.json",
+    "webpack.config.js"
   ],
   "scripts": {
     "test": "jest",
