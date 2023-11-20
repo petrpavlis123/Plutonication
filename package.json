@@ -7,6 +7,7 @@
   "types": "./index.ts",
   "files": [
     "assets",
+    "dist",
     "src",
     "README.md",
     ".babelrc",
@@ -26,7 +27,7 @@
     "dev": "tsc --watch",
     "lint": "eslint --ignore-path .eslintignore --ext .js,.ts",
     "start": "webpack-dev-server --mode development --open --hot",
-    "build": "webpack --mode production"
+    "build": "tsc"
   },
   "repository": {
     "type": "git",

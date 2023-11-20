@@ -2,7 +2,6 @@
 node_modules/
 
 # Ignore build output and compiled JavaScript/TypeScript files
-dist/
 *.js
 !webpack.config.js
 *.js.map
