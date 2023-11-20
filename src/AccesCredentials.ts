@@ -1,5 +1,5 @@
 // @packages
-import { randomBytes } from "crypto";
+// import { randomBytes } from "crypto";
 
 // Class to use correct acces credential information in the wallet
 export class AccessCredentials {
@@ -15,25 +15,26 @@ export class AccessCredentials {
     this.icon = icon;
   }
   
-  // static GenerateKey(length: number = 32): string {
-  //   // return randomBytes(length).toString("hex");
-  //   const array = new Uint8Array(length);
-  //   window.crypto.getRandomValues(array);
-  //   return Array.from(array).map(byte => ("0" + (byte & 0xFF).toString(16)).slice(-2)).join("");
-  // }
   static GenerateKey(length: number = 32): string {
-    let randomKey: string;
-    
-    if (typeof window !== "undefined" && window.crypto && window.crypto.getRandomValues) {
-      const array = new Uint8Array(length);
-      window.crypto.getRandomValues(array);
-      randomKey = Array.from(array).map(byte => ("0" + (byte & 0xFF).toString(16)).slice(-2)).join("");
-    } else {
-      return randomBytes(length).toString("hex");
-    }
-    
-    return randomKey;
+    // return randomBytes(length).toString("hex");
+    const array = new Uint8Array(length);
+    window.crypto.getRandomValues(array);
+    return Array.from(array).map(byte => ("0" + (byte & 0xFF).toString(16)).slice(-2)).join("");
   }
+  // static GenerateKey(length: number = 32): string {
+  //   let randomKey: string;
+    
+  //   if (typeof window !== "undefined" && window.crypto && window.crypto.getRandomValues) {
+  //     const array = new Uint8Array(length);
+  //     window.crypto.getRandomValues(array);
+  //     randomKey = Array.from(array).map(byte => ("0" + (byte & 0xFF).toString(16)).slice(-2)).join("");
+  //   } 
+  //   else {
+  //     return randomBytes(length).toString("hex");
+  //   }
+    
+  //   return randomKey;
+  // }
 
   ToUri(): string {
     const queryParams: string[] = [
