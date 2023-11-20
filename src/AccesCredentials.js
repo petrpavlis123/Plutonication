@@ -10,9 +10,24 @@ var AccessCredentials = /** @class */ (function () {
         this.name = name;
         this.icon = icon;
     }
+    // static GenerateKey(length: number = 32): string {
+    //   // return randomBytes(length).toString("hex");
+    //   const array = new Uint8Array(length);
+    //   window.crypto.getRandomValues(array);
+    //   return Array.from(array).map(byte => ("0" + (byte & 0xFF).toString(16)).slice(-2)).join("");
+    // }
     AccessCredentials.GenerateKey = function (length) {
         if (length === void 0) { length = 32; }
-        return crypto_1.randomBytes(length).toString("hex");
+        var randomKey;
+        if (typeof window !== "undefined" && window.crypto && window.crypto.getRandomValues) {
+            var array = new Uint8Array(length);
+            window.crypto.getRandomValues(array);
+            randomKey = Array.from(array).map(function (byte) { return ("0" + (byte & 0xFF).toString(16)).slice(-2); }).join("");
+        }
+        else {
+            return crypto_1.randomBytes(length).toString("hex");
+        }
+        return randomKey;
     };
     AccessCredentials.prototype.ToUri = function () {
         var queryParams = [
@@ -30,3 +45,6 @@ var AccessCredentials = /** @class */ (function () {
     return AccessCredentials;
 }());
 exports.AccessCredentials = AccessCredentials;
+var customAccessCredentials = new AccessCredentials("wss://plutonication-acnha.ondigitalocean.app/");
+console.log("URL:", customAccessCredentials.url);
+console.log("Key:", customAccessCredentials.key);

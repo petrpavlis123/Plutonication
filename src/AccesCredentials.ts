@@ -15,8 +15,24 @@ export class AccessCredentials {
     this.icon = icon;
   }
   
+  // static GenerateKey(length: number = 32): string {
+  //   // return randomBytes(length).toString("hex");
+  //   const array = new Uint8Array(length);
+  //   window.crypto.getRandomValues(array);
+  //   return Array.from(array).map(byte => ("0" + (byte & 0xFF).toString(16)).slice(-2)).join("");
+  // }
   static GenerateKey(length: number = 32): string {
-    return randomBytes(length).toString("hex");
+    let randomKey: string;
+    
+    if (typeof window !== "undefined" && window.crypto && window.crypto.getRandomValues) {
+      const array = new Uint8Array(length);
+      window.crypto.getRandomValues(array);
+      randomKey = Array.from(array).map(byte => ("0" + (byte & 0xFF).toString(16)).slice(-2)).join("");
+    } else {
+      return randomBytes(length).toString("hex");
+    }
+    
+    return randomKey;
   }
 
   ToUri(): string {
@@ -35,3 +51,8 @@ export class AccessCredentials {
     return `plutonication:?${queryParams.join("&")}`;
   }
 }
+
+
+const customAccessCredentials = new AccessCredentials("wss://plutonication-acnha.ondigitalocean.app/");
+console.log("URL:", customAccessCredentials.url);
+console.log("Key:", customAccessCredentials.key);
