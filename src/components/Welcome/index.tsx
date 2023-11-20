@@ -29,7 +29,7 @@ const Welcome = (): React.JSX.Element => {
   const initializeDapp = async (): Promise<void> => {
     try {
       showQRCode();
-      await PlutonicationDAppClient.InitializeAsync(accessCredentials, (pubKey) => {
+      await PlutonicationDAppClient.Connect(accessCredentials, (pubKey) => {
         console.log("Received pubkey: ", pubKey);
         setPubkey(pubKey);
       });

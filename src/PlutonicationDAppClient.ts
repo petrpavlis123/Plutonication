@@ -15,8 +15,18 @@ class PlutonicationDAppClient {
   private static pubKey: string;
   private static signature: string;
   private static qrUri: string;
+
+  public static async Connect(accessCredentials: AccessCredentials, callback: (pubkey: string) => void): Promise<Injected> {
+    // Lógica de conexión
+    return await this.InitializeAsync(accessCredentials, callback);
+  }
+
+  public static async SendTransaction(accessCredentials: AccessCredentials, transactionDetails: Transaction): Promise<void> {
+    // Lógica para enviar transacción
+    return await this.SendPayloadAsync(accessCredentials, transactionDetails);
+  }
   
-  public static async InitializeAsync(accessCredentials: AccessCredentials, callback: (pubkey: string) => void): Promise<Injected> {
+  private static async InitializeAsync(accessCredentials: AccessCredentials, callback: (pubkey: string) => void): Promise<Injected> {
 
     return new Promise<Injected>((resolve) => {
       this.socket = io(accessCredentials.url);
@@ -106,7 +116,7 @@ class PlutonicationDAppClient {
     });
   }
   
-  public static async SendPayloadAsync(accessCredentials: AccessCredentials, transactionDetails: Transaction): Promise<void> {
+  private  static async SendPayloadAsync(accessCredentials: AccessCredentials, transactionDetails: Transaction): Promise<void> {
     try {
       const injector = await PlutonicationDAppClient.InitializeAsync(accessCredentials, pubKey =>  console.log(pubKey));
   

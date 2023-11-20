@@ -29,25 +29,31 @@ Here is how:
 
 #### Step 1: Import PlutonicationDAppClient
 ```javascript
-import Plutonication from 'Plutonication';
+import { PlutonicationDAppClient } from '@plutonication/plutonication';
 ```
 
 #### Step 2: Initialize the Connection and Get the Signature
 ```javascript
 // Access credentials are used to show correct info to the wallet.
-const accessCredentials = new AccessCredentials(
+const accessCredentials = {
   'YOUR_SERVER_URL',
   'ACCESS_KEY',
   'Application Name',
   'Application Logo URL'
-);
+  
+};
 
 // Initialize the connection
-Plutonication.InitializeAsync(accessCredentials, async (pubKey) => {
-  console.log('Successful connection! PubKey:', pubKey);
-});
+try {
+  await PlutonicationDAppClient.InitializeAsync(accessCredentials, (pubKey) => {
+    console.log("Received pubkey: ", pubKey);
+    setPubkey(pubKey);
+    setInitialized(true);
+  });
 
-... in process
+} catch (e) {
+  console.log("Error initializing the app: ", e);
+}
 
 ```
 
@@ -58,7 +64,12 @@ const transactionDetails: Transaction = {
   amount: 1000 * 10**12,
 };
 
-Plutonication.SendPayloadAsync(accessCredentials, transactionDetails);
+try {
+  await PlutonicationDAppClient.SendPayloadAsync(accessCredentials, transactionDetails);
+  console.log("Transaction sent!");
+} catch (error) {
+  console.error("Error sending transaction:", error);
+}
 
 ```
 
