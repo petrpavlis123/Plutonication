@@ -1,7 +1,7 @@
 "use strict";
-exports.__esModule = true;
 // @packages
-var crypto_1 = require("crypto");
+// import { randomBytes } from "crypto";
+exports.__esModule = true;
 // Class to use correct acces credential information in the wallet
 var AccessCredentials = /** @class */ (function () {
     function AccessCredentials(url, key, name, icon) {
@@ -10,25 +10,25 @@ var AccessCredentials = /** @class */ (function () {
         this.name = name;
         this.icon = icon;
     }
-    // static GenerateKey(length: number = 32): string {
-    //   // return randomBytes(length).toString("hex");
-    //   const array = new Uint8Array(length);
-    //   window.crypto.getRandomValues(array);
-    //   return Array.from(array).map(byte => ("0" + (byte & 0xFF).toString(16)).slice(-2)).join("");
-    // }
-    AccessCredentials.GenerateKey = function (length) {
-        if (length === void 0) { length = 32; }
-        var randomKey;
-        if (typeof window !== "undefined" && window.crypto && window.crypto.getRandomValues) {
-            var array = new Uint8Array(length);
-            window.crypto.getRandomValues(array);
-            randomKey = Array.from(array).map(function (byte) { return ("0" + (byte & 0xFF).toString(16)).slice(-2); }).join("");
-        }
-        else {
-            return crypto_1.randomBytes(length).toString("hex");
-        }
-        return randomKey;
+    AccessCredentials.GenerateKey = function () {
+        // return randomBytes(length).toString("hex");
+        // const array = new Uint8Array(length);
+        // window.crypto.getRandomValues(array);
+        // return Array.from(array).map(byte => ("0" + (byte & 0xFF).toString(16)).slice(-2)).join("");
+        return Date.now().toString();
     };
+    // static GenerateKey(length: number = 32): string {
+    //   let randomKey: string;
+    //   if (typeof window !== "undefined" && window.crypto && window.crypto.getRandomValues) {
+    //     const array = new Uint8Array(length);
+    //     window.crypto.getRandomValues(array);
+    //     randomKey = Array.from(array).map(byte => ("0" + (byte & 0xFF).toString(16)).slice(-2)).join("");
+    //   } 
+    //   else {
+    //     return randomBytes(length).toString("hex");
+    //   }
+    //   return randomKey;
+    // }
     AccessCredentials.prototype.ToUri = function () {
         var queryParams = [
             "url=" + encodeURIComponent(this.url),

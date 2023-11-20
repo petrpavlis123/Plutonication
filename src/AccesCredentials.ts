@@ -15,11 +15,12 @@ export class AccessCredentials {
     this.icon = icon;
   }
   
-  static GenerateKey(length: number = 32): string {
+  static GenerateKey(): string {
     // return randomBytes(length).toString("hex");
-    const array = new Uint8Array(length);
-    window.crypto.getRandomValues(array);
-    return Array.from(array).map(byte => ("0" + (byte & 0xFF).toString(16)).slice(-2)).join("");
+    // const array = new Uint8Array(length);
+    // window.crypto.getRandomValues(array);
+    // return Array.from(array).map(byte => ("0" + (byte & 0xFF).toString(16)).slice(-2)).join("");
+    return Date.now().toString();
   }
   // static GenerateKey(length: number = 32): string {
   //   let randomKey: string;
