@@ -40,7 +40,6 @@ exports.__esModule = true;
 // @packages
 var api_1 = require("@polkadot/api");
 var socket_io_client_1 = require("socket.io-client");
-var AccesCredentials_1 = require("./AccesCredentials");
 var waitForSignature_1 = require("./helpers.ts/waitForSignature");
 var PlutonicationDAppClient = /** @class */ (function () {
     function PlutonicationDAppClient() {
@@ -194,25 +193,3 @@ var PlutonicationDAppClient = /** @class */ (function () {
     return PlutonicationDAppClient;
 }());
 exports.PlutonicationDAppClient = PlutonicationDAppClient;
-var accessCredentials = new AccesCredentials_1.AccessCredentials("wss://plutonication-acnha.ondigitalocean.app/", "1", "Galaxy Logic Game", "https://rostislavlitovkin.pythonanywhere.com/logo");
-var transactionDetails = {
-    to: "5C5555yEXUcmEJ5kkcCMvdZjUo7NGJiQJMS7vZXEeoMhj3VQ",
-    amount: 1000 * Math.pow(10, 12)
-};
-// void PlutonicationDAppClient.InitializeAsync(
-//   accessCredentials,
-//   (pubkey) => {
-//     console.log("Pubkey recibida:", pubkey);
-//   }
-// );
-var execute = function () { return __awaiter(void 0, void 0, void 0, function () {
-    return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0: return [4 /*yield*/, PlutonicationDAppClient.SendPayloadAsync(accessCredentials, transactionDetails)];
-            case 1:
-                _a.sent();
-                return [2 /*return*/];
-        }
-    });
-}); };
-void execute();
