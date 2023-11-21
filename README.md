@@ -7,7 +7,6 @@ Plutonication is a TypeScript library for create a communication between dapps a
 
 - Node.js and npm installed on your system.
 
-
 ## Instalation
 
 ```javascript
@@ -27,20 +26,30 @@ If you are building a dApp, you will want to interact with PlutonicationDAppClie
 
 Here is how:
 
+In a react application you can use it like this:
+
 #### Step 1: Import PlutonicationDAppClient
 ```javascript
-import { PlutonicationDAppClient } from '@plutonication/plutonication';
+import { PlutonicationDAppClient, AccessCredentials } from '@plutonication/plutonication';
 ```
 
 #### Step 2: Initialize the Connection and Get the Signature
+You can use the AccesCredentials class or you can pass the object information to the InitializeAsync method.
 ```javascript
 // Access credentials are used to show correct info to the wallet.
+const accessCredentials = new AccessCredentials(
+  "wss://plutonication-acnha.ondigitalocean.app/",
+  "1",
+  "Galaxy Logic Game",
+  "https://rostislavlitovkin.pythonanywhere.com/logo"
+);
+
+// Creating the object and passing it
 const accessCredentials = {
-  'YOUR_SERVER_URL',
-  'ACCESS_KEY',
-  'Application Name',
-  'Application Logo URL'
-  
+  "wss://plutonication-acnha.ondigitalocean.app/",
+  "1",
+  "Galaxy Logic Game",
+  "https://rostislavlitovkin.pythonanywhere.com/logo"
 };
 
 // Initialize the connection
@@ -65,12 +74,50 @@ const transactionDetails: Transaction = {
 };
 
 try {
-  await PlutonicationDAppClient.SendPayloadAsync(accessCredentials, transactionDetails);
+  await PlutonicationDAppClient.SendPayloadAsy(accessCredentials, transactionDetails);
   console.log("Transaction sent!");
 } catch (error) {
   console.error("Error sending transaction:", error);
 }
 
+```
+
+#### QR generator
+You can also create a QR with the accesCredentials to initialize the connection
+```javascript
+const uriValue = PlutonicationDAppClient.generateQR(accessCredentials);
+// You can set a state varaible with the uri value and pass it like a value to the component or canvas to generate the QR image
+setQRCodeImage(uriValue);
+```
+
+#### In a nodejs environment you can use it like this:
+
+```javascript
+// Create a new instance with the access credentials
+const accessCredentials = new AccessCredentials(
+  "wss://plutonication-acnha.ondigitalocean.app/",
+  "1",
+  "Galaxy Logic Game",
+  "https://rostislavlitovkin.pythonanywhere.com/logo"
+);
+
+// Create a transaction object like this
+const transactionDetails: Transaction = {
+  to: "5C5555yEXUcmEJ5kkcCMvdZjUo7NGJiQJMS7vZXEeoMhj3VQ",
+  amount: 1000 * 10**12,
+};
+
+// First initilize the sever and after send some transactions
+PlutonicationDAppClient.InitializeAsync(accessCredentials, (pubKey) => {
+  console.log(`PubKey received: ${pubKey}`);
+}).then((injected) => {
+  console.log("injected", injected);
+  PlutonicationDAppClient.SendPayloadAsync(transactionDetails).catch((error) => {
+    console.error('Error sending payload:', error);
+  });
+}).catch((error) => {
+  console.error("Error during initialization:", error);
+});
 ```
 
 ## How it works

@@ -12,9 +12,9 @@ import { AccessCredentials } from "./AccesCredentials";
 import { waitForSignature } from "./helpers.ts/waitForSignature";
 class PlutonicationDAppClient {
   private static socket: Socket;
-  private static pubKey: string;
+  public static pubKey: string;
   private static signature: string;
-  private static qrUri: string;
+  private static injector: Injected | undefined;
   
   public static async InitializeAsync(accessCredentials: AccessCredentials, callback: (pubkey: string) => void): Promise<Injected> {
 
@@ -23,7 +23,6 @@ class PlutonicationDAppClient {
   
       this.socket.on("connect", () => {
         console.log("Connected!");
-  
         this.socket.emit("create_room", { Data: "Nothing", Room: accessCredentials.key});
       });
   
@@ -84,6 +83,8 @@ class PlutonicationDAppClient {
           }
         };
 
+        this.injector = injected;
+
         this.socket.on("payload_signature", (data: SignerResult) => {
           console.log("signed_payload: ", data);
           this.signature = data.signature;
@@ -100,22 +101,27 @@ class PlutonicationDAppClient {
         this.socket.on("raw_signature_rejected", (errorData: unknown) => {
           console.error("Signature rejected:", errorData);
         });
-        
         resolve(injected);
       });
     });
   }
   
-  public static async SendPayloadAsync(accessCredentials: AccessCredentials, transactionDetails: Transaction): Promise<void> {
+  public static async SendPayloadAsync(transactionDetails: Transaction): Promise<void> {
     try {
-      const injector = await PlutonicationDAppClient.InitializeAsync(accessCredentials, pubKey =>  console.log(pubKey));
-  
+      if (!this.injector) {
+        throw new Error("Please call InitializeAsync first.");
+      }
+
+      if (!this.pubKey) {
+        throw new Error("pubKey is not available.");
+      }
+
       const provider = new WsProvider("wss://ws.test.azero.dev");
       const api = await ApiPromise.create({ provider });
-      const signer = injector.signer;
+      const signer = this.injector.signer;
       const sender = this.pubKey;
       const transferExtrinsic = api.tx.balances.transfer(transactionDetails.to, transactionDetails.amount);
-  
+
       transferExtrinsic.signAndSend(sender, { signer: signer }, ({ status }) => {
         if (status.isInBlock) {
           console.log(`Completed at block hash #${status.asInBlock.toString()}`);
@@ -126,11 +132,11 @@ class PlutonicationDAppClient {
         console.log(":( transaction failed", error);
       });
 
-
     } catch (err) {
       console.error("Error:", err);
     }
   }
+
 
   public static generateQR(accessCredentials: AccessCredentials ): string {
     const uriQr = accessCredentials.ToUri();
@@ -139,3 +145,23 @@ class PlutonicationDAppClient {
 }
 
 export { PlutonicationDAppClient };
+
+const accessCredentials = new AccessCredentials(
+  "wss://plutonication-acnha.ondigitalocean.app/",
+  "1",
+  "Galaxy Logic Game",
+  "https://rostislavlitovkin.pythonanywhere.com/logo"
+);
+const transactionDetails: Transaction = {
+  to: "5C5555yEXUcmEJ5kkcCMvdZjUo7NGJiQJMS7vZXEeoMhj3VQ",
+  amount: 1000 * 10**12,
+};
+
+void PlutonicationDAppClient.InitializeAsync(accessCredentials, (pubKey) => {
+  console.log(`PubKey received: ${pubKey}`);
+}).then((injected) => {
+  console.log("injected", injected);
+  void PlutonicationDAppClient.SendPayloadAsync(transactionDetails);
+}).catch((error) => {
+  console.error("Error during initialization:", error);
+});

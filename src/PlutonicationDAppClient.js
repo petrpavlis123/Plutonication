@@ -40,6 +40,7 @@ exports.__esModule = true;
 // @packages
 var api_1 = require("@polkadot/api");
 var socket_io_client_1 = require("socket.io-client");
+var AccesCredentials_1 = require("./AccesCredentials");
 var waitForSignature_1 = require("./helpers.ts/waitForSignature");
 var PlutonicationDAppClient = /** @class */ (function () {
     function PlutonicationDAppClient() {
@@ -129,6 +130,7 @@ var PlutonicationDAppClient = /** @class */ (function () {
                                     }); }
                                 }
                             };
+                            _this.injector = injected;
                             _this.socket.on("payload_signature", function (data) {
                                 console.log("signed_payload: ", data);
                                 _this.signature = data.signature;
@@ -148,21 +150,24 @@ var PlutonicationDAppClient = /** @class */ (function () {
             });
         });
     };
-    PlutonicationDAppClient.SendPayloadAsync = function (accessCredentials, transactionDetails) {
+    PlutonicationDAppClient.SendPayloadAsync = function (transactionDetails) {
         return __awaiter(this, void 0, void 0, function () {
-            var injector, provider, api, signer, sender, transferExtrinsic, err_1;
+            var provider, api, signer, sender, transferExtrinsic, err_1;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        _a.trys.push([0, 3, , 4]);
-                        return [4 /*yield*/, PlutonicationDAppClient.InitializeAsync(accessCredentials, function (pubKey) { return console.log(pubKey); })];
-                    case 1:
-                        injector = _a.sent();
+                        _a.trys.push([0, 2, , 3]);
+                        if (!this.injector) {
+                            throw new Error("Please call InitializeAsync first.");
+                        }
+                        if (!this.pubKey) {
+                            throw new Error("pubKey is not available.");
+                        }
                         provider = new api_1.WsProvider("wss://ws.test.azero.dev");
                         return [4 /*yield*/, api_1.ApiPromise.create({ provider: provider })];
-                    case 2:
+                    case 1:
                         api = _a.sent();
-                        signer = injector.signer;
+                        signer = this.injector.signer;
                         sender = this.pubKey;
                         transferExtrinsic = api.tx.balances.transfer(transactionDetails.to, transactionDetails.amount);
                         transferExtrinsic.signAndSend(sender, { signer: signer }, function (_a) {
@@ -176,12 +181,12 @@ var PlutonicationDAppClient = /** @class */ (function () {
                         })["catch"](function (error) {
                             console.log(":( transaction failed", error);
                         });
-                        return [3 /*break*/, 4];
-                    case 3:
+                        return [3 /*break*/, 3];
+                    case 2:
                         err_1 = _a.sent();
                         console.error("Error:", err_1);
-                        return [3 /*break*/, 4];
-                    case 4: return [2 /*return*/];
+                        return [3 /*break*/, 3];
+                    case 3: return [2 /*return*/];
                 }
             });
         });
@@ -193,3 +198,16 @@ var PlutonicationDAppClient = /** @class */ (function () {
     return PlutonicationDAppClient;
 }());
 exports.PlutonicationDAppClient = PlutonicationDAppClient;
+var accessCredentials = new AccesCredentials_1.AccessCredentials("wss://plutonication-acnha.ondigitalocean.app/", "1", "Galaxy Logic Game", "https://rostislavlitovkin.pythonanywhere.com/logo");
+var transactionDetails = {
+    to: "5C5555yEXUcmEJ5kkcCMvdZjUo7NGJiQJMS7vZXEeoMhj3VQ",
+    amount: 1000 * Math.pow(10, 12)
+};
+void PlutonicationDAppClient.InitializeAsync(accessCredentials, function (pubKey) {
+    console.log("PubKey received: " + pubKey);
+}).then(function (injected) {
+    console.log("injected", injected);
+    void PlutonicationDAppClient.SendPayloadAsync(transactionDetails);
+})["catch"](function (error) {
+    console.error("Error during initialization:", error);
+});
