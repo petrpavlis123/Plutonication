@@ -1,4 +1,27 @@
 "use strict";
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -14,7 +37,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     function verb(n) { return function (v) { return step([n, v]); }; }
     function step(op) {
         if (f) throw new TypeError("Generator is already executing.");
-        while (_) try {
+        while (g && (g = 0, op[0] && (_ = 0)), _) try {
             if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
             if (y = 0, t) op = [op[0] & 2, t.value];
             switch (op[0]) {
@@ -35,13 +58,6 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
-    result["default"] = mod;
-    return result;
-};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -59,10 +75,10 @@ var Arrow_Back_svg_1 = __importDefault(require("../../assets/svg/Arrow Back.svg"
 // @styles
 require("./Welcome.css");
 var Welcome = function () {
-    var _a = react_1.useState(""), qrCodeImage = _a[0], setQRCodeImage = _a[1];
-    var _b = react_1.useState(false), isWalletConnected = _b[0], setIsWalletConnected = _b[1];
-    var _c = react_1.useState(""), pubKey = _c[0], setPubkey = _c[1];
-    var overlayRef = react_1.useRef(null);
+    var _a = (0, react_1.useState)(""), qrCodeImage = _a[0], setQRCodeImage = _a[1];
+    var _b = (0, react_1.useState)(false), isWalletConnected = _b[0], setIsWalletConnected = _b[1];
+    var _c = (0, react_1.useState)(""), pubKey = _c[0], setPubkey = _c[1];
+    var overlayRef = (0, react_1.useRef)(null);
     var accessCredentials = new AccesCredentials_1.AccessCredentials("wss://plutonication-acnha.ondigitalocean.app/", "1", "Galaxy Logic Game", "https://rostislavlitovkin.pythonanywhere.com/logo");
     var initializeDapp = function () { return __awaiter(void 0, void 0, void 0, function () {
         var e_1;
@@ -86,7 +102,7 @@ var Welcome = function () {
             }
         });
     }); };
-    react_1.useEffect(function () {
+    (0, react_1.useEffect)(function () {
         if (pubKey !== "") {
             setQRCodeImage("");
         }
@@ -111,14 +127,14 @@ var Welcome = function () {
         }
     };
     console.log("qrCodeImage", qrCodeImage);
-    return (react_1.default.createElement("div", { className: "welcome__container " + (qrCodeImage ? "overlay" : ""), ref: overlayRef, onClick: function (e) { return handleOverlayClick(e); } },
+    return (react_1.default.createElement("div", { className: "welcome__container ".concat(qrCodeImage ? "overlay" : ""), ref: overlayRef, onClick: function (e) { return handleOverlayClick(e); } },
         react_1.default.createElement("main", null, qrCodeImage ? (react_1.default.createElement(react_1.default.Fragment, null,
             react_1.default.createElement("div", { className: "welcome__QR-text-container" },
                 react_1.default.createElement("p", { className: "welcome__QR-text" }, "Plutonication Connect")),
             react_1.default.createElement("img", { className: "welcome__QR-back-arrow", alt: "close", onClick: closeQR, src: Arrow_Back_svg_1.default, width: 25, height: 25 }),
             react_1.default.createElement("div", { className: "welcome__QR-container" },
                 react_1.default.createElement(qrcode_react_1.QRCodeCanvas, { size: 250, className: "welcome__QR", value: qrCodeImage, imageSettings: {
-                        src: "" + testing_image_png_1.default,
+                        src: "".concat(testing_image_png_1.default),
                         x: undefined,
                         y: undefined,
                         height: 30,

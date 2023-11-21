@@ -1,7 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-// @packages
-var crypto_1 = require("crypto");
+exports.AccessCredentials = void 0;
 // Class to use correct acces credential information in the wallet
 var AccessCredentials = /** @class */ (function () {
     function AccessCredentials(url, key, name, icon) {
@@ -10,22 +9,21 @@ var AccessCredentials = /** @class */ (function () {
         this.name = name;
         this.icon = icon;
     }
-    AccessCredentials.GenerateKey = function (length) {
-        if (length === void 0) { length = 32; }
-        return crypto_1.randomBytes(length).toString("hex");
+    AccessCredentials.GenerateKey = function () {
+        return Date.now().toString();
     };
     AccessCredentials.prototype.ToUri = function () {
         var queryParams = [
-            "url=" + encodeURIComponent(this.url),
-            "key=" + encodeURIComponent(this.key),
+            "url=".concat(encodeURIComponent(this.url)),
+            "key=".concat(encodeURIComponent(this.key)),
         ];
         if (this.name != null) {
-            queryParams.push("name=" + encodeURIComponent(this.name));
+            queryParams.push("name=".concat(encodeURIComponent(this.name)));
         }
         if (this.icon != null) {
-            queryParams.push("icon=" + encodeURIComponent(this.icon));
+            queryParams.push("icon=".concat(encodeURIComponent(this.icon)));
         }
-        return "plutonication:?" + queryParams.join("&");
+        return "plutonication:?".concat(queryParams.join("&"));
     };
     return AccessCredentials;
 }());
