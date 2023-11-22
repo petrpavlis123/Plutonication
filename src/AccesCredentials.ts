@@ -1,5 +1,5 @@
 // Class to use correct acces credential information in the wallet
-export class AccessCredentials {
+class AccessCredentials {
   public url: string;
   public key: string;
   public name?: string;
@@ -33,3 +33,5 @@ export class AccessCredentials {
     return `plutonication:?${queryParams.join("&")}`;
   }
 }
+
+export { AccessCredentials };

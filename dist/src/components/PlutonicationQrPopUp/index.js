@@ -74,7 +74,7 @@ var testing_image_png_1 = __importDefault(require("../../assets/images/testing-i
 var Arrow_Back_svg_1 = __importDefault(require("../../assets/svg/Arrow Back.svg"));
 // @styles
 require("./Welcome.css");
-var Welcome = function () {
+var PlutonicationQrPopUp = function () {
     var _a = (0, react_1.useState)(""), qrCodeImage = _a[0], setQRCodeImage = _a[1];
     var _b = (0, react_1.useState)(false), isWalletConnected = _b[0], setIsWalletConnected = _b[1];
     var _c = (0, react_1.useState)(""), pubKey = _c[0], setPubkey = _c[1];
@@ -151,4 +151,4 @@ var Welcome = function () {
                 pubKey,
                 " "))))));
 };
-exports.default = Welcome;
+exports.default = PlutonicationQrPopUp;

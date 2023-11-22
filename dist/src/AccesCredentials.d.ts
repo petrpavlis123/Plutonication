@@ -1,4 +1,4 @@
-export declare class AccessCredentials {
+declare class AccessCredentials {
     url: string;
     key: string;
     name?: string;
@@ -7,3 +7,4 @@ export declare class AccessCredentials {
     static GenerateKey(): string;
     ToUri(): string;
 }
+export { AccessCredentials };

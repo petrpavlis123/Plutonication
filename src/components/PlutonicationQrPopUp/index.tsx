@@ -14,7 +14,7 @@ import backArrowIcon from "../../assets/svg/Arrow Back.svg";
 import "./Welcome.css";
 
 
-const Welcome = (): React.JSX.Element => {
+const PlutonicationQrPopUp = (): React.JSX.Element => {
   const [qrCodeImage, setQRCodeImage] = useState("");
   const [isWalletConnected, setIsWalletConnected] = useState(false);
   const [pubKey, setPubkey] = useState("");
@@ -112,4 +112,4 @@ const Welcome = (): React.JSX.Element => {
   );
 };
 
-export default Welcome;
+export default PlutonicationQrPopUp;

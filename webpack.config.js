@@ -16,12 +16,13 @@ module.exports = {
     rules: [
       {
         test: /\.tsx?$/,
-        use: 'ts-loader', // Usar ts-loader para archivos .ts y .tsx
+        use: 'ts-loader',
         exclude: /node_modules/,
       },
       {
         test: /\.css$/,
-        use: ['style-loader', 'css-loader'], // Usar style-loader y css-loader para archivos .css
+        use: ['style-loader', 'css-loader'],
+        include: path.resolve(__dirname, 'src/components'),
       },
       {
         test: /\.(png|jpe?g|gif|svg)$/i,
@@ -29,11 +30,11 @@ module.exports = {
           {
             loader: 'file-loader',
             options: {
-              outputPath: 'images', // Carpeta de salida para las imágenes
+              outputPath: 'images',
             },
           },
           {
-            loader: 'image-webpack-loader', // Opcional: para optimizar imágenes
+            loader: 'image-webpack-loader',
           },
         ],
       },

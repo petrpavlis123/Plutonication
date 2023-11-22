@@ -1,11 +1,11 @@
 // eslint-disable-next-line @typescript-eslint/quotes
 import React from 'react';
-import Welcome from "./Welcome";
+import PlutonicationQrPopUp from "./PlutonicationQrPopUp";
 
 const App: React.FC = () => {
   return (
     <div>
-      <Welcome />
+      <PlutonicationQrPopUp />
     </div>
   );
 };

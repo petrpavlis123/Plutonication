@@ -30,7 +30,7 @@ In a react application you can use it like this:
 
 #### Step 1: Import PlutonicationDAppClient
 ```javascript
-import { PlutonicationDAppClient, AccessCredentials } from '@plutonication/plutonication';
+import { PlutonicationDAppClient, AccessCredentials, PlutonicationQrPopUp } from '@plutonication/plutonication';
 ```
 
 #### Step 2: Initialize the Connection and Get the Signature
@@ -82,12 +82,15 @@ try {
 
 ```
 
-#### QR generator
-You can also create a QR with the accesCredentials to initialize the connection
+#### Plutonication Qr PopUp
+You can use the Qr PopUp like this:
 ```javascript
-const uriValue = PlutonicationDAppClient.generateQR(accessCredentials);
-// You can set a state varaible with the uri value and pass it like a value to the component or canvas to generate the QR image
-setQRCodeImage(uriValue);
+export default function App() {
+  return (
+    <PlutonicationQrPopUp />
+      // Rest of your app...
+  )
+}
 ```
 
 #### In a nodejs environment you can use it like this:
