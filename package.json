@@ -1,6 +1,6 @@
 {
   "name": "@plutonication/plutonication",
-  "version": "1.0.20",
+  "version": "1.0.21",
   "description": "TypeScript version of C# plutonication library",
   "main": "src/PlutonicationDAppClient.js",
   "module": "dist/PlutonicationDAppClient.js",
@@ -50,6 +50,7 @@
     "@types/react-dom": "^18.2.15",
     "@typescript-eslint/eslint-plugin": "^6.10.0",
     "@typescript-eslint/parser": "^6.10.0",
+    "babel-loader": "^9.1.3",
     "css-loader": "^6.8.1",
     "eslint": "^8.52.0",
     "eslint-config-standard-with-typescript": "^39.1.1",

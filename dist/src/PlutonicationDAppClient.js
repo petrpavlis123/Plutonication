@@ -134,19 +134,6 @@ var PlutonicationDAppClient = /** @class */ (function () {
                                 }
                             };
                             _this.injector = injected;
-                            _this.socket.on("payload_signature", function (data) {
-                                console.log("signed_payload: ", data);
-                                _this.signature = data.signature;
-                            });
-                            _this.socket.on("payload_signature_rejected", function (errorData) {
-                                console.error("Signature rejected:", errorData);
-                            });
-                            _this.socket.on("raw_signature", function (signature) {
-                                console.log("signed_raw: ", signature);
-                            });
-                            _this.socket.on("raw_signature_rejected", function (errorData) {
-                                console.error("Signature rejected:", errorData);
-                            });
                             resolve(injected);
                         });
                     })];
@@ -156,6 +143,7 @@ var PlutonicationDAppClient = /** @class */ (function () {
     PlutonicationDAppClient.SendPayloadAsync = function (transactionDetails) {
         return __awaiter(this, void 0, void 0, function () {
             var provider, api, signer, sender, transferExtrinsic, err_1;
+            var _this = this;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -166,6 +154,19 @@ var PlutonicationDAppClient = /** @class */ (function () {
                         if (!this.pubKey) {
                             throw new Error("pubKey is not available.");
                         }
+                        this.socket.on("payload_signature", function (data) {
+                            console.log("signed_payload: ", data);
+                            _this.signature = data.signature;
+                        });
+                        this.socket.on("payload_signature_rejected", function (errorData) {
+                            console.error("Signature rejected:", errorData);
+                        });
+                        this.socket.on("raw_signature", function (signature) {
+                            console.log("signed_raw: ", signature);
+                        });
+                        this.socket.on("raw_signature_rejected", function (errorData) {
+                            console.error("Signature rejected:", errorData);
+                        });
                         provider = new api_1.WsProvider("wss://ws.test.azero.dev");
                         return [4 /*yield*/, api_1.ApiPromise.create({ provider: provider })];
                     case 1:

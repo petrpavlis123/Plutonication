@@ -84,23 +84,7 @@ class PlutonicationDAppClient {
         };
 
         this.injector = injected;
-
-        this.socket.on("payload_signature", (data: SignerResult) => {
-          console.log("signed_payload: ", data);
-          this.signature = data.signature;
-        });
-        
-        this.socket.on("payload_signature_rejected", (errorData: unknown) => {
-          console.error("Signature rejected:", errorData);
-        });
-
-        this.socket.on("raw_signature", (signature: string) => {
-          console.log("signed_raw: ", signature);
-        });
-
-        this.socket.on("raw_signature_rejected", (errorData: unknown) => {
-          console.error("Signature rejected:", errorData);
-        });
+       
         resolve(injected);
       });
     });
@@ -115,6 +99,24 @@ class PlutonicationDAppClient {
       if (!this.pubKey) {
         throw new Error("pubKey is not available.");
       }
+
+      this.socket.on("payload_signature", (data: SignerResult) => {
+        console.log("signed_payload: ", data);
+        this.signature = data.signature;
+      });
+      
+      this.socket.on("payload_signature_rejected", (errorData: unknown) => {
+        console.error("Signature rejected:", errorData);
+      });
+
+      this.socket.on("raw_signature", (signature: string) => {
+        console.log("signed_raw: ", signature);
+      });
+
+      this.socket.on("raw_signature_rejected", (errorData: unknown) => {
+        console.error("Signature rejected:", errorData);
+      });
+
 
       const provider = new WsProvider("wss://ws.test.azero.dev");
       const api = await ApiPromise.create({ provider });
@@ -131,6 +133,8 @@ class PlutonicationDAppClient {
       }).catch((error: unknown) => {
         console.log(":( transaction failed", error);
       });
+
+
 
     } catch (err) {
       console.error("Error:", err);
