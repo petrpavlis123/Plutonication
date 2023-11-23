@@ -56,6 +56,7 @@ class PlutonicationDAppClient {
       this.pubKey = await new Promise((resolve, reject) => {
         this.socket!.on("pubkey", (pubkey: string) => {
           console.log("Received pubkey:", pubkey);
+          this.setPubKey(pubkey);
           resolve(pubkey);
         });
 
@@ -65,6 +66,7 @@ class PlutonicationDAppClient {
       });
 
       this.injector = this.createInjected(this.pubKey || "", this.socket, accessCredentials);
+      this.setInjector(this.injector);
       return this.injector;
     } catch (error) {
       console.error("Error during initialization:", error);
