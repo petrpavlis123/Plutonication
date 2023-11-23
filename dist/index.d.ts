@@ -1,4 +1,6 @@
+import { AccessCredentials } from "./src/AccesCredentials";
+import { PlutonicationDAppClient } from "./src/PlutonicationDAppClient";
 import PlutonicationQrPopUp from "./src/components/PlutonicationQrPopUp";
-export { PlutonicationDAppClient } from "./src/PlutonicationDAppClient";
-export { AccessCredentials } from "./src/AccesCredentials";
+export { PlutonicationDAppClient };
+export { AccessCredentials };
 export { PlutonicationQrPopUp };

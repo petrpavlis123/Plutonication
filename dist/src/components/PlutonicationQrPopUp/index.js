@@ -92,7 +92,7 @@ var PlutonicationQrPopUp = function () {
                 case 1:
                     _a.sent();
                     setIsWalletConnected(true);
-                    setPubkey(dappClient.pubKey || ""); // Set the pubKey state from dappClient
+                    setPubkey(dappClient.pubKey || "");
                     return [3 /*break*/, 3];
                 case 2:
                     error_1 = _a.sent();
@@ -107,11 +107,6 @@ var PlutonicationQrPopUp = function () {
             setQRCodeImage("");
         }
     }, [pubKey]);
-    // const showQRCode = ():void  => {
-    //   const uriValue = dappClient.generateQR(accessCredentials);
-    //   setQRCodeImage(uriValue);
-    //   setIsWalletConnected(true);
-    // };
     var disconnect = function () {
         // disconnect functionality here
         console.log("Disconnecting!");

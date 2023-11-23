@@ -149,15 +149,24 @@ export { PlutonicationDAppClient };
 //   to: "5C5555yEXUcmEJ5kkcCMvdZjUo7NGJiQJMS7vZXEeoMhj3VQ",
 //   amount: 1000 * 10 ** 12,
 // };
+// const dappClient = new PlutonicationDAppClient();
 
 // void (async (): Promise<void> => {
-//   const dappClient = new PlutonicationDAppClient();
 //   console.log("instanciando mi dapp");
 //   try {
 //     const injected: Injected = await dappClient.initializeAsync(accessCredentials);
 //     console.log("Injected:", injected);
 
+//   } catch (error) {
+//     console.error("Error in main flow:", error);
+//   }
+// })();
+
+// void (async (): Promise<void> => {
+//   console.log("instanciando mi dapp");
+//   try {
 //     await dappClient.sendPayloadAsync(transactionDetails);
+
 //   } catch (error) {
 //     console.error("Error in main flow:", error);
 //   }

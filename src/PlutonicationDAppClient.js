@@ -40,30 +40,8 @@ exports.__esModule = true;
 // @packages
 var api_1 = require("@polkadot/api");
 var socket_io_client_1 = require("socket.io-client");
+var AccesCredentials_1 = require("./AccesCredentials");
 var waitForSignature_1 = require("./helpers.ts/waitForSignature");
-// interface InjectedAccount {
-//   address: string;
-// }
-// interface Injected {
-//   accounts: {
-//     get(_anyType?: boolean): Promise<InjectedAccount[]>;
-//     subscribe(_cb: (accounts: InjectedAccount[]) => void | Promise<void>): () => void;
-//   };
-//   signer: {
-//     signPayload(payloadJson: SignerPayloadJSON): Promise<SignerResult>;
-//     signRaw(raw: SignerPayloadRaw): Promise<SignerResult>;
-//   };
-// }
-// interface SignerPayloadJSON {}
-// interface SignerPayloadRaw {}
-// interface SignerResult {
-//   id: number;
-//   signature: string;
-// }
-// interface Transaction {
-//   to: string;
-//   amount: number;
-// }
 var PlutonicationDAppClient = /** @class */ (function () {
     function PlutonicationDAppClient() {
         this.socket = null;
@@ -71,6 +49,18 @@ var PlutonicationDAppClient = /** @class */ (function () {
         this.signature = null;
         this.injector = undefined;
     }
+    PlutonicationDAppClient.prototype.getPubKey = function () {
+        return this.pubKey;
+    };
+    PlutonicationDAppClient.prototype.setPubKey = function (pubKey) {
+        this.pubKey = pubKey;
+    };
+    PlutonicationDAppClient.prototype.getInjector = function () {
+        return this.injector;
+    };
+    PlutonicationDAppClient.prototype.setInjector = function (injector) {
+        this.injector = injector;
+    };
     PlutonicationDAppClient.prototype.initializeAsync = function (accessCredentials) {
         return __awaiter(this, void 0, void 0, function () {
             var _a, error_1;
@@ -91,6 +81,7 @@ var PlutonicationDAppClient = /** @class */ (function () {
                         return [4 /*yield*/, new Promise(function (resolve, reject) {
                                 _this.socket.on("pubkey", function (pubkey) {
                                     console.log("Received pubkey:", pubkey);
+                                    _this.setPubKey(pubkey);
                                     resolve(pubkey);
                                 });
                                 _this.socket.on("connect_error", function (error) {
@@ -100,6 +91,7 @@ var PlutonicationDAppClient = /** @class */ (function () {
                     case 1:
                         _a.pubKey = _b.sent();
                         this.injector = this.createInjected(this.pubKey || "", this.socket, accessCredentials);
+                        this.setInjector(this.injector);
                         return [2 /*return*/, this.injector];
                     case 2:
                         error_1 = _b.sent();
@@ -178,14 +170,6 @@ var PlutonicationDAppClient = /** @class */ (function () {
                         signer = this.injector.signer;
                         sender = this.pubKey;
                         transferExtrinsic = api.tx.balances.transfer(transactionDetails.to, transactionDetails.amount);
-                        // const statusCallback = ({ status }: { status: unknown }): void => {
-                        //   if (status.isInBlock) {
-                        //     console.log(`Completed at block hash #${status.asInBlock.toString()}`);
-                        //   } else {
-                        //     console.log(`Current status: ${status.type}`);
-                        //   }
-                        // };
-                        // await transferExtrinsic.signAndSend(sender, { signer }, statusCallback);
                         return [4 /*yield*/, transferExtrinsic.signAndSend(sender, { signer: signer }, function (_a) {
                                 var status = _a.status;
                                 if (status.isInBlock) {
@@ -198,14 +182,6 @@ var PlutonicationDAppClient = /** @class */ (function () {
                                 console.log(":( transaction failed", error);
                             })];
                     case 2:
-                        // const statusCallback = ({ status }: { status: unknown }): void => {
-                        //   if (status.isInBlock) {
-                        //     console.log(`Completed at block hash #${status.asInBlock.toString()}`);
-                        //   } else {
-                        //     console.log(`Current status: ${status.type}`);
-                        //   }
-                        // };
-                        // await transferExtrinsic.signAndSend(sender, { signer }, statusCallback);
                         _a.sent();
                         return [3 /*break*/, 4];
                     case 3:
@@ -224,24 +200,52 @@ var PlutonicationDAppClient = /** @class */ (function () {
     return PlutonicationDAppClient;
 }());
 exports.PlutonicationDAppClient = PlutonicationDAppClient;
-// const accessCredentials = new AccessCredentials(
-//   "wss://plutonication-acnha.ondigitalocean.app/",
-//   "1",
-//   "Galaxy Logic Game",
-//   "https://rostislavlitovkin.pythonanywhere.com/logo"
-// );
-// const transactionDetails: Transaction = {
-//   to: "5C5555yEXUcmEJ5kkcCMvdZjUo7NGJiQJMS7vZXEeoMhj3VQ",
-//   amount: 1000 * 10 ** 12,
-// };
-// void (async (): Promise<void> => {
-//   const dappClient = new PlutonicationDAppClient();
-//   console.log("instanciando mi dapp");
-//   try {
-//     const injected: Injected = await dappClient.initializeAsync(accessCredentials);
-//     console.log("Injected:", injected);
-//     await dappClient.sendPayloadAsync(transactionDetails);
-//   } catch (error) {
-//     console.error("Error in main flow:", error);
-//   }
-// })();
+var accessCredentials = new AccesCredentials_1.AccessCredentials("wss://plutonication-acnha.ondigitalocean.app/", "1", "Galaxy Logic Game", "https://rostislavlitovkin.pythonanywhere.com/logo");
+var transactionDetails = {
+    to: "5C5555yEXUcmEJ5kkcCMvdZjUo7NGJiQJMS7vZXEeoMhj3VQ",
+    amount: 1000 * Math.pow(10, 12)
+};
+var dappClient = new PlutonicationDAppClient();
+void (function () { return __awaiter(void 0, void 0, void 0, function () {
+    var injected, error_3;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                console.log("instanciando mi dapp");
+                _a.label = 1;
+            case 1:
+                _a.trys.push([1, 3, , 4]);
+                return [4 /*yield*/, dappClient.initializeAsync(accessCredentials)];
+            case 2:
+                injected = _a.sent();
+                console.log("Injected:", injected);
+                return [3 /*break*/, 4];
+            case 3:
+                error_3 = _a.sent();
+                console.error("Error in main flow:", error_3);
+                return [3 /*break*/, 4];
+            case 4: return [2 /*return*/];
+        }
+    });
+}); })();
+void (function () { return __awaiter(void 0, void 0, void 0, function () {
+    var error_4;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                console.log("instanciando mi dapp");
+                _a.label = 1;
+            case 1:
+                _a.trys.push([1, 3, , 4]);
+                return [4 /*yield*/, dappClient.sendPayloadAsync(transactionDetails)];
+            case 2:
+                _a.sent();
+                return [3 /*break*/, 4];
+            case 3:
+                error_4 = _a.sent();
+                console.error("Error in main flow:", error_4);
+                return [3 /*break*/, 4];
+            case 4: return [2 /*return*/];
+        }
+    });
+}); })();

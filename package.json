@@ -1,6 +1,6 @@
 {
   "name": "@plutonication/plutonication",
-  "version": "1.0.25",
+  "version": "1.0.26",
   "description": "TypeScript version of C# plutonication library",
   "main": "src/PlutonicationDAppClient.js",
   "module": "dist/PlutonicationDAppClient.js",

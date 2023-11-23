@@ -7,6 +7,10 @@ declare class PlutonicationDAppClient {
     private signature;
     private injector;
     constructor();
+    getPubKey(): string | null;
+    setPubKey(pubKey: string | null): void;
+    getInjector(): Injected | undefined;
+    setInjector(injector: Injected | undefined): void;
     initializeAsync(accessCredentials: AccessCredentials): Promise<Injected>;
     private createInjected;
     sendPayloadAsync(transactionDetails: Transaction): Promise<void>;
