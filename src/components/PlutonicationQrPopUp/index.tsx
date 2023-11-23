@@ -7,6 +7,7 @@ import { QRCodeCanvas } from "qrcode.react";
 // @scripts
 import { AccessCredentials } from "../../AccesCredentials";
 import { PlutonicationDAppClient } from "../../PlutonicationDAppClient";
+
 import img from "../../assets/images/testing-image.png";
 import backArrowIcon from "../../assets/svg/Arrow Back.svg";
 
@@ -26,16 +27,18 @@ const PlutonicationQrPopUp = (): React.JSX.Element => {
     "Galaxy Logic Game",
     "https://rostislavlitovkin.pythonanywhere.com/logo"
   );
-  const initializeDapp = async (): Promise<void> => {
-    try {
-      showQRCode();
-      await PlutonicationDAppClient.InitializeAsync(accessCredentials, (pubKey) => {
-        console.log("Received pubkey: ", pubKey);
-        setPubkey(pubKey);
-      });
 
-    } catch (e) {
-      console.log("Error initializing the app: ", e);
+  
+  const dappClient: PlutonicationDAppClient = new PlutonicationDAppClient();
+
+  const initializeDapp = async () => {
+    try {
+      setQRCodeImage(dappClient.generateQR(accessCredentials));
+      await dappClient.initializeAsync(accessCredentials);
+      setIsWalletConnected(true);
+      setPubkey(dappClient.pubKey || "");
+    } catch (error) {
+      console.error("Error initializing the app:", error);
     }
   };
 
@@ -44,12 +47,6 @@ const PlutonicationQrPopUp = (): React.JSX.Element => {
       setQRCodeImage("");
     }
   }, [pubKey]);
-
-  const showQRCode = ():void  => {
-    const uriValue = PlutonicationDAppClient.generateQR(accessCredentials);
-    setQRCodeImage(uriValue);
-    setIsWalletConnected(true);
-  };
 
   const disconnect = ():void => {
     // disconnect functionality here

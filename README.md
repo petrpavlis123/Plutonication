@@ -28,13 +28,13 @@ Here is how:
 
 In a react application you can use it like this:
 
-#### Step 1: Import PlutonicationDAppClient
+#### Import PlutonicationDAppClient
 ```javascript
 import { PlutonicationDAppClient, AccessCredentials, PlutonicationQrPopUp } from '@plutonication/plutonication';
 ```
 
-#### Step 2: Initialize the Connection and Get the Signature
-You can use the AccesCredentials class or you can pass the object information to the InitializeAsync method.
+#### Initialize the Connection and send transactions
+To access the initializeAsync and SendPayloadAsync methods, you need to instantiate the AccessCredentials with the necessary information and also create an instance of PlutonicationDAppClient
 ```javascript
 // Access credentials are used to show correct info to the wallet.
 const accessCredentials = new AccessCredentials(
@@ -44,43 +44,28 @@ const accessCredentials = new AccessCredentials(
   "https://rostislavlitovkin.pythonanywhere.com/logo"
 );
 
-// Creating the object and passing it
-const accessCredentials = {
-  "wss://plutonication-acnha.ondigitalocean.app/",
-  "1",
-  "Galaxy Logic Game",
-  "https://rostislavlitovkin.pythonanywhere.com/logo"
-};
+// Instanciate the class
+  const dappClient: PlutonicationDAppClient = new PlutonicationDAppClient();
 
 // Initialize the connection
 try {
-  await PlutonicationDAppClient.InitializeAsync(accessCredentials, (pubKey) => {
-    console.log("Received pubkey: ", pubKey);
-    setPubkey(pubKey);
-    setInitialized(true);
-  });
+  const injected: Injected = await dappClient.initializeAsync(accessCredentials);
+  // Access the pubKey
+  const pubKey = dappClient.pubKey;
 
+  const transactionDetails: Transaction = {
+    to: 'TRANSACTION_DESTINATION',
+    amount: 1000 * 10**12,
+  };
+
+  // Send transactions
+   await PlutonicationDAppClient.SendPayloadAsync(transactionDetails);
 } catch (e) {
   console.log("Error initializing the app: ", e);
 }
 
 ```
 
-#### Step 3: Send a Transaction
-```javascript
-const transactionDetails: Transaction = {
-  to: 'TRANSACTION_DESTINATION',
-  amount: 1000 * 10**12,
-};
-
-try {
-  await PlutonicationDAppClient.SendPayloadAsy(accessCredentials, transactionDetails);
-  console.log("Transaction sent!");
-} catch (error) {
-  console.error("Error sending transaction:", error);
-}
-
-```
 
 #### Plutonication Qr PopUp
 You can use the Qr PopUp like this:
@@ -111,16 +96,15 @@ const transactionDetails: Transaction = {
 };
 
 // First initilize the sever and after send some transactions
-PlutonicationDAppClient.InitializeAsync(accessCredentials, (pubKey) => {
-  console.log(`PubKey received: ${pubKey}`);
-}).then((injected) => {
-  console.log("injected", injected);
-  PlutonicationDAppClient.SendPayloadAsync(transactionDetails).catch((error) => {
-    console.error('Error sending payload:', error);
-  });
-}).catch((error) => {
-  console.error("Error during initialization:", error);
-});
+  const dappClient = new PlutonicationDAppClient();
+  // Initialize the connection
+  try {
+    const injected: Injected = await dappClient.initializeAsync(accessCredentials);
+    // After initialize you can acces the pubKey returned by the wallet and you can aslo send transactions
+    await dappClient.sendPayloadAsync(transactionDetails);
+  } catch (error) {
+    console.error("Error in main flow:", error);
+  }
 ```
 
 ## How it works

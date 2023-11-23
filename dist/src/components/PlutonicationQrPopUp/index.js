@@ -80,23 +80,23 @@ var PlutonicationQrPopUp = function () {
     var _c = (0, react_1.useState)(""), pubKey = _c[0], setPubkey = _c[1];
     var overlayRef = (0, react_1.useRef)(null);
     var accessCredentials = new AccesCredentials_1.AccessCredentials("wss://plutonication-acnha.ondigitalocean.app/", "1", "Galaxy Logic Game", "https://rostislavlitovkin.pythonanywhere.com/logo");
+    var dappClient = new PlutonicationDAppClient_1.PlutonicationDAppClient();
     var initializeDapp = function () { return __awaiter(void 0, void 0, void 0, function () {
-        var e_1;
+        var error_1;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
                     _a.trys.push([0, 2, , 3]);
-                    showQRCode();
-                    return [4 /*yield*/, PlutonicationDAppClient_1.PlutonicationDAppClient.InitializeAsync(accessCredentials, function (pubKey) {
-                            console.log("Received pubkey: ", pubKey);
-                            setPubkey(pubKey);
-                        })];
+                    setQRCodeImage(dappClient.generateQR(accessCredentials));
+                    return [4 /*yield*/, dappClient.initializeAsync(accessCredentials)];
                 case 1:
                     _a.sent();
+                    setIsWalletConnected(true);
+                    setPubkey(dappClient.pubKey || ""); // Set the pubKey state from dappClient
                     return [3 /*break*/, 3];
                 case 2:
-                    e_1 = _a.sent();
-                    console.log("Error initializing the app: ", e_1);
+                    error_1 = _a.sent();
+                    console.error("Error initializing the app:", error_1);
                     return [3 /*break*/, 3];
                 case 3: return [2 /*return*/];
             }
@@ -107,11 +107,11 @@ var PlutonicationQrPopUp = function () {
             setQRCodeImage("");
         }
     }, [pubKey]);
-    var showQRCode = function () {
-        var uriValue = PlutonicationDAppClient_1.PlutonicationDAppClient.generateQR(accessCredentials);
-        setQRCodeImage(uriValue);
-        setIsWalletConnected(true);
-    };
+    // const showQRCode = ():void  => {
+    //   const uriValue = dappClient.generateQR(accessCredentials);
+    //   setQRCodeImage(uriValue);
+    //   setIsWalletConnected(true);
+    // };
     var disconnect = function () {
         // disconnect functionality here
         console.log("Disconnecting!");
