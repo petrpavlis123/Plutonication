@@ -19,9 +19,25 @@ class PlutonicationDAppClient {
 
   constructor() {
     this.socket = null;
-    this.pubKey = null;
+    this.pubKey = null; 
     this.signature = null;
     this.injector = undefined;
+  }
+
+  getPubKey(): string | null {
+    return this.pubKey;
+  }
+
+  setPubKey(pubKey: string | null): void {
+    this.pubKey = pubKey;
+  }
+
+  getInjector(): Injected | undefined {
+    return this.injector;
+  }
+
+  setInjector(injector: Injected | undefined): void {
+    this.injector = injector;
   }
   
   async initializeAsync(accessCredentials: AccessCredentials): Promise<Injected> {

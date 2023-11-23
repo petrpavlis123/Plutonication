@@ -103,7 +103,7 @@ const transactionDetails: Transaction = {
     // After initialize you can acces the pubKey returned by the wallet and you can aslo send transactions
     await dappClient.sendPayloadAsync(transactionDetails);
   } catch (error) {
-    console.error("Error in main flow:", error);
+    console.error("Error:", error);
   }
 ```
 
