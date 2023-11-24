@@ -1,6 +1,6 @@
 {
   "name": "@plutonication/plutonication",
-  "version": "1.0.29",
+  "version": "1.0.30",
   "description": "TypeScript version of C# plutonication library",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -10,7 +10,8 @@
     "!.github",
     "!lib",
     "!test",
-    "!src"
+    "!src",
+    "dis/src"
   ],
   "scripts": {
     "test": "jest",
