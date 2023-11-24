@@ -11,7 +11,7 @@
     "!lib",
     "!test",
     "!src",
-    "dis/src"
+    "dist/src"
   ],
   "scripts": {
     "test": "jest",
