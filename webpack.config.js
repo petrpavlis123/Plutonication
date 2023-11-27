@@ -1,6 +1,7 @@
 const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
-const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+// const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const CopyPlugin = require('copy-webpack-plugin');
 
 module.exports = {
   mode: "production",
@@ -40,8 +41,8 @@ module.exports = {
       // Regla para archivos CSS
       {
         test: /\.css$/,
-        use: [MiniCssExtractPlugin.loader, 'css-loader'],
-        // use: ['style-loader', 'css-loader'],
+        // use: [MiniCssExtractPlugin.loader, 'css-loader'],
+        use: ['style-loader', 'css-loader'],
         include: path.resolve(__dirname, '/'), 
       },
       // Regla para archivos de imágenes
@@ -66,8 +67,14 @@ module.exports = {
     new HtmlWebpackPlugin({
       template: "./index.html",
     }),
-    new MiniCssExtractPlugin({
-      filename: 'styles/[name].css', // This will output your CSS files in 'dist/styles' folder
+    // new MiniCssExtractPlugin({
+    //   filename: 'styles/[name].css', // This will output your CSS files in 'dist/styles' folder
+    // }),
+    new CopyPlugin({
+      patterns: [
+        { from: 'styles/welcome.css', to: 'styles/welcome.css' },
+        { from: 'globalStyles.css', to: 'globalStyles.css' }
+      ],
     }),
   ],
 };

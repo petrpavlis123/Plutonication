@@ -12,7 +12,7 @@ import img from "../../../assets/images/testing-image.png";
 import backArrowIcon from "../../../assets/svg/Arrow Back.svg";
 
 // @styles
-import "../../../styles/Welcome.css";
+import "../../../styles/welcome.css";
 
 
 const PlutonicationQrPopUp = (): React.JSX.Element => {
