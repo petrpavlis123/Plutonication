@@ -57,7 +57,7 @@ var PlutonicationDAppClient_1 = require("../../PlutonicationDAppClient");
 var testing_image_png_1 = __importDefault(require("../../../assets/images/testing-image.png"));
 var Arrow_Back_svg_1 = __importDefault(require("../../../assets/svg/Arrow Back.svg"));
 // @styles
-require("./Welcome.css");
+require("../../../styles/Welcome.css");
 var PlutonicationQrPopUp = function () {
     var _a = react_1.useState(""), qrCodeImage = _a[0], setQRCodeImage = _a[1];
     var _b = react_1.useState(false), isWalletConnected = _b[0], setIsWalletConnected = _b[1];
