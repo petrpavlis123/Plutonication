@@ -40,7 +40,7 @@ module.exports = {
       {
         test: /\.css$/,
         use: ['style-loader', 'css-loader'],
-        include: path.resolve(__dirname, '/'), 
+        // include: path.resolve(__dirname, '/'), 
       },
       // Regla para archivos de imágenes
       {
