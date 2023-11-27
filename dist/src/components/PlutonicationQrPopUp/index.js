@@ -54,8 +54,8 @@ var qrcode_react_1 = require("qrcode.react");
 // @scripts
 var AccesCredentials_1 = require("../../AccesCredentials");
 var PlutonicationDAppClient_1 = require("../../PlutonicationDAppClient");
-var testing_image_png_1 = __importDefault(require("../../assets/images/testing-image.png"));
-var Arrow_Back_svg_1 = __importDefault(require("../../assets/svg/Arrow Back.svg"));
+var testing_image_png_1 = __importDefault(require("../../../assets/images/testing-image.png"));
+var Arrow_Back_svg_1 = __importDefault(require("../../../assets/svg/Arrow Back.svg"));
 // @styles
 require("./Welcome.css");
 var PlutonicationQrPopUp = function () {

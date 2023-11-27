@@ -8,8 +8,8 @@ import { QRCodeCanvas } from "qrcode.react";
 import { AccessCredentials } from "../../AccesCredentials";
 import { PlutonicationDAppClient } from "../../PlutonicationDAppClient";
 
-import img from "../../assets/images/testing-image.png";
-import backArrowIcon from "../../assets/svg/Arrow Back.svg";
+import img from "../../../assets/images/testing-image.png";
+import backArrowIcon from "../../../assets/svg/Arrow Back.svg";
 
 // @styles
 import "./Welcome.css";
