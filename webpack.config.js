@@ -5,9 +5,14 @@ module.exports = {
   mode: "production",
   entry: "./main.tsx",
   output: {
+    // path: path.resolve(__dirname, "dist"),
+    // filename: "bundle.js",
+    // publicPath: "/",
     path: path.resolve(__dirname, "dist"),
     filename: "bundle.js",
-    publicPath: "/",
+    library: "@plutonication/plutonication",
+    libraryTarget: "umd", // or another format suitable for libraries
+    globalObject: "this"
   },
   resolve: {
     extensions: [".ts", ".tsx", ".js", ".jsx"],

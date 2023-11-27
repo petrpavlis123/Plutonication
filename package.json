@@ -1,6 +1,6 @@
 {
   "name": "@plutonication/plutonication",
-  "version": "1.0.34",
+  "version": "1.0.35",
   "description": "TypeScript version of C# plutonication library",
   "main": "dist/bundle.js",
   "types": "dist/index.d.ts",
