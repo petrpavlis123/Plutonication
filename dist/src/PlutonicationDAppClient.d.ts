@@ -14,6 +14,7 @@ declare class PlutonicationDAppClient {
     initializeAsync(accessCredentials: AccessCredentials): Promise<Injected>;
     private createInjected;
     sendPayloadAsync(transactionDetails: Transaction): Promise<void>;
+    disconnect(): void;
     generateQR(accessCredentials: AccessCredentials): string;
 }
 export { PlutonicationDAppClient };

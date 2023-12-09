@@ -5,6 +5,7 @@ import React, { useState, useRef, useEffect  } from "react";
 import { QRCodeCanvas } from "qrcode.react";
 
 // @scripts
+
 import { AccessCredentials } from "../../AccesCredentials";
 import { PlutonicationDAppClient } from "../../PlutonicationDAppClient";
 
@@ -15,7 +16,7 @@ import backArrowIcon from "../../../assets/svg/Arrow Back.svg";
 import "../../../styles/welcome.css";
 
 
-const PlutonicationQrPopUp = (): React.JSX.Element => {
+const PlutonicationQrPopUp= (): React.JSX.Element => {
   const [qrCodeImage, setQRCodeImage] = useState("");
   const [isWalletConnected, setIsWalletConnected] = useState(false);
   const [pubKey, setPubkey] = useState("");

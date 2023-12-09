@@ -1,11 +1,11 @@
 "use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.PlutonicationDAppClient = exports.AccessCredentials = void 0;
+var PlutonicationQrPopUp_1 = require("./src/components/PlutonicationQrPopUp");
 var AccesCredentials_1 = require("./src/AccesCredentials");
-exports.AccessCredentials = AccesCredentials_1.AccessCredentials;
+Object.defineProperty(exports, "AccessCredentials", { enumerable: true, get: function () { return AccesCredentials_1.AccessCredentials; } });
 var PlutonicationDAppClient_1 = require("./src/PlutonicationDAppClient");
-exports.PlutonicationDAppClient = PlutonicationDAppClient_1.PlutonicationDAppClient;
-var PlutonicationQrPopUp_1 = __importDefault(require("./src/components/PlutonicationQrPopUp"));
-exports.PlutonicationQrPopUp = PlutonicationQrPopUp_1.default;
+Object.defineProperty(exports, "PlutonicationDAppClient", { enumerable: true, get: function () { return PlutonicationDAppClient_1.PlutonicationDAppClient; } });
+// import PlutonicationQrPopUp from "./src/components/PlutonicationQrPopUp";
+// export {PlutonicationQrPopUp};
+customElements.define("plutonication-qr-popup", PlutonicationQrPopUp_1.PlutonicationQrPopUp);

@@ -46,7 +46,7 @@ class PlutonicationDAppClient {
 
       this.socket.on("connect", () => {
         console.log("Connected!");
-        this.socket!.emit("create_room", { Data: "Nothing", Room: accessCredentials.key});
+        this.socket?.emit("create_room", { Data: "Nothing", Room: accessCredentials.key});
       });
 
       this.socket.on("message", function (data) {
@@ -54,7 +54,7 @@ class PlutonicationDAppClient {
       });
 
       this.pubKey = await new Promise((resolve, reject) => {
-        this.socket!.on("pubkey", (pubkey: string) => {
+        this.socket?.on("pubkey", (pubkey: string) => {
           console.log("Received pubkey:", pubkey);
           this.setPubKey(pubkey);
           resolve(pubkey);
@@ -130,6 +130,13 @@ class PlutonicationDAppClient {
     }
   }
 
+  public disconnect(): void {
+    if (this.socket) {
+      this.socket.disconnect();
+      this.socket = null;
+    }
+  }
+
   generateQR(accessCredentials: AccessCredentials): string {
     const uriQr = accessCredentials.ToUri();
     return uriQr;
@@ -138,36 +145,36 @@ class PlutonicationDAppClient {
 
 export { PlutonicationDAppClient };
 
-// const accessCredentials = new AccessCredentials(
-//   "wss://plutonication-acnha.ondigitalocean.app/",
-//   "1",
-//   "Galaxy Logic Game",
-//   "https://rostislavlitovkin.pythonanywhere.com/logo"
-// );
+const accessCredentials = new AccessCredentials(
+  "wss://plutonication-acnha.ondigitalocean.app/",
+  "1",
+  "Galaxy Logic Game",
+  "https://rostislavlitovkin.pythonanywhere.com/logo"
+);
 
-// const transactionDetails: Transaction = {
-//   to: "5C5555yEXUcmEJ5kkcCMvdZjUo7NGJiQJMS7vZXEeoMhj3VQ",
-//   amount: 1000 * 10 ** 12,
-// };
-// const dappClient = new PlutonicationDAppClient();
+const transactionDetails: Transaction = {
+  to: "5C5555yEXUcmEJ5kkcCMvdZjUo7NGJiQJMS7vZXEeoMhj3VQ",
+  amount: 1000 * 10 ** 12,
+};
+const dappClient = new PlutonicationDAppClient();
 
-// void (async (): Promise<void> => {
-//   console.log("instanciando mi dapp");
-//   try {
-//     const injected: Injected = await dappClient.initializeAsync(accessCredentials);
-//     console.log("Injected:", injected);
+void (async (): Promise<void> => {
+  console.log("instanciando mi dapp");
+  try {
+    const injected: Injected = await dappClient.initializeAsync(accessCredentials);
+    console.log("Injected:", injected);
 
-//   } catch (error) {
-//     console.error("Error in main flow:", error);
-//   }
-// })();
+  } catch (error) {
+    console.error("Error in main flow:", error);
+  }
+})();
 
-// void (async (): Promise<void> => {
-//   console.log("instanciando mi dapp");
-//   try {
-//     await dappClient.sendPayloadAsync(transactionDetails);
+void (async (): Promise<void> => {
+  console.log("instanciando mi dapp");
+  try {
+    await dappClient.sendPayloadAsync(transactionDetails);
 
-//   } catch (error) {
-//     console.error("Error in main flow:", error);
-//   }
-// })();
+  } catch (error) {
+    console.error("Error in main flow:", error);
+  }
+})();
