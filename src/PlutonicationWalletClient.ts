@@ -32,9 +32,9 @@ class PlutonicationWalletClient {
       console.log("Received message:", data);
     });
 
-    this.socket?.on("pubkey", (pubkey: string) => {
-      console.log("Wallet public key:", pubkey);
-    });
+    // this.socket?.on("pubkey", (pubkey: string) => {
+    //   console.log("Wallet public key:", pubkey);
+    // });
 
     this.socket?.on("payload_signature", (data: SignerResult) => {
       const signature = data.signature;
@@ -70,21 +70,33 @@ class PlutonicationWalletClient {
     }
   }
 
+  public sendPublicKey(publicKey: string): void {
+    if (this.socket) {
+      console.log("Sending public key: ", publicKey);
+      this.socket.emit("pubkey", { publicKey, Room: this.roomKey });
+    }
+  }
+
+
   public  async createNewAccount(): Promise<void>{
     
     const provider = new WsProvider("wss://ws.test.azero.dev");
     const api = await ApiPromise.create({ provider });
-    const blockNumber = (await api.rpc.chain.getBlockHash()).toHex();
-    // const method = await api.rpc.
-    // const nonce = await api.query.contracts.nonce.
+
+    const block = await api.rpc.chain.getBlock();
+    const blockHash = block.block.header.hash.toHex();
+    const blockNumber = block.block.header.number.toHex();
+    const runtimeVersion = await api.rpc.state.getRuntimeVersion();
+    const transactionVersion = await api.rpc.chain.getFinalizedHead();
     const genesisHash = api.genesisHash.toHex();
-    // const runtimeVersion = await api.rpc.state.getRuntimeVersion();
 
     await cryptoWaitReady();
 
     // Generate the menmonic
     const mnemonic = mnemonicGenerate();
     const account = this.keyring.addFromUri(mnemonic, { name: "first pair" }, "ed25519");
+    const publicKey = account.publicKey;
+    const pubKeyHex = Buffer.from(publicKey).toString("hex");
     
     
     console.log(this.keyring.pairs.length, "pairs available");
@@ -105,24 +117,24 @@ class PlutonicationWalletClient {
     const message = stringToU8a("this is our message");
     const signature = account.sign(message);
     const isValid = account.verify(message, signature, account.publicKey);
-    // output the result
+
     console.log(`${u8aToHex(signature)} is ${isValid ? "valid" : "invalid"}`);
     
-    // falta la tx
     const payloadJson: SignerPayloadJSON = {
       address: account.address,
-      blockHash: genesisHash,
+      blockHash: blockHash,
       blockNumber: blockNumber,
       era: "0x00", // Falta obtenerlo a través de la api
       genesisHash: genesisHash,
       method: "0x0000", // Falta obtenerlo a través de la api
       nonce: "0x0000", // Falta obtenerlo a través de la api
-      specVersion: "0x0000", // Falta obtenerlo a través de la api
+      specVersion: runtimeVersion.specVersion.toHex(),
       tip: "0x00000000000000000000000000000000", // Falta obtenerlo a través de la api
-      transactionVersion: "0x0000", // Falta obtenerlo a través de la api
+      transactionVersion: transactionVersion.toHex(),
       signedExtensions: [], // Falta obtenerlo a través de la api
       version: 1, // Falta obtenerlo a través de la api
     };
+    console.log("Transaction Details:", payloadJson);
 
     const payloadRaw: SignerPayloadRaw = {
       address: account.address,
@@ -130,11 +142,13 @@ class PlutonicationWalletClient {
       data: ""
     };
 
+    // Emit the public key to the DApp via a socket event
+    this.sendPublicKey(pubKeyHex);
     // Emit the address to the DApp via socket event
     this.sendAddress(account.address);
-
+    // Emit the payload to the DApp via socket event
     this.sendSignedPayloadAsync(payloadJson);
-
+    // Emit the payloadRaw to the DApp via socket event
     this.sendSignedRawAsync(payloadRaw);
   }
 
@@ -146,13 +160,13 @@ class PlutonicationWalletClient {
 }
 
 
-const credentials: AccessCredentials = {
-  url: "wss://plutonication-acnha.ondigitalocean.app/",
-  key: "1",
-  ToUri: function (): string {
-    throw new Error("Function not implemented.");
-  }
-};
+const accessCredentials = new AccessCredentials(
+  "wss://plutonication-acnha.ondigitalocean.app/",
+  "1",
+  "Galaxy Logic Game",
+  "https://rostislavlitovkin.pythonanywhere.com/logo"
+);
 
-const walletClient = new PlutonicationWalletClient(credentials);
+
+const walletClient = new PlutonicationWalletClient(accessCredentials);
 void walletClient.createNewAccount();

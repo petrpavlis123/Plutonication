@@ -60,7 +60,7 @@ class PlutonicationDAppClient {
           resolve(pubkey);
         });
 
-        this.socket!.on("connect_error", (error: Error) => {
+        this.socket?.on("connect_error", (error: Error) => {
           reject(new Error(`Connection error: ${error.message}`));
         });
       });
@@ -163,18 +163,19 @@ void (async (): Promise<void> => {
   try {
     const injected: Injected = await dappClient.initializeAsync(accessCredentials);
     console.log("Injected:", injected);
-
-  } catch (error) {
-    console.error("Error in main flow:", error);
-  }
-})();
-
-void (async (): Promise<void> => {
-  console.log("instanciando mi dapp");
-  try {
     await dappClient.sendPayloadAsync(transactionDetails);
 
   } catch (error) {
     console.error("Error in main flow:", error);
   }
 })();
+
+// void (async (): Promise<void> => {
+//   console.log("instanciando mi dapp");
+//   try {
+//     await dappClient.sendPayloadAsync(transactionDetails);
+
+//   } catch (error) {
+//     console.error("Error in main flow:", error);
+//   }
+// })();

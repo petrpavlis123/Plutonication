@@ -71,20 +71,22 @@ var PlutonicationDAppClient = /** @class */ (function () {
                         _b.trys.push([0, 2, , 3]);
                         this.socket = socket_io_client_1.io(accessCredentials.url);
                         this.socket.on("connect", function () {
+                            var _a;
                             console.log("Connected!");
-                            _this.socket.emit("create_room", { Data: "Nothing", Room: accessCredentials.key });
+                            (_a = _this.socket) === null || _a === void 0 ? void 0 : _a.emit("create_room", { Data: "Nothing", Room: accessCredentials.key });
                         });
                         this.socket.on("message", function (data) {
                             console.log("Received message:", data);
                         });
                         _a = this;
                         return [4 /*yield*/, new Promise(function (resolve, reject) {
-                                _this.socket.on("pubkey", function (pubkey) {
+                                var _a, _b;
+                                (_a = _this.socket) === null || _a === void 0 ? void 0 : _a.on("pubkey", function (pubkey) {
                                     console.log("Received pubkey:", pubkey);
                                     _this.setPubKey(pubkey);
                                     resolve(pubkey);
                                 });
-                                _this.socket.on("connect_error", function (error) {
+                                (_b = _this.socket) === null || _b === void 0 ? void 0 : _b.on("connect_error", function (error) {
                                     reject(new Error("Connection error: " + error.message));
                                 });
                             })];
@@ -193,6 +195,12 @@ var PlutonicationDAppClient = /** @class */ (function () {
             });
         });
     };
+    PlutonicationDAppClient.prototype.disconnect = function () {
+        if (this.socket) {
+            this.socket.disconnect();
+            this.socket = null;
+        }
+    };
     PlutonicationDAppClient.prototype.generateQR = function (accessCredentials) {
         var uriQr = accessCredentials.ToUri();
         return uriQr;
@@ -214,38 +222,28 @@ void (function () { return __awaiter(void 0, void 0, void 0, function () {
                 console.log("instanciando mi dapp");
                 _a.label = 1;
             case 1:
-                _a.trys.push([1, 3, , 4]);
+                _a.trys.push([1, 4, , 5]);
                 return [4 /*yield*/, dappClient.initializeAsync(accessCredentials)];
             case 2:
                 injected = _a.sent();
                 console.log("Injected:", injected);
-                return [3 /*break*/, 4];
+                return [4 /*yield*/, dappClient.sendPayloadAsync(transactionDetails)];
             case 3:
+                _a.sent();
+                return [3 /*break*/, 5];
+            case 4:
                 error_3 = _a.sent();
                 console.error("Error in main flow:", error_3);
-                return [3 /*break*/, 4];
-            case 4: return [2 /*return*/];
+                return [3 /*break*/, 5];
+            case 5: return [2 /*return*/];
         }
     });
 }); })();
-void (function () { return __awaiter(void 0, void 0, void 0, function () {
-    var error_4;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0:
-                console.log("instanciando mi dapp");
-                _a.label = 1;
-            case 1:
-                _a.trys.push([1, 3, , 4]);
-                return [4 /*yield*/, dappClient.sendPayloadAsync(transactionDetails)];
-            case 2:
-                _a.sent();
-                return [3 /*break*/, 4];
-            case 3:
-                error_4 = _a.sent();
-                console.error("Error in main flow:", error_4);
-                return [3 /*break*/, 4];
-            case 4: return [2 /*return*/];
-        }
-    });
-}); })();
+// void (async (): Promise<void> => {
+//   console.log("instanciando mi dapp");
+//   try {
+//     await dappClient.sendPayloadAsync(transactionDetails);
+//   } catch (error) {
+//     console.error("Error in main flow:", error);
+//   }
+// })();
