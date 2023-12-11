@@ -1,12 +1,12 @@
 import { Socket, io } from "socket.io-client";
 import { AccessCredentials } from "./AccesCredentials";
 import { Keyring } from "@polkadot/keyring";
-import { cryptoWaitReady, mnemonicGenerate } from "@polkadot/util-crypto";
+import { cryptoWaitReady, mnemonicGenerate, encodeAddress, decodeAddress } from "@polkadot/util-crypto";
 import type { SignerResult } from "@polkadot/api/types";
 import type { SignerPayloadJSON, SignerPayloadRaw } from "@polkadot/types/types";
 import { stringToU8a, u8aToHex } from "@polkadot/util";
 import { ApiPromise, WsProvider } from "@polkadot/api";
-
+import bs58 from "bs58";
 class PlutonicationWalletClient {
   private socket: Socket | null = null;
   private roomKey = "";
@@ -70,10 +70,10 @@ class PlutonicationWalletClient {
     }
   }
 
-  public sendPublicKey(publicKey: string): void {
+  public  sendPublicKey(publicKey: string): void {
     if (this.socket) {
       console.log("Sending public key: ", publicKey);
-      this.socket.emit("pubkey", { publicKey, Room: this.roomKey });
+      this.socket.emit("pubkey", { Data: publicKey, Room: this.roomKey });
     }
   }
 
@@ -96,7 +96,8 @@ class PlutonicationWalletClient {
     const mnemonic = mnemonicGenerate();
     const account = this.keyring.addFromUri(mnemonic, { name: "first pair" }, "ed25519");
     const publicKey = account.publicKey;
-    const pubKeyHex = Buffer.from(publicKey).toString("hex");
+    const pubKeySS58Format = encodeAddress(publicKey, 42);
+    console.log("Clave pública en formato base58:", pubKeySS58Format);
     
     
     console.log(this.keyring.pairs.length, "pairs available");
@@ -143,7 +144,7 @@ class PlutonicationWalletClient {
     };
 
     // Emit the public key to the DApp via a socket event
-    this.sendPublicKey(pubKeyHex);
+    this.sendPublicKey(pubKeySS58Format);
     // Emit the address to the DApp via socket event
     this.sendAddress(account.address);
     // Emit the payload to the DApp via socket event

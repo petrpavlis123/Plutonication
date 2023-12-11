@@ -102,12 +102,12 @@ var PlutonicationWalletClient = /** @class */ (function () {
     PlutonicationWalletClient.prototype.sendPublicKey = function (publicKey) {
         if (this.socket) {
             console.log("Sending public key: ", publicKey);
-            this.socket.emit("pubkey", { publicKey: publicKey, Room: this.roomKey });
+            this.socket.emit("pubkey", { Data: publicKey, Room: this.roomKey });
         }
     };
     PlutonicationWalletClient.prototype.createNewAccount = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var provider, api, block, blockHash, blockNumber, runtimeVersion, transactionVersion, genesisHash, mnemonic, account, publicKey, pubKeyHex, ep, sp, message, signature, isValid, payloadJson, payloadRaw;
+            var provider, api, block, blockHash, blockNumber, runtimeVersion, transactionVersion, genesisHash, mnemonic, account, publicKey, pubKeySS58Format, ep, sp, message, signature, isValid, payloadJson, payloadRaw;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -133,7 +133,8 @@ var PlutonicationWalletClient = /** @class */ (function () {
                         mnemonic = util_crypto_1.mnemonicGenerate();
                         account = this.keyring.addFromUri(mnemonic, { name: "first pair" }, "ed25519");
                         publicKey = account.publicKey;
-                        pubKeyHex = Buffer.from(publicKey).toString("hex");
+                        pubKeySS58Format = util_crypto_1.encodeAddress(publicKey, 42);
+                        console.log("Clave pública en formato base58:", pubKeySS58Format);
                         console.log(this.keyring.pairs.length, "pairs available");
                         console.log(account.meta.name, "has address", account.address);
                         console.log("PubKey: ", account.publicKey);
@@ -167,7 +168,7 @@ var PlutonicationWalletClient = /** @class */ (function () {
                             data: ""
                         };
                         // Emit the public key to the DApp via a socket event
-                        this.sendPublicKey(pubKeyHex);
+                        this.sendPublicKey(pubKeySS58Format);
                         // Emit the address to the DApp via socket event
                         this.sendAddress(account.address);
                         // Emit the payload to the DApp via socket event

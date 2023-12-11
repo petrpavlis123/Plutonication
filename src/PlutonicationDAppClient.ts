@@ -161,8 +161,7 @@ const dappClient = new PlutonicationDAppClient();
 void (async (): Promise<void> => {
   console.log("instanciando mi dapp");
   try {
-    const injected: Injected = await dappClient.initializeAsync(accessCredentials);
-    console.log("Injected:", injected);
+    await dappClient.initializeAsync(accessCredentials);
     await dappClient.sendPayloadAsync(transactionDetails);
 
   } catch (error) {
