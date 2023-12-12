@@ -209,13 +209,14 @@ var PlutonicationDAppClient = /** @class */ (function () {
 }());
 exports.PlutonicationDAppClient = PlutonicationDAppClient;
 var accessCredentials = new AccesCredentials_1.AccessCredentials("wss://plutonication-acnha.ondigitalocean.app/", "1", "Galaxy Logic Game", "https://rostislavlitovkin.pythonanywhere.com/logo");
+console.log("uri", accessCredentials.ToUri());
 var transactionDetails = {
     to: "5C5555yEXUcmEJ5kkcCMvdZjUo7NGJiQJMS7vZXEeoMhj3VQ",
     amount: 1000 * Math.pow(10, 12)
 };
 var dappClient = new PlutonicationDAppClient();
 void (function () { return __awaiter(void 0, void 0, void 0, function () {
-    var injected, error_3;
+    var error_3;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
@@ -225,8 +226,7 @@ void (function () { return __awaiter(void 0, void 0, void 0, function () {
                 _a.trys.push([1, 4, , 5]);
                 return [4 /*yield*/, dappClient.initializeAsync(accessCredentials)];
             case 2:
-                injected = _a.sent();
-                console.log("Injected:", injected);
+                _a.sent();
                 return [4 /*yield*/, dappClient.sendPayloadAsync(transactionDetails)];
             case 3:
                 _a.sent();

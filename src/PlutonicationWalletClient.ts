@@ -1,12 +1,11 @@
 import { Socket, io } from "socket.io-client";
 import { AccessCredentials } from "./AccesCredentials";
 import { Keyring } from "@polkadot/keyring";
-import { cryptoWaitReady, mnemonicGenerate, encodeAddress, decodeAddress } from "@polkadot/util-crypto";
+import { cryptoWaitReady, mnemonicGenerate, encodeAddress } from "@polkadot/util-crypto";
 import type { SignerResult } from "@polkadot/api/types";
 import type { SignerPayloadJSON, SignerPayloadRaw } from "@polkadot/types/types";
 import { stringToU8a, u8aToHex } from "@polkadot/util";
 import { ApiPromise, WsProvider } from "@polkadot/api";
-import bs58 from "bs58";
 class PlutonicationWalletClient {
   private socket: Socket | null = null;
   private roomKey = "";
@@ -15,7 +14,7 @@ class PlutonicationWalletClient {
   constructor(private accessCredentials: AccessCredentials) {
     this.roomKey = accessCredentials.key;
     this.socket = io(accessCredentials.url);
-    // Create a keyring instance
+    
     this.keyring = new Keyring({ type: "sr25519" });
     this.initializeAsync();
   }
@@ -31,10 +30,6 @@ class PlutonicationWalletClient {
     this.socket?.on("message", function (data) {
       console.log("Received message:", data);
     });
-
-    // this.socket?.on("pubkey", (pubkey: string) => {
-    //   console.log("Wallet public key:", pubkey);
-    // });
 
     this.socket?.on("payload_signature", (data: SignerResult) => {
       const signature = data.signature;
@@ -97,12 +92,10 @@ class PlutonicationWalletClient {
     const account = this.keyring.addFromUri(mnemonic, { name: "first pair" }, "ed25519");
     const publicKey = account.publicKey;
     const pubKeySS58Format = encodeAddress(publicKey, 42);
-    console.log("Clave pública en formato base58:", pubKeySS58Format);
     
     
     console.log(this.keyring.pairs.length, "pairs available");
     console.log(account.meta.name, "has address", account.address);
-    console.log("PubKey: ", account.publicKey);
 
     // create an ed25519 pair from the mnemonic
     const ep = this.keyring.createFromUri(mnemonic, { name: "ed25519" }, "ed25519");
@@ -119,7 +112,17 @@ class PlutonicationWalletClient {
     const signature = account.sign(message);
     const isValid = account.verify(message, signature, account.publicKey);
 
+
     console.log(`${u8aToHex(signature)} is ${isValid ? "valid" : "invalid"}`);
+
+    // const { data: { free: previousFree }, nonce } = await api.query.system.account(account.address);
+
+    // console.log(`Balance before transfer: ${previousFree}`);
+
+    // const transfer = api.tx.balances.transfer("5Dac", 12345);
+    // const hash = await transfer.signAndSend(account);
+
+    // console.log(`Transfer sent with hash: ${hash}`);
     
     const payloadJson: SignerPayloadJSON = {
       address: account.address,
@@ -135,7 +138,7 @@ class PlutonicationWalletClient {
       signedExtensions: [], // Falta obtenerlo a través de la api
       version: 1, // Falta obtenerlo a través de la api
     };
-    console.log("Transaction Details:", payloadJson);
+
 
     const payloadRaw: SignerPayloadRaw = {
       address: account.address,
@@ -159,7 +162,6 @@ class PlutonicationWalletClient {
     }
   }
 }
-
 
 const accessCredentials = new AccessCredentials(
   "wss://plutonication-acnha.ondigitalocean.app/",

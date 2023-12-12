@@ -1,6 +1,6 @@
 # Plutonication
 
-Plutonication is a TypeScript library for create a communication between dapps and platforms
+Plutonication is a TypeScript library for create a communication between dapps and wallets across platforms
 
 
 ## Requirements
@@ -11,7 +11,6 @@ Plutonication is a TypeScript library for create a communication between dapps a
 
 ```javascript
 npm i @plutonication/plutonication
-
 ```
 
 ## Other versions
@@ -49,7 +48,7 @@ const accessCredentials = new AccessCredentials(
 
 // Initialize the connection
 try {
-  const injected: Injected = await dappClient.initializeAsync(accessCredentials);
+  await dappClient.initializeAsync(accessCredentials);
   // Access the pubKey
   const pubKey = dappClient.pubKey;
 
@@ -59,7 +58,7 @@ try {
   };
 
   // Send transactions
-   await PlutonicationDAppClient.SendPayloadAsync(transactionDetails);
+  await PlutonicationDAppClient.SendPayloadAsync(transactionDetails);
 } catch (e) {
   console.log("Error initializing the app: ", e);
 }
@@ -80,6 +79,7 @@ export default function App() {
 
 #### In a nodejs environment you can use it like this:
 
+
 ```javascript
 // Create a new instance with the access credentials
 const accessCredentials = new AccessCredentials(
@@ -89,23 +89,30 @@ const accessCredentials = new AccessCredentials(
   "https://rostislavlitovkin.pythonanywhere.com/logo"
 );
 
+// Use AccessCredentials to generate a link for connecting.
+// Use this link to generate a correct QR code.
+const qrLink = accessCredentials.toUri();
+
 // Create a transaction object like this
 const transactionDetails: Transaction = {
   to: "5C5555yEXUcmEJ5kkcCMvdZjUo7NGJiQJMS7vZXEeoMhj3VQ",
   amount: 1000 * 10**12,
 };
 
-// First initilize the sever and after send some transactions
+// First initilize the sever and after send some payloads
   const dappClient = new PlutonicationDAppClient();
   // Initialize the connection
   try {
-    const injected: Injected = await dappClient.initializeAsync(accessCredentials);
-    // After initialize you can acces the pubKey returned by the wallet and you can aslo send transactions
+    await dappClient.initializeAsync(accessCredentials);
+    // After initialize you can acces the pubKey returned by the wallet and you can also send payloads
     await dappClient.sendPayloadAsync(transactionDetails);
   } catch (error) {
     console.error("Error:", error);
   }
 ```
+
+### Problem / Motivation
+Currently, there is no way to connect a wallet to more exotic devices, like gaming console and wearables.
 
 ## How it works
 
@@ -114,10 +121,49 @@ The private key is always saved in your wallet on your phone and is never sent a
 ## Execution
 To run your application, simply execute your TypeScript file containing the usage code. Ensure that Node.js is installed on your system, and if you haven't already, compile your TypeScript code to JavaScript using the TypeScript Compiler (tsc).
 
+establish the connection.
+
 Run your application with:
 ```javascript
 node your_application.js
 ```
+
+### Plutonication Server
+- Used for reliable establishing of connection.
+- Passes payloads between Wallets and dApps.
+
+### Mobile Wallet
+- Has access to the private key
+- signs the payloads and sends them back to the dApp.
+- Never exposes the private key
+
+### dApp
+- needs to have access to either: Plutonication Native / Plutonication Extension
+
+### Plutonication Native
+- A simple package that allows the dApp get connected with the Mobile Wallet.
+- Connects the dApp with the Plutonication server.
+- Helps to generate a QR code for the Wallet to 
+
+### Plutonication Extension
+a polkadot.js extension that works with any existing dApp that supports polkadot.js extension.
+Connects the dApp with the Plutonication server.
+Generate a QR code for the Wallet to establish the connection.
+
+## Limitations
+- both devices need to support internet connection
+
+## dApps utilising Plutonication
+- [Plutonication Extension](https://github.com/RostislavLitovkin/PlutonicationExtension)
+- [Galaxy Logic Game](https://github.com/RostislavLitovkin/galaxylogicgamemaui)
+
+## Wallets utilising Plutonication
+- [PlutoWallet](https://github.com/RostislavLitovkin/PlutoWallet)
+
+Feel free to add your own project by making a PR.
+
+## Inspiration
+- [https://walletconnect.com/](https://walletconnect.com/)
 
 ## Contributions
 Contributions are welcome. If you wish to contribute to the project, follow these steps:

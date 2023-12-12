@@ -152,6 +152,8 @@ const accessCredentials = new AccessCredentials(
   "https://rostislavlitovkin.pythonanywhere.com/logo"
 );
 
+console.log("uri", accessCredentials.ToUri());
+
 const transactionDetails: Transaction = {
   to: "5C5555yEXUcmEJ5kkcCMvdZjUo7NGJiQJMS7vZXEeoMhj3VQ",
   amount: 1000 * 10 ** 12,

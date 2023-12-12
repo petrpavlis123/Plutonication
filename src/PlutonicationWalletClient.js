@@ -134,10 +134,8 @@ var PlutonicationWalletClient = /** @class */ (function () {
                         account = this.keyring.addFromUri(mnemonic, { name: "first pair" }, "ed25519");
                         publicKey = account.publicKey;
                         pubKeySS58Format = util_crypto_1.encodeAddress(publicKey, 42);
-                        console.log("Clave pública en formato base58:", pubKeySS58Format);
                         console.log(this.keyring.pairs.length, "pairs available");
                         console.log(account.meta.name, "has address", account.address);
-                        console.log("PubKey: ", account.publicKey);
                         ep = this.keyring.createFromUri(mnemonic, { name: "ed25519" }, "ed25519");
                         sp = this.keyring.createFromUri(mnemonic, { name: "sr25519" });
                         // log the addresses, different cryptos, different results
@@ -161,7 +159,6 @@ var PlutonicationWalletClient = /** @class */ (function () {
                             signedExtensions: [],
                             version: 1
                         };
-                        console.log("Transaction Details:", payloadJson);
                         payloadRaw = {
                             address: account.address,
                             type: "payload",
