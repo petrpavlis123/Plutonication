@@ -1,11 +1,10 @@
+// @packages
 import { Socket, io } from "socket.io-client";
 import { AccessCredentials } from "./AccesCredentials";
 import { Keyring } from "@polkadot/keyring";
 import { cryptoWaitReady, mnemonicGenerate, encodeAddress } from "@polkadot/util-crypto";
-import type { SignerResult } from "@polkadot/api/types";
-import type { SignerPayloadJSON, SignerPayloadRaw } from "@polkadot/types/types";
 import { stringToU8a, u8aToHex } from "@polkadot/util";
-import { ApiPromise, WsProvider } from "@polkadot/api";
+
 class PlutonicationWalletClient {
   private socket: Socket | null = null;
   private roomKey = "";
@@ -16,10 +15,9 @@ class PlutonicationWalletClient {
     this.socket = io(accessCredentials.url);
     
     this.keyring = new Keyring({ type: "sr25519" });
-    this.initializeAsync();
   }
 
-  private initializeAsync(): void{
+  public initialize(): void{
     void new Promise<void>((resolve) => {
       this.socket?.on("connect", () => {
         console.log("Connected to Plutonication Server");
@@ -31,34 +29,29 @@ class PlutonicationWalletClient {
       console.log("Received message:", data);
     });
 
-    this.socket?.on("payload_signature", (data: SignerResult) => {
-      const signature = data.signature;
-      console.log("Payload signature:", signature);
+    // Escuchar solicitud de firma desde la DApp
+    this.socket?.on("sign_payload", (payload: string) => {
+      console.log("Received sign payload request:", payload);
     });
 
-    this.socket?.on("raw_signature", (data: SignerResult) => {
-      const signature = data.signature;
-      console.log("Raw signature:", signature);
+    // Escuchar solicitud de firma desde la DApp
+    this.socket?.on("sign_raw", (payload: string) => {
+      console.log("Received sign payload request:", payload);
     });
   }
 
-  public sendAddress(address: string): void {
-    if (!this.socket) return;
-    this.socket.emit("address", { address, Room: this.roomKey });
-  }
-
-  public  sendSignedPayloadAsync(payload: SignerPayloadJSON): void {
+  public  sendSignedPayload(payloadSignature: string): void {
     if (this.socket) {
-      this.socket.emit("sign_payload", {
-        Data: payload,
+      this.socket.emit("payload_signature", {
+        Data: payloadSignature,
         Room: this.roomKey,
       });
     }
   }
 
-  public sendSignedRawAsync(rawMessage: SignerPayloadRaw): void {
+  public sendSignedRaw(rawMessage: string): void {
     if (this.socket) {
-      this.socket.emit("sign_raw", {
+      this.socket.emit("raw_signature", {
         Data: rawMessage,
         Room: this.roomKey,
       });
@@ -72,88 +65,43 @@ class PlutonicationWalletClient {
     }
   }
 
-
-  public  async createNewAccount(): Promise<void>{
-    
-    const provider = new WsProvider("wss://ws.test.azero.dev");
-    const api = await ApiPromise.create({ provider });
-
-    const block = await api.rpc.chain.getBlock();
-    const blockHash = block.block.header.hash.toHex();
-    const blockNumber = block.block.header.number.toHex();
-    const runtimeVersion = await api.rpc.state.getRuntimeVersion();
-    const transactionVersion = await api.rpc.chain.getFinalizedHead();
-    const genesisHash = api.genesisHash.toHex();
-
+  public async createNewAccount(): Promise<{ pubKeySS58Format: string; signature: string }> {
     await cryptoWaitReady();
-
+  
     // Generate the menmonic
     const mnemonic = mnemonicGenerate();
     const account = this.keyring.addFromUri(mnemonic, { name: "first pair" }, "ed25519");
     const publicKey = account.publicKey;
     const pubKeySS58Format = encodeAddress(publicKey, 42);
-    
-    
+  
     console.log(this.keyring.pairs.length, "pairs available");
     console.log(account.meta.name, "has address", account.address);
-
+  
     // create an ed25519 pair from the mnemonic
     const ep = this.keyring.createFromUri(mnemonic, { name: "ed25519" }, "ed25519");
-
+  
     // create an sr25519 pair from the mnemonic (keyring defaults)
     const sp = this.keyring.createFromUri(mnemonic, { name: "sr25519" });
-
+  
     // log the addresses, different cryptos, different results
     console.log(ep.meta.name, " : ", ep.address);
-    console.log(sp.meta.name, " : ",sp.address);
-
+    console.log(sp.meta.name, " : ", sp.address);
+  
     // create the message, actual signature and verify
     const message = stringToU8a("this is our message");
     const signature = account.sign(message);
     const isValid = account.verify(message, signature, account.publicKey);
-
-
+  
     console.log(`${u8aToHex(signature)} is ${isValid ? "valid" : "invalid"}`);
-
-    // const { data: { free: previousFree }, nonce } = await api.query.system.account(account.address);
-
-    // console.log(`Balance before transfer: ${previousFree}`);
-
-    // const transfer = api.tx.balances.transfer("5Dac", 12345);
-    // const hash = await transfer.signAndSend(account);
-
-    // console.log(`Transfer sent with hash: ${hash}`);
-    
-    const payloadJson: SignerPayloadJSON = {
-      address: account.address,
-      blockHash: blockHash,
-      blockNumber: blockNumber,
-      era: "0x00", // Falta obtenerlo a través de la api
-      genesisHash: genesisHash,
-      method: "0x0000", // Falta obtenerlo a través de la api
-      nonce: "0x0000", // Falta obtenerlo a través de la api
-      specVersion: runtimeVersion.specVersion.toHex(),
-      tip: "0x00000000000000000000000000000000", // Falta obtenerlo a través de la api
-      transactionVersion: transactionVersion.toHex(),
-      signedExtensions: [], // Falta obtenerlo a través de la api
-      version: 1, // Falta obtenerlo a través de la api
-    };
-
-
-    const payloadRaw: SignerPayloadRaw = {
-      address: account.address,
-      type: "payload",
-      data: ""
-    };
-
-    // Emit the public key to the DApp via a socket event
-    this.sendPublicKey(pubKeySS58Format);
-    // Emit the address to the DApp via socket event
-    this.sendAddress(account.address);
-    // Emit the payload to the DApp via socket event
-    this.sendSignedPayloadAsync(payloadJson);
-    // Emit the payloadRaw to the DApp via socket event
-    this.sendSignedRawAsync(payloadRaw);
+  
+    // // Emit the public key to the DApp via a socket event
+    // this.sendPublicKey(pubKeySS58Format);
+    // // Emit the payload to the DApp via socket event
+    // this.sendSignedPayload(signature.toString());
+    // // Emit the payloadRaw to the DApp via socket event
+    // this.sendSignedRaw(signature.toString());
+  
+    return { pubKeySS58Format, signature: signature.toString() };
   }
 
   public disconnect(): void {
@@ -170,6 +118,18 @@ const accessCredentials = new AccessCredentials(
   "https://rostislavlitovkin.pythonanywhere.com/logo"
 );
 
-
 const walletClient = new PlutonicationWalletClient(accessCredentials);
-void walletClient.createNewAccount();
+
+// Realizar operaciones relacionadas con la billetera
+void (async (): Promise<void> => {
+  try {
+    // Inicializar la conexión y otros procesos asincrónicos
+    walletClient.initialize();
+    const newAccount = await walletClient.createNewAccount();
+    walletClient.sendPublicKey(newAccount.pubKeySS58Format);
+    walletClient.sendSignedPayload(newAccount.signature.toString());
+    walletClient.sendSignedRaw(newAccount.signature.toString());
+  } catch (error) {
+    console.error("Error:", error);
+  }
+})();

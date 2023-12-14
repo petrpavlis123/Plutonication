@@ -43,28 +43,57 @@ const accessCredentials = new AccessCredentials(
   "https://rostislavlitovkin.pythonanywhere.com/logo"
 );
 
-// Instanciate the class
-  const dappClient: PlutonicationDAppClient = new PlutonicationDAppClient();
+// Instantiate the PlutonicationDAppClient class
+const dappClient = new PlutonicationDAppClient(accessCredentials);
 
-// Initialize the connection
-try {
-  await dappClient.initializeAsync(accessCredentials);
-  // Access the pubKey
-  const pubKey = dappClient.pubKey;
-
-  const transactionDetails: Transaction = {
-    to: 'TRANSACTION_DESTINATION',
-    amount: 1000 * 10**12,
-  };
-
-  // Send transactions
-  await PlutonicationDAppClient.SendPayloadAsync(transactionDetails);
-} catch (e) {
-  console.log("Error initializing the app: ", e);
-}
+//  Initialize the conection
+void (async (): Promise<void> => {
+  try {
+    const injector = await dappClient.initializeAsync();
+    if (injector) {
+      // Send Payload to the wallet to be signed
+      const to = "5C5555yEXUcmEJ5kkcCMvdZjUo7NGJiQJMS7vZXEeoMhj3VQ";
+      const amount = 1000 * 10 ** 12;
+      await dappClient.sendPayloadAsync(to, amount);
+    } else {
+      console.error("Error sending payload");
+    }
+  } catch (error) {
+    console.error("Error:", error);
+  }
+})();
 
 ```
 
+After you can send the payloads back to the dapp signed:
+```javascript
+// Access credentials are used to show correct info to the wallet.
+const accessCredentials = new AccessCredentials(
+  "wss://plutonication-acnha.ondigitalocean.app/",
+  "1",
+  "Galaxy Logic Game",
+  "https://rostislavlitovkin.pythonanywhere.com/logo"
+);
+
+// Instantiate the PlutonicationWalletClient class
+const walletClient = new PlutonicationWalletClient(accessCredentials);
+
+void (async (): Promise<void> => {
+  try {
+    // Initialize the connection
+    walletClient.initialize();
+    // Create a wallet account with polkadotjs api
+    const newAccount = await walletClient.createNewAccount();
+    // Send the publick key and the payloads signature back to the dapp
+    walletClient.sendPublicKey(newAccount.pubKeySS58Format);
+    walletClient.sendSignedPayload(newAccount.signature.toString());
+    walletClient.sendSignedRaw(newAccount.signature.toString());
+  } catch (error) {
+    console.error("Error:", error);
+  }
+})();
+
+```
 
 #### Plutonication Qr PopUp
 You can use the Qr PopUp like this:

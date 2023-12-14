@@ -36,12 +36,12 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 exports.__esModule = true;
+// @packages
 var socket_io_client_1 = require("socket.io-client");
 var AccesCredentials_1 = require("./AccesCredentials");
 var keyring_1 = require("@polkadot/keyring");
 var util_crypto_1 = require("@polkadot/util-crypto");
 var util_1 = require("@polkadot/util");
-var api_1 = require("@polkadot/api");
 var PlutonicationWalletClient = /** @class */ (function () {
     function PlutonicationWalletClient(accessCredentials) {
         this.accessCredentials = accessCredentials;
@@ -49,11 +49,9 @@ var PlutonicationWalletClient = /** @class */ (function () {
         this.roomKey = "";
         this.roomKey = accessCredentials.key;
         this.socket = socket_io_client_1.io(accessCredentials.url);
-        // Create a keyring instance
         this.keyring = new keyring_1.Keyring({ type: "sr25519" });
-        this.initializeAsync();
     }
-    PlutonicationWalletClient.prototype.initializeAsync = function () {
+    PlutonicationWalletClient.prototype.initialize = function () {
         var _this = this;
         var _a, _b, _c;
         void new Promise(function (resolve) {
@@ -66,34 +64,26 @@ var PlutonicationWalletClient = /** @class */ (function () {
         (_a = this.socket) === null || _a === void 0 ? void 0 : _a.on("message", function (data) {
             console.log("Received message:", data);
         });
-        // this.socket?.on("pubkey", (pubkey: string) => {
-        //   console.log("Wallet public key:", pubkey);
-        // });
-        (_b = this.socket) === null || _b === void 0 ? void 0 : _b.on("payload_signature", function (data) {
-            var signature = data.signature;
-            console.log("Payload signature:", signature);
+        // Escuchar solicitud de firma desde la DApp
+        (_b = this.socket) === null || _b === void 0 ? void 0 : _b.on("sign_payload", function (payload) {
+            console.log("Received sign payload request:", payload);
         });
-        (_c = this.socket) === null || _c === void 0 ? void 0 : _c.on("raw_signature", function (data) {
-            var signature = data.signature;
-            console.log("Raw signature:", signature);
+        // Escuchar solicitud de firma desde la DApp
+        (_c = this.socket) === null || _c === void 0 ? void 0 : _c.on("sign_raw", function (payload) {
+            console.log("Received sign payload request:", payload);
         });
     };
-    PlutonicationWalletClient.prototype.sendAddress = function (address) {
-        if (!this.socket)
-            return;
-        this.socket.emit("address", { address: address, Room: this.roomKey });
-    };
-    PlutonicationWalletClient.prototype.sendSignedPayloadAsync = function (payload) {
+    PlutonicationWalletClient.prototype.sendSignedPayload = function (payloadSignature) {
         if (this.socket) {
-            this.socket.emit("sign_payload", {
-                Data: payload,
+            this.socket.emit("payload_signature", {
+                Data: payloadSignature,
                 Room: this.roomKey
             });
         }
     };
-    PlutonicationWalletClient.prototype.sendSignedRawAsync = function (rawMessage) {
+    PlutonicationWalletClient.prototype.sendSignedRaw = function (rawMessage) {
         if (this.socket) {
-            this.socket.emit("sign_raw", {
+            this.socket.emit("raw_signature", {
                 Data: rawMessage,
                 Room: this.roomKey
             });
@@ -107,28 +97,11 @@ var PlutonicationWalletClient = /** @class */ (function () {
     };
     PlutonicationWalletClient.prototype.createNewAccount = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var provider, api, block, blockHash, blockNumber, runtimeVersion, transactionVersion, genesisHash, mnemonic, account, publicKey, pubKeySS58Format, ep, sp, message, signature, isValid, payloadJson, payloadRaw;
+            var mnemonic, account, publicKey, pubKeySS58Format, ep, sp, message, signature, isValid;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0:
-                        provider = new api_1.WsProvider("wss://ws.test.azero.dev");
-                        return [4 /*yield*/, api_1.ApiPromise.create({ provider: provider })];
+                    case 0: return [4 /*yield*/, util_crypto_1.cryptoWaitReady()];
                     case 1:
-                        api = _a.sent();
-                        return [4 /*yield*/, api.rpc.chain.getBlock()];
-                    case 2:
-                        block = _a.sent();
-                        blockHash = block.block.header.hash.toHex();
-                        blockNumber = block.block.header.number.toHex();
-                        return [4 /*yield*/, api.rpc.state.getRuntimeVersion()];
-                    case 3:
-                        runtimeVersion = _a.sent();
-                        return [4 /*yield*/, api.rpc.chain.getFinalizedHead()];
-                    case 4:
-                        transactionVersion = _a.sent();
-                        genesisHash = api.genesisHash.toHex();
-                        return [4 /*yield*/, util_crypto_1.cryptoWaitReady()];
-                    case 5:
                         _a.sent();
                         mnemonic = util_crypto_1.mnemonicGenerate();
                         account = this.keyring.addFromUri(mnemonic, { name: "first pair" }, "ed25519");
@@ -145,34 +118,13 @@ var PlutonicationWalletClient = /** @class */ (function () {
                         signature = account.sign(message);
                         isValid = account.verify(message, signature, account.publicKey);
                         console.log(util_1.u8aToHex(signature) + " is " + (isValid ? "valid" : "invalid"));
-                        payloadJson = {
-                            address: account.address,
-                            blockHash: blockHash,
-                            blockNumber: blockNumber,
-                            era: "0x00",
-                            genesisHash: genesisHash,
-                            method: "0x0000",
-                            nonce: "0x0000",
-                            specVersion: runtimeVersion.specVersion.toHex(),
-                            tip: "0x00000000000000000000000000000000",
-                            transactionVersion: transactionVersion.toHex(),
-                            signedExtensions: [],
-                            version: 1
-                        };
-                        payloadRaw = {
-                            address: account.address,
-                            type: "payload",
-                            data: ""
-                        };
-                        // Emit the public key to the DApp via a socket event
-                        this.sendPublicKey(pubKeySS58Format);
-                        // Emit the address to the DApp via socket event
-                        this.sendAddress(account.address);
-                        // Emit the payload to the DApp via socket event
-                        this.sendSignedPayloadAsync(payloadJson);
-                        // Emit the payloadRaw to the DApp via socket event
-                        this.sendSignedRawAsync(payloadRaw);
-                        return [2 /*return*/];
+                        // // Emit the public key to the DApp via a socket event
+                        // this.sendPublicKey(pubKeySS58Format);
+                        // // Emit the payload to the DApp via socket event
+                        // this.sendSignedPayload(signature.toString());
+                        // // Emit the payloadRaw to the DApp via socket event
+                        // this.sendSignedRaw(signature.toString());
+                        return [2 /*return*/, { pubKeySS58Format: pubKeySS58Format, signature: signature.toString() }];
                 }
             });
         });
@@ -186,4 +138,27 @@ var PlutonicationWalletClient = /** @class */ (function () {
 }());
 var accessCredentials = new AccesCredentials_1.AccessCredentials("wss://plutonication-acnha.ondigitalocean.app/", "1", "Galaxy Logic Game", "https://rostislavlitovkin.pythonanywhere.com/logo");
 var walletClient = new PlutonicationWalletClient(accessCredentials);
-void walletClient.createNewAccount();
+// Realizar operaciones relacionadas con la billetera
+void (function () { return __awaiter(void 0, void 0, void 0, function () {
+    var newAccount, error_1;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                _a.trys.push([0, 2, , 3]);
+                // Inicializar la conexión y otros procesos asincrónicos
+                walletClient.initialize();
+                return [4 /*yield*/, walletClient.createNewAccount()];
+            case 1:
+                newAccount = _a.sent();
+                walletClient.sendPublicKey(newAccount.pubKeySS58Format);
+                walletClient.sendSignedPayload(newAccount.signature.toString());
+                walletClient.sendSignedRaw(newAccount.signature.toString());
+                return [3 /*break*/, 3];
+            case 2:
+                error_1 = _a.sent();
+                console.error("Error:", error_1);
+                return [3 /*break*/, 3];
+            case 3: return [2 /*return*/];
+        }
+    });
+}); })();

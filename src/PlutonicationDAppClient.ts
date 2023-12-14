@@ -7,56 +7,45 @@ import type { SignerPayloadJSON, SignerPayloadRaw  } from "@polkadot/types/types
 import type { SignerResult } from "@polkadot/api/types/index.js";
 
 // @scripts
-import { Transaction } from "./interfaces/transaction.interface";
 import { AccessCredentials } from "./AccesCredentials";
 import { waitForSignature } from "./helpers.ts/waitForSignature";
 
 class PlutonicationDAppClient {
-  private socket: Socket | null;
-  public pubKey: string | null;
-  private signature: string | null;
+  private socket: Socket;
+  private pubKey: string | null = null;
   private injector: Injected | undefined;
 
-  constructor() {
-    this.socket = null;
-    this.pubKey = null; 
-    this.signature = null;
-    this.injector = undefined;
+  constructor(private accessCredentials: AccessCredentials) {
+    this.socket = io(this.accessCredentials.url);
+    this.initialize();
   }
 
-  getPubKey(): string | null {
-    return this.pubKey;
+  private initialize(): void {
+    this.socket?.on("connect", () => {
+      console.log("Connected!");
+      this.socket?.emit("create_room", { Data: "Nothing", Room: this.accessCredentials.key });
+    });
+
+    this.socket?.on("message", (data) => {
+      console.log("Received message:", data);
+    });
+
+    // Listen for payload signature from wallet
+    this.socket?.on("payload_signature", (signature: string) => {
+      console.log("Received payload signature:", signature);
+    });
+
+    // Listen for raw signature from wallet
+    this.socket?.on("raw_signature", (signature: string) => {
+      console.log("Received raw signature:", signature);
+    });
   }
 
-  setPubKey(pubKey: string | null): void {
-    this.pubKey = pubKey;
-  }
-
-  getInjector(): Injected | undefined {
-    return this.injector;
-  }
-
-  setInjector(injector: Injected | undefined): void {
-    this.injector = injector;
-  }
-  
-  async initializeAsync(accessCredentials: AccessCredentials): Promise<Injected> {
+  public async initializeAsync(): Promise<Injected> {
     try {
-      this.socket = io(accessCredentials.url);
-
-      this.socket.on("connect", () => {
-        console.log("Connected!");
-        this.socket?.emit("create_room", { Data: "Nothing", Room: accessCredentials.key});
-      });
-
-      this.socket.on("message", function (data) {
-        console.log("Received message:", data);
-      });
-
-      this.pubKey = await new Promise((resolve, reject) => {
+      this.pubKey = await new Promise<string>((resolve, reject) => {
         this.socket?.on("pubkey", (pubkey: string) => {
           console.log("Received pubkey:", pubkey);
-          this.setPubKey(pubkey);
           resolve(pubkey);
         });
 
@@ -65,14 +54,14 @@ class PlutonicationDAppClient {
         });
       });
 
-      this.injector = this.createInjected(this.pubKey || "", this.socket, accessCredentials);
-      this.setInjector(this.injector);
+      this.injector = this.createInjected(this.pubKey || "", this.socket, this.accessCredentials);
       return this.injector;
     } catch (error) {
       console.error("Error during initialization:", error);
       throw error;
     }
   }
+  
 
   private createInjected(pubKey: string, socket: Socket, accessCredentials: AccessCredentials): Injected {
     return {
@@ -102,7 +91,7 @@ class PlutonicationDAppClient {
     };
   }
 
-  async sendPayloadAsync(transactionDetails: Transaction): Promise<void> {
+  async sendPayloadAsync(to: string, amount: number): Promise<void> {
     try {
       if (!this.injector || !this.pubKey) {
         throw new Error("Please call initializeAsync first.");
@@ -113,7 +102,7 @@ class PlutonicationDAppClient {
 
       const signer = this.injector.signer;
       const sender = this.pubKey;
-      const transferExtrinsic = api.tx.balances.transfer(transactionDetails.to, transactionDetails.amount);
+      const transferExtrinsic = api.tx.balances.transfer(to, amount);
 
       await transferExtrinsic.signAndSend(sender, { signer: signer }, ({ status }) => {
         if (status.isInBlock) {
@@ -133,7 +122,6 @@ class PlutonicationDAppClient {
   public disconnect(): void {
     if (this.socket) {
       this.socket.disconnect();
-      this.socket = null;
     }
   }
 
@@ -145,6 +133,7 @@ class PlutonicationDAppClient {
 
 export { PlutonicationDAppClient };
 
+// Crear una instancia de AccessCredentials y PlutonicationDAppClient
 const accessCredentials = new AccessCredentials(
   "wss://plutonication-acnha.ondigitalocean.app/",
   "1",
@@ -152,31 +141,25 @@ const accessCredentials = new AccessCredentials(
   "https://rostislavlitovkin.pythonanywhere.com/logo"
 );
 
-console.log("uri", accessCredentials.ToUri());
+const dappClient = new PlutonicationDAppClient(accessCredentials);
 
-const transactionDetails: Transaction = {
-  to: "5C5555yEXUcmEJ5kkcCMvdZjUo7NGJiQJMS7vZXEeoMhj3VQ",
-  amount: 1000 * 10 ** 12,
-};
-const dappClient = new PlutonicationDAppClient();
-
+// Iniciar la conexión e inicialización asincrónica
 void (async (): Promise<void> => {
-  console.log("instanciando mi dapp");
   try {
-    await dappClient.initializeAsync(accessCredentials);
-    await dappClient.sendPayloadAsync(transactionDetails);
+    // Inicializar la conexión y obtener la inyección de la extensión
+    const injector = await dappClient.initializeAsync();
 
+    // Verificar si se ha inicializado correctamente la extensión
+    if (injector) {
+      // Llamar a sendPayloadAsync para enviar una transacción
+      const to = "5C5555yEXUcmEJ5kkcCMvdZjUo7NGJiQJMS7vZXEeoMhj3VQ";
+      const amount = 1000 * 10 ** 12;
+
+      await dappClient.sendPayloadAsync(to, amount);
+    } else {
+      console.error("Error al inicializar la extensión");
+    }
   } catch (error) {
-    console.error("Error in main flow:", error);
+    console.error("Error:", error);
   }
 })();
-
-// void (async (): Promise<void> => {
-//   console.log("instanciando mi dapp");
-//   try {
-//     await dappClient.sendPayloadAsync(transactionDetails);
-
-//   } catch (error) {
-//     console.error("Error in main flow:", error);
-//   }
-// })();

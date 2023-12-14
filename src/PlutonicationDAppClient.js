@@ -40,28 +40,37 @@ exports.__esModule = true;
 // @packages
 var api_1 = require("@polkadot/api");
 var socket_io_client_1 = require("socket.io-client");
+// @scripts
 var AccesCredentials_1 = require("./AccesCredentials");
 var waitForSignature_1 = require("./helpers.ts/waitForSignature");
 var PlutonicationDAppClient = /** @class */ (function () {
-    function PlutonicationDAppClient() {
-        this.socket = null;
+    function PlutonicationDAppClient(accessCredentials) {
+        this.accessCredentials = accessCredentials;
         this.pubKey = null;
-        this.signature = null;
-        this.injector = undefined;
+        this.socket = socket_io_client_1.io(this.accessCredentials.url);
+        this.initialize();
     }
-    PlutonicationDAppClient.prototype.getPubKey = function () {
-        return this.pubKey;
+    PlutonicationDAppClient.prototype.initialize = function () {
+        var _this = this;
+        var _a, _b, _c, _d;
+        (_a = this.socket) === null || _a === void 0 ? void 0 : _a.on("connect", function () {
+            var _a;
+            console.log("Connected!");
+            (_a = _this.socket) === null || _a === void 0 ? void 0 : _a.emit("create_room", { Data: "Nothing", Room: _this.accessCredentials.key });
+        });
+        (_b = this.socket) === null || _b === void 0 ? void 0 : _b.on("message", function (data) {
+            console.log("Received message:", data);
+        });
+        // Listen for payload signature from wallet
+        (_c = this.socket) === null || _c === void 0 ? void 0 : _c.on("payload_signature", function (signature) {
+            console.log("Received payload signature:", signature);
+        });
+        // Listen for raw signature from wallet
+        (_d = this.socket) === null || _d === void 0 ? void 0 : _d.on("raw_signature", function (signature) {
+            console.log("Received raw signature:", signature);
+        });
     };
-    PlutonicationDAppClient.prototype.setPubKey = function (pubKey) {
-        this.pubKey = pubKey;
-    };
-    PlutonicationDAppClient.prototype.getInjector = function () {
-        return this.injector;
-    };
-    PlutonicationDAppClient.prototype.setInjector = function (injector) {
-        this.injector = injector;
-    };
-    PlutonicationDAppClient.prototype.initializeAsync = function (accessCredentials) {
+    PlutonicationDAppClient.prototype.initializeAsync = function () {
         return __awaiter(this, void 0, void 0, function () {
             var _a, error_1;
             var _this = this;
@@ -69,21 +78,11 @@ var PlutonicationDAppClient = /** @class */ (function () {
                 switch (_b.label) {
                     case 0:
                         _b.trys.push([0, 2, , 3]);
-                        this.socket = socket_io_client_1.io(accessCredentials.url);
-                        this.socket.on("connect", function () {
-                            var _a;
-                            console.log("Connected!");
-                            (_a = _this.socket) === null || _a === void 0 ? void 0 : _a.emit("create_room", { Data: "Nothing", Room: accessCredentials.key });
-                        });
-                        this.socket.on("message", function (data) {
-                            console.log("Received message:", data);
-                        });
                         _a = this;
                         return [4 /*yield*/, new Promise(function (resolve, reject) {
                                 var _a, _b;
                                 (_a = _this.socket) === null || _a === void 0 ? void 0 : _a.on("pubkey", function (pubkey) {
                                     console.log("Received pubkey:", pubkey);
-                                    _this.setPubKey(pubkey);
                                     resolve(pubkey);
                                 });
                                 (_b = _this.socket) === null || _b === void 0 ? void 0 : _b.on("connect_error", function (error) {
@@ -92,8 +91,7 @@ var PlutonicationDAppClient = /** @class */ (function () {
                             })];
                     case 1:
                         _a.pubKey = _b.sent();
-                        this.injector = this.createInjected(this.pubKey || "", this.socket, accessCredentials);
-                        this.setInjector(this.injector);
+                        this.injector = this.createInjected(this.pubKey || "", this.socket, this.accessCredentials);
                         return [2 /*return*/, this.injector];
                     case 2:
                         error_1 = _b.sent();
@@ -155,7 +153,7 @@ var PlutonicationDAppClient = /** @class */ (function () {
             }
         };
     };
-    PlutonicationDAppClient.prototype.sendPayloadAsync = function (transactionDetails) {
+    PlutonicationDAppClient.prototype.sendPayloadAsync = function (to, amount) {
         return __awaiter(this, void 0, void 0, function () {
             var provider, api, signer, sender, transferExtrinsic, error_2;
             return __generator(this, function (_a) {
@@ -171,7 +169,7 @@ var PlutonicationDAppClient = /** @class */ (function () {
                         api = _a.sent();
                         signer = this.injector.signer;
                         sender = this.pubKey;
-                        transferExtrinsic = api.tx.balances.transfer(transactionDetails.to, transactionDetails.amount);
+                        transferExtrinsic = api.tx.balances.transfer(to, amount);
                         return [4 /*yield*/, transferExtrinsic.signAndSend(sender, { signer: signer }, function (_a) {
                                 var status = _a.status;
                                 if (status.isInBlock) {
@@ -198,7 +196,6 @@ var PlutonicationDAppClient = /** @class */ (function () {
     PlutonicationDAppClient.prototype.disconnect = function () {
         if (this.socket) {
             this.socket.disconnect();
-            this.socket = null;
         }
     };
     PlutonicationDAppClient.prototype.generateQR = function (accessCredentials) {
@@ -208,42 +205,35 @@ var PlutonicationDAppClient = /** @class */ (function () {
     return PlutonicationDAppClient;
 }());
 exports.PlutonicationDAppClient = PlutonicationDAppClient;
+// Crear una instancia de AccessCredentials y PlutonicationDAppClient
 var accessCredentials = new AccesCredentials_1.AccessCredentials("wss://plutonication-acnha.ondigitalocean.app/", "1", "Galaxy Logic Game", "https://rostislavlitovkin.pythonanywhere.com/logo");
-console.log("uri", accessCredentials.ToUri());
-var transactionDetails = {
-    to: "5C5555yEXUcmEJ5kkcCMvdZjUo7NGJiQJMS7vZXEeoMhj3VQ",
-    amount: 1000 * Math.pow(10, 12)
-};
-var dappClient = new PlutonicationDAppClient();
+var dappClient = new PlutonicationDAppClient(accessCredentials);
+// Iniciar la conexión e inicialización asincrónica
 void (function () { return __awaiter(void 0, void 0, void 0, function () {
-    var error_3;
+    var injector, to, amount, error_3;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
-                console.log("instanciando mi dapp");
-                _a.label = 1;
+                _a.trys.push([0, 5, , 6]);
+                return [4 /*yield*/, dappClient.initializeAsync()];
             case 1:
-                _a.trys.push([1, 4, , 5]);
-                return [4 /*yield*/, dappClient.initializeAsync(accessCredentials)];
+                injector = _a.sent();
+                if (!injector) return [3 /*break*/, 3];
+                to = "5C5555yEXUcmEJ5kkcCMvdZjUo7NGJiQJMS7vZXEeoMhj3VQ";
+                amount = 1000 * Math.pow(10, 12);
+                return [4 /*yield*/, dappClient.sendPayloadAsync(to, amount)];
             case 2:
                 _a.sent();
-                return [4 /*yield*/, dappClient.sendPayloadAsync(transactionDetails)];
+                return [3 /*break*/, 4];
             case 3:
-                _a.sent();
-                return [3 /*break*/, 5];
-            case 4:
+                console.error("Error al inicializar la extensión");
+                _a.label = 4;
+            case 4: return [3 /*break*/, 6];
+            case 5:
                 error_3 = _a.sent();
-                console.error("Error in main flow:", error_3);
-                return [3 /*break*/, 5];
-            case 5: return [2 /*return*/];
+                console.error("Error:", error_3);
+                return [3 /*break*/, 6];
+            case 6: return [2 /*return*/];
         }
     });
 }); })();
-// void (async (): Promise<void> => {
-//   console.log("instanciando mi dapp");
-//   try {
-//     await dappClient.sendPayloadAsync(transactionDetails);
-//   } catch (error) {
-//     console.error("Error in main flow:", error);
-//   }
-// })();
