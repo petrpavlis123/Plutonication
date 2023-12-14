@@ -86,8 +86,8 @@ void (async (): Promise<void> => {
     const newAccount = await walletClient.createNewAccount();
     // Send the publick key and the payloads signature back to the dapp
     walletClient.sendPublicKey(newAccount.pubKeySS58Format);
-    walletClient.sendSignedPayload(newAccount.signature.toString());
-    walletClient.sendSignedRaw(newAccount.signature.toString());
+    walletClient.sendSignedPayload(newAccount.signature);
+    walletClient.sendSignedRaw(newAccount.signature);
   } catch (error) {
     console.error("Error:", error);
   }
