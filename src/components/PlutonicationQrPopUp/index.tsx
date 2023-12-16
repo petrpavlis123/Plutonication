@@ -30,83 +30,84 @@ const PlutonicationQrPopUp= (): React.JSX.Element => {
   );
 
   
-  const dappClient: PlutonicationDAppClient = new PlutonicationDAppClient();
+  // const dappClient: PlutonicationDAppClient = new PlutonicationDAppClient();
 
-  const initializeDapp = async () => {
-    try {
-      setQRCodeImage(dappClient.generateQR(accessCredentials));
-      await dappClient.initializeAsync(accessCredentials);
-      setIsWalletConnected(true);
-      setPubkey(dappClient.pubKey || "");
-    } catch (error) {
-      console.error("Error initializing the app:", error);
-    }
-  };
+  // const initializeDapp = async () => {
+  //   try {
+  //     setQRCodeImage(dappClient.generateQR(accessCredentials));
+  //     await dappClient.initialize();
+  //     setIsWalletConnected(true);
+  //     setPubkey(dappClient.pubKey || "");
+  //   } catch (error) {
+  //     console.error("Error initializing the app:", error);
+  //   }
+  // };
 
-  useEffect(() => {
-    if (pubKey !== "") {
-      setQRCodeImage("");
-    }
-  }, [pubKey]);
+  // useEffect(() => {
+  //   if (pubKey !== "") {
+  //     setQRCodeImage("");
+  //   }
+  // }, [pubKey]);
 
-  const disconnect = ():void => {
-    // disconnect functionality here
-    console.log("Disconnecting!");
-    setIsWalletConnected(false);
-    closeQR();
-  };
+  // const disconnect = ():void => {
+  //   // disconnect functionality here
+  //   console.log("Disconnecting!");
+  //   setIsWalletConnected(false);
+  //   closeQR();
+  // };
 
-  const closeQR = ():void => {
-    setQRCodeImage("");
-  };
+  // const closeQR = ():void => {
+  //   setQRCodeImage("");
+  // };
 
-  const handleOverlayClick = (e: React.MouseEvent<HTMLDivElement, MouseEvent>): void => {
-    if (overlayRef.current === e.target) {
-      closeQR();
-    }
-  };
+  // const handleOverlayClick = (e: React.MouseEvent<HTMLDivElement, MouseEvent>): void => {
+  //   if (overlayRef.current === e.target) {
+  //     closeQR();
+  //   }
+  // };
 
-  console.log("qrCodeImage", qrCodeImage);
+  // console.log("qrCodeImage", qrCodeImage);
 
   return (
-    <div className={`welcome__container ${qrCodeImage ? "overlay" : ""}`} ref={overlayRef} onClick={e => handleOverlayClick(e)}>
-      <main>
-        {qrCodeImage ? (
-          <>
-            <div className="welcome__QR-text-container">
-              <p className="welcome__QR-text">Plutonication Connect</p>
-            </div>
-            <img className="welcome__QR-back-arrow" alt="close" onClick={closeQR} src={backArrowIcon} width={25} height={25}/>
-            <div className="welcome__QR-container" >
-              <QRCodeCanvas size={250} className="welcome__QR" value={qrCodeImage}  imageSettings={{
-                src: `${img}`,
-                x: undefined,
-                y: undefined,
-                height: 30,
-                width: 30,
-                excavate: true,
-              }}
-              bgColor="#FFFFFF"
-              level={"H"}
-              />
-            </div>
-            <div className="welcome__QR-text-button-container">
-              <p className="welcome__QR-text">Scan this QR with your phone</p>
-            </div>
-          </>
-        ) : (
-          <>
-            <h4 className="welcome__QR-headaer">Welcome to Plutonication</h4>
-            <div className={"welcome__btn-container"}>
-              <button className="welcome__btn" onClick={() => isWalletConnected ? disconnect() : initializeDapp()}>
-                {isWalletConnected ? "Disconnect" : "Connect"}
-              </button>
-            </div>
-            {isWalletConnected && <p className="welcome__QR-text-connected">Connected to {pubKey} </p>}
-          </>
-        )}
-      </main>
-    </div>
+    <></>
+    // <div className={`welcome__container ${qrCodeImage ? "overlay" : ""}`} ref={overlayRef} onClick={e => handleOverlayClick(e)}>
+    //   <main>
+    //     {qrCodeImage ? (
+    //       <>
+    //         <div className="welcome__QR-text-container">
+    //           <p className="welcome__QR-text">Plutonication Connect</p>
+    //         </div>
+    //         <img className="welcome__QR-back-arrow" alt="close" onClick={closeQR} src={backArrowIcon} width={25} height={25}/>
+    //         <div className="welcome__QR-container" >
+    //           <QRCodeCanvas size={250} className="welcome__QR" value={qrCodeImage}  imageSettings={{
+    //             src: `${img}`,
+    //             x: undefined,
+    //             y: undefined,
+    //             height: 30,
+    //             width: 30,
+    //             excavate: true,
+    //           }}
+    //           bgColor="#FFFFFF"
+    //           level={"H"}
+    //           />
+    //         </div>
+    //         <div className="welcome__QR-text-button-container">
+    //           <p className="welcome__QR-text">Scan this QR with your phone</p>
+    //         </div>
+    //       </>
+    //     ) : (
+    //       <>
+    //         <h4 className="welcome__QR-headaer">Welcome to Plutonication</h4>
+    //         <div className={"welcome__btn-container"}>
+    //           <button className="welcome__btn" onClick={() => isWalletConnected ? disconnect() : initializeDapp()}>
+    //             {isWalletConnected ? "Disconnect" : "Connect"}
+    //           </button>
+    //         </div>
+    //         {isWalletConnected && <p className="welcome__QR-text-connected">Connected to {pubKey} </p>}
+    //       </>
+    //     )}
+    //   </main>
+    // </div>
   );
 };
 

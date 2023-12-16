@@ -49,15 +49,14 @@ const dappClient = new PlutonicationDAppClient(accessCredentials);
 //  Initialize the conection
 void (async (): Promise<void> => {
   try {
-    const injector = await dappClient.initializeAsync();
-    if (injector) {
-      // Send Payload to the wallet to be signed
-      const to = "5C5555yEXUcmEJ5kkcCMvdZjUo7NGJiQJMS7vZXEeoMhj3VQ";
-      const amount = 1000 * 10 ** 12;
-      await dappClient.sendPayloadAsync(to, amount);
-    } else {
-      console.error("Error sending payload");
-    }
+    // Initialize the connection 
+    dappClient.initialize();
+    // Receive pub key from wallet
+    dappClient.receivePubKey();
+    // Send request payloads to the wallet
+    dappClient.sendJsonPayload(payload);
+    dappClient.sendRawPayload(rawMessage);
+
   } catch (error) {
     console.error("Error:", error);
   }
@@ -82,12 +81,11 @@ void (async (): Promise<void> => {
   try {
     // Initialize the connection
     walletClient.initialize();
-    // Create a wallet account with polkadotjs api
-    const newAccount = await walletClient.createNewAccount();
-    // Send the publick key and the payloads signature back to the dapp
-    walletClient.sendPublicKey(newAccount.pubKeySS58Format);
-    walletClient.sendSignedPayload(newAccount.signature);
-    walletClient.sendSignedRaw(newAccount.signature);
+    // Send public key to the dapp
+    walletClient.sendPublicKey("5GQWXj...");
+    // Send signature to the payload request to the wallet
+    walletClient.sendSignedPayload("0x3e17cafeb04e69...");
+    walletClient.sendSignedRaw("0x3e17cafeb04e69....");
   } catch (error) {
     console.error("Error:", error);
   }
@@ -96,7 +94,7 @@ void (async (): Promise<void> => {
 ```
 
 #### Plutonication Qr PopUp
-You can use the Qr PopUp like this:
+You can use the Qr PopUp like this in a reactjs application:
 ```javascript
 export default function App() {
   return (
@@ -104,40 +102,6 @@ export default function App() {
       // Rest of your app...
   )
 }
-```
-
-#### In a nodejs environment you can use it like this:
-
-
-```javascript
-// Create a new instance with the access credentials
-const accessCredentials = new AccessCredentials(
-  "wss://plutonication-acnha.ondigitalocean.app/",
-  "1",
-  "Galaxy Logic Game",
-  "https://rostislavlitovkin.pythonanywhere.com/logo"
-);
-
-// Use AccessCredentials to generate a link for connecting.
-// Use this link to generate a correct QR code.
-const qrLink = accessCredentials.toUri();
-
-// Create a transaction object like this
-const transactionDetails: Transaction = {
-  to: "5C5555yEXUcmEJ5kkcCMvdZjUo7NGJiQJMS7vZXEeoMhj3VQ",
-  amount: 1000 * 10**12,
-};
-
-// First initilize the sever and after send some payloads
-  const dappClient = new PlutonicationDAppClient();
-  // Initialize the connection
-  try {
-    await dappClient.initializeAsync(accessCredentials);
-    // After initialize you can acces the pubKey returned by the wallet and you can also send payloads
-    await dappClient.sendPayloadAsync(transactionDetails);
-  } catch (error) {
-    console.error("Error:", error);
-  }
 ```
 
 ### Problem / Motivation
