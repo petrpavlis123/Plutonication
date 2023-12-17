@@ -36,63 +36,40 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 exports.__esModule = true;
+// Small example of how to send the payloads signed back to the dapp 
+//using PlutonicationDappClient function
 var keyring_1 = require("@polkadot/keyring");
 var util_crypto_1 = require("@polkadot/util-crypto");
 var util_1 = require("@polkadot/util");
 var AccesCredentials_1 = require("../AccesCredentials");
 var PlutonicationWalletClient_1 = require("../PlutonicationWalletClient");
-var KeyringManager = /** @class */ (function () {
-    function KeyringManager() {
-        this.keyring = new keyring_1.Keyring({ type: "sr25519" });
-    }
-    KeyringManager.prototype.generateNewPair = function () {
-        return __awaiter(this, void 0, void 0, function () {
-            var mnemonic, account, publicKey, pubKeySS58Format, message, signature, isValid;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4 /*yield*/, util_crypto_1.cryptoWaitReady()];
-                    case 1:
-                        _a.sent();
-                        mnemonic = util_crypto_1.mnemonicGenerate();
-                        account = this.keyring.addFromUri(mnemonic, { name: "first pair" }, "ed25519");
-                        publicKey = account.publicKey;
-                        pubKeySS58Format = util_crypto_1.encodeAddress(publicKey, 42);
-                        message = util_1.stringToU8a("this is our message");
-                        signature = account.sign(message);
-                        isValid = account.verify(message, signature, account.publicKey);
-                        console.log(util_1.u8aToHex(signature) + " is " + (isValid ? "valid" : "invalid"));
-                        return [2 /*return*/, { pubKeySS58Format: pubKeySS58Format, signature: signature.toString() }];
-                }
-            });
-        });
-    };
-    return KeyringManager;
-}());
-exports.KeyringManager = KeyringManager;
-var accessCredentials = new AccesCredentials_1.AccessCredentials("wss://plutonication-acnha.ondigitalocean.app/", "1", "Galaxy Logic Game", "https://rostislavlitovkin.pythonanywhere.com/logo");
-var walletClient = new PlutonicationWalletClient_1.PlutonicationWalletClient(accessCredentials);
-var account = new KeyringManager();
-// Realizar operaciones relacionadas con la billetera
-void (function () { return __awaiter(void 0, void 0, void 0, function () {
-    var newAccount, error_1;
+var walletClientUsage = function () { return __awaiter(void 0, void 0, void 0, function () {
+    var accessCredentials, walletClient, keyring, mnemonic, account, publicKey, pubKeySS58Format, message, signature, isValid;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
-                _a.trys.push([0, 2, , 3]);
-                // Inicializar la conexión y otros procesos asincrónicos
+                accessCredentials = new AccesCredentials_1.AccessCredentials("wss://plutonication-acnha.ondigitalocean.app/", "1", "Galaxy Logic Game", "https://rostislavlitovkin.pythonanywhere.com/logo");
+                walletClient = new PlutonicationWalletClient_1.PlutonicationWalletClient(accessCredentials);
                 walletClient.initialize();
-                return [4 /*yield*/, account.generateNewPair()];
+                return [4 /*yield*/, util_crypto_1.cryptoWaitReady()];
             case 1:
-                newAccount = _a.sent();
-                walletClient.sendPublicKey(newAccount.pubKeySS58Format);
-                walletClient.sendSignedPayload(newAccount.signature);
-                walletClient.sendSignedRaw(newAccount.signature.toString());
-                return [3 /*break*/, 3];
-            case 2:
-                error_1 = _a.sent();
-                console.error("Error:", error_1);
-                return [3 /*break*/, 3];
-            case 3: return [2 /*return*/];
+                _a.sent();
+                keyring = new keyring_1.Keyring({ type: "sr25519" });
+                mnemonic = util_crypto_1.mnemonicGenerate();
+                account = keyring.addFromUri(mnemonic, { name: "first pair" }, "ed25519");
+                publicKey = account.publicKey;
+                pubKeySS58Format = util_crypto_1.encodeAddress(publicKey, 42);
+                // Sending pubKey to the dapp
+                walletClient.sendPublicKey(pubKeySS58Format);
+                message = util_1.stringToU8a("this is our message");
+                signature = account.sign(message);
+                isValid = account.verify(message, signature, account.publicKey);
+                // Sending signature to the dapp
+                walletClient.sendSignedPayload(signature.toString());
+                walletClient.sendSignedRaw(signature.toString());
+                console.log(util_1.u8aToHex(signature) + " is " + (isValid ? "valid" : "invalid"));
+                return [2 /*return*/];
         }
     });
-}); })();
+}); };
+void walletClientUsage();

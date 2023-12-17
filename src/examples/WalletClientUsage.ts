@@ -1,57 +1,47 @@
+// Small example of how to send the payloads signed back to the dapp 
+//using PlutonicationWalletClient function
+
 import { Keyring } from "@polkadot/keyring";
 import { cryptoWaitReady, mnemonicGenerate, encodeAddress } from "@polkadot/util-crypto";
 import { stringToU8a, u8aToHex } from "@polkadot/util";
 import { AccessCredentials } from "../AccesCredentials";
 import { PlutonicationWalletClient } from "../PlutonicationWalletClient";
 
-class KeyringManager {
-  private keyring: Keyring;
+const walletClientUsage = async(): Promise<void> => {
+  const accessCredentials = new AccessCredentials(
+    "wss://plutonication-acnha.ondigitalocean.app/",
+    "1",
+    "Galaxy Logic Game",
+    "https://rostislavlitovkin.pythonanywhere.com/logo"
+  );
 
-  constructor() {
-    this.keyring = new Keyring({ type: "sr25519" });
-  }
+  const walletClient = new PlutonicationWalletClient(accessCredentials);
 
-  public async generateNewPair(): Promise<{ pubKeySS58Format: string; signature: string }> {
-    await cryptoWaitReady();
+  // Initialize the connection
+  walletClient.initialize();
 
-    const mnemonic = mnemonicGenerate();
-    const account = this.keyring.addFromUri(mnemonic, { name: "first pair" }, "ed25519");
-    const publicKey = account.publicKey;
-    const pubKeySS58Format = encodeAddress(publicKey, 42);
+  await cryptoWaitReady();
+  const keyring = new Keyring({ type: "sr25519" });
 
-    const message = stringToU8a("this is our message");
-    const signature = account.sign(message);
-    const isValid = account.verify(message, signature, account.publicKey);
+  const mnemonic = mnemonicGenerate();
+  const account = keyring.addFromUri(mnemonic, { name: "first pair" }, "ed25519");
+  const publicKey = account.publicKey;
+  const pubKeySS58Format = encodeAddress(publicKey, 42);
+
+  // Sending pubKey to the dapp
+  walletClient.sendPublicKey(pubKeySS58Format);
   
-    console.log(`${u8aToHex(signature)} is ${isValid ? "valid" : "invalid"}`);
+  const message = stringToU8a("this is our message");
+  const signature = account.sign(message);
+  const isValid = account.verify(message, signature, account.publicKey);
+  
+  // Sending signature to the dapp
+  walletClient.sendSignedPayload(signature.toString());
+  walletClient.sendSignedRaw(signature.toString());
+  
+  console.log(`${u8aToHex(signature)} is ${isValid ? "valid" : "invalid"}`);
 
 
-    return { pubKeySS58Format, signature: signature.toString()  };
-  }
-}
+};
 
-export { KeyringManager };
-
-const accessCredentials = new AccessCredentials(
-  "wss://plutonication-acnha.ondigitalocean.app/",
-  "1",
-  "Galaxy Logic Game",
-  "https://rostislavlitovkin.pythonanywhere.com/logo"
-);
-
-const walletClient = new PlutonicationWalletClient(accessCredentials);
-const account = new KeyringManager();
-
-// Realizar operaciones relacionadas con la billetera
-void (async (): Promise<void> => {
-  try {
-    // Inicializar la conexión y otros procesos asincrónicos
-    walletClient.initialize();
-    const newAccount = await account.generateNewPair();
-    walletClient.sendPublicKey(newAccount.pubKeySS58Format);
-    walletClient.sendSignedPayload(newAccount.signature);
-    walletClient.sendSignedRaw(newAccount.signature.toString());
-  } catch (error) {
-    console.error("Error:", error);
-  }
-})();
+void walletClientUsage();

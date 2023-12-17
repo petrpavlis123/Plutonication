@@ -165,9 +165,8 @@
   </div>
 </template>
 
-<script>
+<script type="module">
   // const accesCredentials = require("../AccesCredentials")
-
   customElements.define('qr-generator', class extends HTMLElement {
     constructor() {
       super();
@@ -207,8 +206,8 @@
         }
         // Simulación de conexión después de un tiempo (para propósitos de demostración)
         setTimeout(() => {
+          console.log("Connecting to server...")
           connectToServerAndListen();
-          
         }, 5000); 
       });
 
@@ -220,26 +219,29 @@
         generateButton.style.display = 'block';
         welcomeHeader.style.display = 'block';
       });
-
-
     
       const connectToServerAndListen = () => {
         const socket = io('wss://plutonication-acnha.ondigitalocean.app/');
         socket.on('connect', () => {
           console.log('Conectado a través de WebSocket con Socket.IO');
           socket.emit("create_room", { Data: "Nothing", Room: 1 });
-          receivePubKey(socket, "5C9tkbJ1wG8eieJDpwHunicxPpf7P8MqLLuv2GPTHgsERnqE");
+          // receivePubKey(socket, "5C9tkbJ1wG8eieJDpwHunicxPpf7P8MqLLuv2GPTHgsERnqE");
+          receivePubKey(socket);
+        });
+
+        socket?.on("message", (data) => {
+          console.log("Received message:", data);
         });
       };
 
       const receivePubKey = (socket, pubKey) => {
-        // socket.on("pubkey", (publicKey) => {
-        //   console.log("Received pubkey:", publicKey);
-        //   // Actualizar la interfaz con la public key recibida
-        //   connectionInfoDiv.textContent = `Conectado con la public key: ${publicKey}`;
-        // });
+        socket.on("pubkey", (publicKey) => {
+          console.log("Received pubkey:", publicKey);
+          // Actualizar la interfaz con la public key recibida
+          connectionInfoDiv.textContent = `Conectado con la public key: ${publicKey}`;
+        });
         connectionInfoDiv.style.display = 'block';
-        connectionInfoDiv.textContent = `Conectado con la public key: ${pubKey}`;
+        // connectionInfoDiv.textContent = `Conectado con la public key: ${pubKey}`;
         qrCodeDiv.style.display = 'none';
         scanQrContainer.style.display = "none";
         qrContainer.style.display = 'none';

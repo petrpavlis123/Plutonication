@@ -10,6 +10,8 @@ declare class PlutonicationDAppClient {
     receivePubKey(): void;
     sendJsonPayload(payloadJson: SignerPayloadJSON): void;
     sendRawPayload(raw: SignerPayloadRaw): void;
+    private createInjector;
+    transferExtrinsics(to: string, amount: number): Promise<void>;
     disconnect(): void;
     generateQR(accessCredentials: AccessCredentials): string;
 }
