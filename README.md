@@ -104,6 +104,14 @@ export default function App() {
 }
 ```
 
+### Testing
+
+```
+cd tests
+
+npx playwright test
+```
+
 ### Problem / Motivation
 Currently, there is no way to connect a wallet to more exotic devices, like gaming console and wearables.
 
