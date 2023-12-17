@@ -17,8 +17,7 @@ const walletClientUsage = async(): Promise<void> => {
 
   const walletClient = new PlutonicationWalletClient(accessCredentials);
 
-  // Initialize the connection
-  walletClient.initialize();
+
 
   await cryptoWaitReady();
   const keyring = new Keyring({ type: "sr25519" });
@@ -28,19 +27,30 @@ const walletClientUsage = async(): Promise<void> => {
   const publicKey = account.publicKey;
   const pubKeySS58Format = encodeAddress(publicKey, 42);
 
-  // Sending pubKey to the dapp
-  walletClient.sendPublicKey(pubKeySS58Format);
+
   
   const message = stringToU8a("this is our message");
   const signature = account.sign(message);
   const isValid = account.verify(message, signature, account.publicKey);
   
-  // Sending signature to the dapp
-  walletClient.sendSignedPayload(signature.toString());
-  walletClient.sendSignedRaw(signature.toString());
+
   
   console.log(`${u8aToHex(signature)} is ${isValid ? "valid" : "invalid"}`);
 
+  try {
+
+    // Initialize the connection
+    await walletClient.initializeAsync();
+    // Sending pubKey to the dapp
+    await walletClient.sendPublicKeyAsync(pubKeySS58Format);
+
+    // Sending signature to the dapp
+    await walletClient.sendSignedPayloadAsync(signature.toString());
+    await walletClient.sendSignedRawAsync(signature.toString());
+
+  } catch (error) {
+    console.error("Error:", error);
+  }
 
 };
 

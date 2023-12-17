@@ -35,62 +35,73 @@ import { PlutonicationDAppClient, AccessCredentials, PlutonicationQrPopUp } from
 #### Initialize the Connection and send transactions
 To access the initializeAsync and SendPayloadAsync methods, you need to instantiate the AccessCredentials with the necessary information and also create an instance of PlutonicationDAppClient
 ```javascript
-// Access credentials are used to show correct info to the wallet.
-const accessCredentials = new AccessCredentials(
-  "wss://plutonication-acnha.ondigitalocean.app/",
-  "1",
-  "Galaxy Logic Game",
-  "https://rostislavlitovkin.pythonanywhere.com/logo"
-);
+const dappClientUsage = async() => {
 
-// Instantiate the PlutonicationDAppClient class
-const dappClient = new PlutonicationDAppClient(accessCredentials);
+  //  Access credentials are used to show correct info to the wallet.
+  const accessCredentials = new AccessCredentials(
+    "wss://plutonication-acnha.ondigitalocean.app/",
+    "1",
+    "Galaxy Logic Game",
+    "https://rostislavlitovkin.pythonanywhere.com/logo"
+  );
 
-//  Initialize the conection
-void (async (): Promise<void> => {
+  // Instantiate the Dapp
+  const dappClient = new PlutonicationDAppClient(accessCredentials);
+  const payloadRaw: SignerPayloadRaw  = { ... };
+
+  const payloadJson: SignerPayloadJSON  = { ... };
+
   try {
-    // Initialize the connection 
-    dappClient.initialize();
-    // Receive pub key from wallet
-    dappClient.receivePubKey();
-    // Send request payloads to the wallet
-    dappClient.sendJsonPayload(payload);
-    dappClient.sendRawPayload(rawMessage);
+
+    // Initialize connection
+    await dappClient.initializeAsync();
+    // Receive pubKey
+    const pubKey = await dappClient.receivePubKeyAsync();
+
+    // Use the pubKey as need it
+    console.log("The pubKey is:", pubKey);
+
+    // Send paylaods request to be signed
+    await dappClient.sendJsonPayloadAsync(payloadJson);
+    await dappClient.sendRawPayloadAsync(payloadRaw);
 
   } catch (error) {
     console.error("Error:", error);
   }
-})();
+};
 
 ```
 
 After you can send the payloads back to the dapp signed:
 ```javascript
-// Access credentials are used to show correct info to the wallet.
-const accessCredentials = new AccessCredentials(
-  "wss://plutonication-acnha.ondigitalocean.app/",
-  "1",
-  "Galaxy Logic Game",
-  "https://rostislavlitovkin.pythonanywhere.com/logo"
-);
+const walletClientUsage = async() => {
+
+  //  Access credentials are used to show correct info to the wallet.
+  const accessCredentials = new AccessCredentials(
+    "wss://plutonication-acnha.ondigitalocean.app/",
+    "1",
+    "Galaxy Logic Game",
+    "https://rostislavlitovkin.pythonanywhere.com/logo"
+  );
 
 // Instantiate the PlutonicationWalletClient class
 const walletClient = new PlutonicationWalletClient(accessCredentials);
 
-void (async (): Promise<void> => {
   try {
+
     // Initialize the connection
-    walletClient.initialize();
+    await walletClient.initializeAsync();
     // Send public key to the dapp
-    walletClient.sendPublicKey("5GQWXj...");
-    // Send signature to the payload request to the wallet
-    walletClient.sendSignedPayload("0x3e17cafeb04e69...");
-    walletClient.sendSignedRaw("0x3e17cafeb04e69....");
+    await walletClient.sendPublicKeyAsync("5GQWXj...");
+
+  // Send signature to the payload request to the wallet
+    await walletClient.sendSignedPayloadAsync("0x3e17cafeb04e69...");
+    await walletClient.sendSignedRawAsync("0x3e17cafeb04e69....");
+
   } catch (error) {
     console.error("Error:", error);
   }
-})();
-
+};
 ```
 
 #### Plutonication Qr PopUp

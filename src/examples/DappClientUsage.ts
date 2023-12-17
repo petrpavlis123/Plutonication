@@ -8,7 +8,7 @@ import { AccessCredentials } from "../AccesCredentials";
 import { PlutonicationDAppClient } from "../PlutonicationDAppClient";
 import { ApiPromise, WsProvider } from "@polkadot/api";
 
-const dappClientUsage = () : void => {
+const dappClientUsage = async() : Promise<void> => {
   const accessCredentials = new AccessCredentials(
     "wss://plutonication-acnha.ondigitalocean.app/",
     "1",
@@ -38,19 +38,24 @@ const dappClientUsage = () : void => {
     version: 4,
   };
 
+  try {
 
-  // initialize the connection
-  dappClient.initialize();
+    // Initialize connection
+    await dappClient.initializeAsync();
+    // Receive pubKey
+    const pubKey = await dappClient.receivePubKeyAsync();
 
-  // Receive the pub key from the wallet
-  dappClient.receivePubKey();
+    // Use the pubKey as need it
+    console.log("La pubKey es:", pubKey);
 
-  // Send the payload requests
-  dappClient.sendJsonPayload(payloadJson);
-  dappClient.sendRawPayload(payloadRaw);
+    // Send paylaod request to be signed
+    await dappClient.sendJsonPayloadAsync(payloadJson);
+    await dappClient.sendRawPayloadAsync(payloadRaw);
 
-
+  } catch (error) {
+    console.error("Error:", error);
+  }
 
 };
 
-dappClientUsage();
+void dappClientUsage();

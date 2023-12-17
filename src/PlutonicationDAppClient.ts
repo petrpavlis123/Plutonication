@@ -19,45 +19,96 @@ class PlutonicationDAppClient {
     this.socket = io(this.accessCredentials.url);
   }
 
-  public initialize(): void {
-    this.socket?.on("connect", () => {
-      console.log("Connected!");
-      this.socket?.emit("create_room", { Data: "Nothing", Room: this.accessCredentials.key });
-    });
+  public async initializeAsync(): Promise<void> {
+    return new Promise<void>((resolve) => {
+      this.socket?.on("connect", () => {
+        console.log("Connected!");
+        this.socket?.emit("create_room", { Data: "Nothing", Room: this.accessCredentials.key });
+      });
 
-    this.socket?.on("message", (data) => {
-      console.log("Received message:", data);
-    });
+      this.socket?.on("message", (data) => {
+        console.log("Received message:", data);
+      });
 
-    // Listen for payload signature from wallet
-    this.socket?.on("payload_signature", (signature: string) => {
-      console.log("Received payload signature:", signature);
-    });
+      this.socket?.on("payload_signature", (signature: string) => {
+        console.log("Received json payload signature:", signature);
+      });
+  
+      // Listen for raw signature from wallet
+      this.socket?.on("raw_signature", (signature: string) => {
+        console.log("Received raw payload signature:", signature);
+      });
 
-    // Listen for raw signature from wallet
-    this.socket?.on("raw_signature", (signature: string) => {
-      console.log("Received raw signature:", signature);
-    });
-  }
-
-  public receivePubKey() : void {
-    this.socket?.on("pubkey", (pubkey: string) => {
-      console.log("Received pubkey:", pubkey);
-      this.pubKey = pubkey;
+      resolve();
     });
   }
 
-  public sendJsonPayload(payloadJson: SignerPayloadJSON): void {
-    if (this.socket) {
-      this.socket.emit("sign_payload", { Data: payloadJson, Room: this.accessCredentials.key });
-    }
+  public async receivePubKeyAsync(): Promise<string> {
+    return new Promise<string>((resolve) => {
+      this.socket?.on("pubkey", (pubkey: string) => {
+        console.log("Received pubkey:", pubkey);
+        this.pubKey = pubkey;
+        resolve(pubkey);
+      });
+    });
   }
 
-  public sendRawPayload(raw: SignerPayloadRaw): void {
-    if (this.socket) {
-      this.socket.emit("sign_raw", { Data: raw, Room: this.accessCredentials.key });
-    }
+  public async sendJsonPayloadAsync(payloadJson: SignerPayloadJSON): Promise<void> {
+    return new Promise<void>((resolve) => {
+      if (this.socket) {
+        this.socket.emit("sign_payload", { Data: payloadJson, Room: this.accessCredentials.key });
+        resolve();
+      }
+    });
   }
+
+  public async sendRawPayloadAsync(raw: SignerPayloadRaw): Promise<void> {
+    return new Promise<void>((resolve) => {
+      if (this.socket) {
+        this.socket.emit("sign_raw", { Data: raw, Room: this.accessCredentials.key });
+        resolve();
+      }
+    });
+  }
+  // public initialize(): void {
+  //   this.socket?.on("connect", () => {
+  //     console.log("Connected!");
+  //     this.socket?.emit("create_room", { Data: "Nothing", Room: this.accessCredentials.key });
+  //   });
+
+  //   this.socket?.on("message", (data) => {
+  //     console.log("Received message:", data);
+  //   });
+
+  //   // Listen for payload signature from wallet
+  //   this.socket?.on("payload_signature", (signature: string) => {
+  //     console.log("Received payload signature:", signature);
+  //   });
+
+  //   // Listen for raw signature from wallet
+  //   this.socket?.on("raw_signature", (signature: string) => {
+  //     console.log("Received raw signature:", signature);
+  //   });
+  // }
+
+  // public receivePubKey() : void {
+  //   this.socket?.on("pubkey", (pubkey: string) => {
+  //     console.log("Received pubkey:", pubkey);
+  //     this.pubKey = pubkey;
+  //   });
+  // }
+
+  // public sendJsonPayload(payloadJson: SignerPayloadJSON): void {
+  //   if (this.socket) {
+  //     this.socket.emit("sign_payload", { Data: payloadJson, Room: this.accessCredentials.key });
+  //   }
+  // }
+
+  // public sendRawPayload(raw: SignerPayloadRaw): void {
+  //   if (this.socket) {
+  //     this.socket.emit("sign_raw", { Data: raw, Room: this.accessCredentials.key });
+  //   }
+  // }
 
 
   private createInjector(pubKey: string, socket: Socket, accessCredentials: AccessCredentials): Injected {
