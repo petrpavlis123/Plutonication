@@ -1,75 +1,62 @@
 // @packages
 import { Socket, io } from "socket.io-client";
-import { AccessCredentials } from "./AccesCredentials";
-import { Keyring } from "@polkadot/keyring";
+import { AccessCredentials } from "./AccessCredentials";
 
-class PlutonicationWalletClient {
-  private socket: Socket | null = null;
-  private roomKey = "";
-  private keyring: Keyring;
+import type { SignerResult} from "@polkadot/api/types/index.js"
+import type { SignerPayloadJSON, SignerPayloadRaw } from "@polkadot/types/types"
 
-  constructor(private accessCredentials: AccessCredentials) {
-    this.roomKey = accessCredentials.key;
-    this.socket = io(accessCredentials.url);
-    
-    this.keyring = new Keyring({ type: "sr25519" });
-  }
 
-  public initialize(): void{
-    void new Promise<void>((resolve) => {
-      this.socket?.on("connect", () => {
-        console.log("Connected to Plutonication Server");
-        resolve();
-      });
-    });
+interface PlutonicationWallet {
+  send_payload_signature: (signature: SignerResult) => void
+  send_raw_signature: (singature: SignerResult) => void
+  disconnect: () => void
+}
 
-    this.socket?.on("message", function (data) {
-      console.log("Received message:", data);
-    });
+export async function initializePlutonicationWalletClient(
+  accessCredentials: AccessCredentials,
+  pubkey: string,
+  onSignPayload: (payload: SignerPayloadJSON) => Promise<void>,
+  onSignRaw: (raw: SignerPayloadRaw) => Promise<void>,
+): Promise<PlutonicationWallet> {
 
-    // Escuchar solicitud de firma desde la DApp
-    this.socket?.on("sign_payload", (payload: string) => {
-      console.log("Received sign payload request:", payload);
-    });
+  const socket = io(accessCredentials.url)
 
-    // Escuchar solicitud de firma desde la DApp
-    this.socket?.on("sign_raw", (payload: string) => {
-      console.log("Received sign payload request:", payload);
-    });
-  }
+  // used for debugging
+  socket.on("message", (data) => {
+    console.log("Received message:", data)
+  })
 
-  public  sendSignedPayload(payloadSignature: string): void {
-    if (this.socket) {
-      this.socket.emit("payload_signature", {
-        Data: payloadSignature,
-        Room: this.roomKey,
-      });
-    }
-  }
+  // On sign_payload
+  socket.on("sign_payload", async (receivedPayload: SignerPayloadJSON) => {
+    await onSignPayload(receivedPayload)
+  })
 
-  public sendSignedRaw(rawMessage: string): void {
-    if (this.socket) {
-      this.socket.emit("raw_signature", {
-        Data: rawMessage,
-        Room: this.roomKey,
-      });
-    }
-  }
+  // On sign_raw
+  socket.on("sign_raw", async (receivedRaw: SignerPayloadRaw) => {
+    await onSignRaw(receivedRaw)
+  })
 
-  public  sendPublicKey(publicKey: string): void {
-    if (this.socket) {
-      console.log("Sending public key: ", publicKey);
-      this.socket.emit("pubkey", { Data: publicKey, Room: this.roomKey });
-    }
-  }
+  // Wait for the Wallet socket client to connect.
+  await new Promise<void>((resolve) => {
+    socket.on("connect", () => {
+      console.log("Wallet connected")
 
-  public disconnect(): void {
-    if (this.socket && this.socket.connected) {
-      this.socket.disconnect();
+      resolve()
+    })
+  })
+
+  // Join the room and expose the pubkey
+  socket.emit("pubkey", { Data: pubkey, Room: accessCredentials.key })
+
+  return {
+    send_payload_signature(signerResult: SignerResult): void {
+      socket.emit("payload_signature", { Data: signerResult, Room: accessCredentials.key });
+    },
+    send_raw_signature(signerResult: SignerResult): void {
+      socket.emit("raw_signature", { Data: signerResult, Room: accessCredentials.key } );
+    },
+    disconnect(): void {
+      socket.emit("disconnect");
     }
   }
 }
-
-export { PlutonicationWalletClient };
-
-

@@ -1,4 +1,4 @@
-import { AccessCredentials } from "./AccesCredentials";
+import { AccessCredentials } from "./AccessCredentials";
 declare class PlutonicationWalletClient {
     private accessCredentials;
     private socket;

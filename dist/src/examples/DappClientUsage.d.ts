@@ -1,1 +1,1 @@
-export {};
+declare const dappClientUsage: () => void;

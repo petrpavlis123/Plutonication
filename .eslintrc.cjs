@@ -44,7 +44,6 @@ module.exports = {
 
     // Code Style and Formatting Rules
     '@typescript-eslint/indent': ['error', 2],
-    '@typescript-eslint/semi': 'error',
     '@typescript-eslint/quotes': ['error', 'double'],
     '@typescript-eslint/no-var-requires': 'error',
     '@typescript-eslint/prefer-namespace-keyword': 'error',
