@@ -1,16 +1,35 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Plutonication</title>
+  <script defer src="./index.js"></script>
+
+
 </head>
+
 <body>
-  <div id="root"></div>
-  <plutonication-qr-popup></plutonication-qr-popup>
-  <!-- <h6>Qr</h6>
-  <canvas id="qrcode-canvas"></canvas>
-  <img src="qrcode.png"  alt="qr-connection"/> -->
+  <test-web-component></test-web-component>
+
+  <button onclick="click()">Connect to Plutonication</button>
+
+  <script>
+    async function click() {
+      const accessCredentials = new AccessCredentials(
+        "wss://plutonication-acnha.ondigitalocean.app/",
+        "7",
+        "Galaxy Logic Game",
+        "https://rostislavlitovkin.pythonanywhere.com/logo"
+      )
+
+      await initializeDAppClient(accessCredentials)
+
+      console.log("All done")
+    }
+  </script>
+
 </body>
-<script src="dist/bundle.js"></script>
+
 </html>

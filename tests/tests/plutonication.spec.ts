@@ -4,9 +4,8 @@ import { ApiPromise, WsProvider, Keyring } from "@polkadot/api";
 import { cryptoWaitReady } from '@polkadot/util-crypto'
 import { initializePlutonicationDAppClient } from '../../src/PlutonicationDAppClient';
 import { initializePlutonicationWalletClient } from '../../src/PlutonicationWalletClient';
-import type { SignerResult } from "@polkadot/api/types/index.js"
 import type { SignerPayloadJSON, SignerPayloadRaw } from "@polkadot/types/types"
-import { stringToU8a, u8aToHex, hexToU8a } from '@polkadot/util';
+import { u8aToHex, hexToU8a } from '@polkadot/util';
 
 const accessCredentials = new AccessCredentials(
   "wss://plutonication-acnha.ondigitalocean.app/",
@@ -26,18 +25,6 @@ async function getAlice() {
   const alice = keyring.addFromUri('//Alice')
 
   return alice
-}
-
-async function getAccount() {
-  await cryptoWaitReady()
-
-  // Create an instance of the Keyring
-  const keyring = new Keyring({ type: 'sr25519' })
-
-  // Create pair and add Alice to keyring pair dictionary (with account seed)
-  const account = keyring.addFromUri('action also cabbage profit medal animal pelican begin dust lottery humor athlete')
-
-  return account
 }
 
 test('AccessCredentials to uri', async () => {

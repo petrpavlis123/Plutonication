@@ -1,10 +1,9 @@
 // @packages
-import { Socket, io } from "socket.io-client";
+import { io } from "socket.io-client";
 import { AccessCredentials } from "./AccessCredentials";
 
 import type { SignerResult} from "@polkadot/api/types/index.js"
 import type { SignerPayloadJSON, SignerPayloadRaw } from "@polkadot/types/types"
-
 
 interface PlutonicationWallet {
   send_payload_signature: (signature: SignerResult) => void

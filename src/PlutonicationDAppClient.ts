@@ -6,7 +6,7 @@ import type { SignerPayloadJSON, SignerPayloadRaw } from "@polkadot/types/types"
 import type { SignerResult} from "@polkadot/api/types/index.js"
 import { AccessCredentials } from "./AccessCredentials"
 
-interface PlutonicationInjected extends Injected {
+export interface PlutonicationInjected extends Injected {
   disconnect: () => void
 }
 
