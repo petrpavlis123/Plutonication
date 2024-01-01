@@ -1,6 +1,6 @@
-import { AccessCredentials, initializePlutonicationDAppClient } from "./dist/index";
+import { AccessCredentials, initializePlutonicationDAppClient } from "./lib/index.js";
 
-async function click() {
+async function click2() {
     const accessCredentials = new AccessCredentials(
         "wss://plutonication-acnha.ondigitalocean.app/",
         "7",
