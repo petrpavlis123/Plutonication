@@ -3,7 +3,7 @@
 import { io } from "socket.io-client"
 import type { Injected, InjectedAccount } from "@polkadot/extension-inject/types"
 import type { SignerPayloadJSON, SignerPayloadRaw } from "@polkadot/types/types"
-import type { SignerResult} from "@polkadot/api/types/index.js"
+import type { SignerResult } from "@polkadot/api/types/index.js"
 import { AccessCredentials } from "./AccessCredentials"
 
 export interface PlutonicationInjected extends Injected {
@@ -54,7 +54,7 @@ export async function initializePlutonicationDAppClient(
         return () => { }
       },
     },
-    
+
     signer: {
       async signPayload(payloadJson: SignerPayloadJSON): Promise<SignerResult> {
 
@@ -87,4 +87,28 @@ export async function initializePlutonicationDAppClient(
       socket.emit("disconnect");
     }
   }
+}
+
+export async function initializePlutonicationDAppClientWithModal(
+  accessCredentials: AccessCredentials,
+  onReceivePubkey: (receivedPubkey: string) => void,
+): Promise<PlutonicationInjected> {
+
+  //
+  // TODO: Show Plutonication modal QR code
+  //
+  // pass the url from accessCredentials
+  //
+
+  return await initializePlutonicationDAppClient(
+    accessCredentials,
+    (receivedPubkey: string): void => {
+
+      //
+      // TODO: Hide Plutonication modal QR code
+      //
+
+      onReceivePubkey(receivedPubkey)
+    }
+  )
 }
