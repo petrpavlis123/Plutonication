@@ -1,4 +1,3 @@
-const QRCode = require("davidshimjs-qrcodejs")
 import { AccessCredentials } from "../AccessCredentials"
 
 export class PlutonicationModal extends HTMLElement {
@@ -98,11 +97,11 @@ export class PlutonicationModal extends HTMLElement {
 
     if (inputValue.trim() !== "") {
       // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-      new QRCode(this.qrCodeDiv, {
+      /*new QRCode(this.qrCodeDiv, {
         text: inputValue,
         width: 200,
         height: 200,
-      });
+      });*/
 
     } else {
       console.log("Input is empty");
