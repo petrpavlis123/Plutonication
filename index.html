@@ -5,7 +5,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Plutonication</title>
-  <script defer src="./dist/index.js"></script>
+  <script type="module" src="implement.js"></script>
+
 
 
 </head>
@@ -15,20 +16,6 @@
 
   <button onclick="click()">Connect to Plutonication</button>
 
-  <script>
-    async function click() {
-      const accessCredentials = new AccessCredentials(
-        "wss://plutonication-acnha.ondigitalocean.app/",
-        "7",
-        "Galaxy Logic Game",
-        "https://rostislavlitovkin.pythonanywhere.com/logo"
-      )
-
-      await initializeDAppClient(accessCredentials)
-
-      console.log("All done")
-    }
-  </script>
 
 </body>
 

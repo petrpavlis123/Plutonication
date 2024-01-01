@@ -3,6 +3,7 @@
   "version": "1.0.58",
   "description": "TypeScript version of C# plutonication library",
   "main": "./lib/index.js",
+  "module": "./lib/index.js",
   "types": "./types",
   "scripts": {
     "build": "tsc"
