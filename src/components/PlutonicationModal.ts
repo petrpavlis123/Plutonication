@@ -1,6 +1,5 @@
-/* eslint-disable @typescript-eslint/no-misused-promises */
-import QRCode from "qrcodejs";
-import { AccessCredentials } from "../AccessCredentials";
+const QRCode = require("davidshimjs-qrcodejs")
+import { AccessCredentials } from "../AccessCredentials"
 
 export class PlutonicationModal extends HTMLElement {
 
