@@ -15,18 +15,17 @@ export async function initializePlutonicationDAppClient(
   onReceivePubkey: (receivedPubkey: string) => void,
 ): Promise<PlutonicationInjected> {
 
+  // Connect to the web socket
   const socket = io(accessCredentials.url)
 
-  // used for debugging
+  // Used for debugging
   socket.on("message", (data) => {
-    console.log("Received message:", data)
+    console.log("Plutonication received message:", data)
   })
 
   // Wait for the dApp socket client to connect.
   await new Promise<void>((resolve) => {
     socket.on("connect", () => {
-      console.log("dApp connected")
-
       resolve()
     })
   })
@@ -34,15 +33,13 @@ export async function initializePlutonicationDAppClient(
   // Create the room
   socket.emit("create_room", { Room: accessCredentials.key })
 
-  let pubkey: string
-
-  await new Promise<void>((resolve) => {
+  // Wait for the wallet.
+  // It needs to send to pubkey to this dApp client.
+  const pubkey = await new Promise<string>((resolve) => {
     socket.on("pubkey", (receivedPubkey: string) => {
-      pubkey = receivedPubkey
-
       onReceivePubkey(receivedPubkey)
 
-      resolve()
+      resolve(receivedPubkey)
     })
   })
 
@@ -57,6 +54,7 @@ export async function initializePlutonicationDAppClient(
         return () => { }
       },
     },
+    
     signer: {
       async signPayload(payloadJson: SignerPayloadJSON): Promise<SignerResult> {
 
@@ -84,6 +82,7 @@ export async function initializePlutonicationDAppClient(
         return signerResult
       },
     },
+
     disconnect(): void {
       socket.emit("disconnect");
     }

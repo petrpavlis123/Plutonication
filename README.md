@@ -104,10 +104,20 @@ export default function App() {
 }
 ```
 
+### Build the package
+
+```
+npm i
+
+npm run build
+```
+
 ### Testing
 
 ```
 cd tests
+
+npm i
 
 npx playwright test
 ```
