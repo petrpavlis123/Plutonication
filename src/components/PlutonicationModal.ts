@@ -15,6 +15,9 @@ export class PlutonicationModal extends HTMLElement {
 
   constructor() {
     super();
+    
+    this.id = "plutonication-modal"
+
     const shadowRoot = this.attachShadow({ mode: "open" });
 
     const template = `
