@@ -14,12 +14,152 @@ export class PlutonicationModal extends HTMLElement {
 
   constructor() {
     super();
-    
+
     this.id = "plutonication-modal"
 
     const shadowRoot = this.attachShadow({ mode: "open" });
 
     const template = `
+      <style>
+      @import url("https://fonts.googleapis.com/css2?family=Inter:wght@500&family=Lexend:wght@500&family=Roboto&display=swap");
+
+      * {
+          font-family: "Lexend", serif !important;
+      }
+
+      .qr-container {
+          margin: 0;
+          padding: 0;
+          box-sizing: border-box;
+          text-size-adjust: none;
+          -webkit-text-size-adjust: none;
+
+          background-color: rgb(14, 16, 16);
+          color: #f0f0f0;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          width: 100%;
+          height: 100vh;
+      }
+
+      h1,
+      h2,
+      h3,
+      h4,
+      h5,
+      h6 {
+          margin: 0;
+          padding: 0;
+      }
+
+      ul,
+      ol {
+          margin: 0;
+          padding: 0;
+          list-style: none;
+      }
+
+      button.hover {
+          cursor: pointer;
+      }
+
+      .disconnect-btn {
+          display: none;
+      }
+
+      .scan-qr-container {
+          display: none
+      }
+
+      .generate-btn-container {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          margin-top: 1rem;
+      }
+
+      .generate-btn,
+      .disconnect-btn {
+          background-color: #f0f0f0;
+          padding: 0.5rem;
+          color: rgb(14, 16, 16);
+          font-weight: 500;
+          font-family: "Lexend", serif;
+          border-radius: 0.3rem;
+          transition: transform 0.2s ease;
+      }
+
+      .generate-btn:hover,
+      .disconnect-btn:hover {
+          transform: scale(1.05);
+          cursor: pointer;
+      }
+
+      .disconnect-btn {
+          display: none;
+      }
+
+      .scan-qr-title-container {
+          display: inline;
+          position: relative;
+          top: 4.2rem;
+          z-index: 1;
+      }
+
+      .scan-qr-title,
+      .scan-qr-text,
+      .connection-info {
+          text-align: center;
+          margin: 0;
+      }
+
+      .qr-back-arrow {
+          display: inline;
+          position: relative;
+          left: 3rem;
+          top: 2.8rem;
+          z-index: 1;
+          transition: transform 0.4s ease;
+      }
+
+      .qr-back-arrow:hover {
+          transform: scale(1.1);
+          cursor: pointer;
+      }
+
+      .qr-code-container {
+          align-items: center;
+          justify-content: center;
+          border-radius: 1rem;
+          padding: 3.5rem;
+          background-color: rgb(24, 27, 26);
+          opacity: 1;
+          transform: scale(1);
+          transition: opacity 1s ease, transform 1s ease;
+          position: relative;
+          display: none;
+      }
+
+      .qr-code {
+          border-radius: 1rem;
+          padding: 2rem;
+          background-color: white;
+      }
+
+      .scan-qr-text-container {
+          position: relative;
+          bottom: 2.2rem;
+          z-index: 1;
+          display: none;
+      }
+
+      .connection-info {
+          margin-top: 3.125rem;
+          display: none;
+      }
+
+      </style>
       <div class= "qr-container" id="qr-container">
         <div>
           <h4 class="welcome-title" id="welcome-title" >Welcome to Plutonication</h4>

@@ -6,27 +6,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Plutonication</title>
   <script type="module" src="./lib/src/components/PlutonicationModal.js"></script>
+  <script type="module" src="./lib/src/PlutonicationDAppClient.js"></script>
+
+  <script type="module" src="./lib/src/AccessCredentials.js"></script>
 </head>
 
 <body>
-
   <plutonication-modal></plutonication-modal>
 
-  <button onclick="showPlutonicationModal()">Show modal</button>
-  <script>
-    function showPlutonicationModal() {
-      const plutonicationModal = document.getElementById("plutonication-modal")
-
-      const accessCredentials = new AccessCredentials(
-        "wss://plutonication-acnha.ondigitalocean.app/",
-        "7",
-        "Galaxy Logic Game",
-        "https://rostislavlitovkin.pythonanywhere.com/logo"
-      )
-
-      plutonicationModal.open(accessCredentials)
-    }
-  </script>
+  <button onclick="test()">Show modal</button>
 </body>
 
 </html>
