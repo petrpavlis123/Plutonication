@@ -10,8 +10,8 @@ import { u8aToHex, hexToU8a } from '@polkadot/util';
 const accessCredentials = new AccessCredentials(
   "wss://plutonication-acnha.ondigitalocean.app/",
   "1",
-  "Galaxy Logic Game",
-  "https://rostislavlitovkin.pythonanywhere.com/logo"
+  "Plutonication test",
+  "https://rostislavlitovkin.pythonanywhere.com/plutowalleticonwhite"
 );
 
 /// Helper method that returns the Alice account

@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+  content="width=device-width, initial-scale=1.0">
+  <title>Plutonication example</title>
+</head>
+
+<body>
+  <!-- Custom Plutocation modal Web Component -->
+  <plutonication-modal id="modalComponent"></plutonication-modal>
+
+  <!-- Button for connecting -->
+  <button onclick="initialize()">Connect</button>
+
+  <!-- Button for requesting a message signature -->
+  <button onclick="signMessage()">Sign message</button>
+
+  <script src="lib/plutonication.js"></script>
+
+  <script>
+    let account // This is the Injected account object that will connect via Plutonication
+
+    async function initialize() {
+
+      const accessCredentials = new Plutonication.AccessCredentials(
+        "wss://plutonication-acnha.ondigitalocean.app/",
+        "100",
+        "Plutonication test",
+        "https://rostislavlitovkin.pythonanywhere.com/plutowalleticonwhite"
+      )
+
+      console.log("accessCredentials:", accessCredentials.ToUri());
+      
+      account = await Plutonication.initializePlutonicationDAppClientWithModal(
+        accessCredentials,
+        (receivedPubkey) => {
+          console.log("receivedPubkey", receivedPubkey);
+        },
+      )
+
+      console.log("injected", account)
+    }
+    
+    async function signMessage() {
+      if (account == null) {
+        console.warn("Account has not connected yet.")
+        return;
+      }
+
+      const rawMessage = {
+        address: account.address,
+        data: "0x3c42797465733e48656c6c6f20537562737472617465206d6573736167653c2f42797465733e",
+        type: "bytes",
+      }
+
+      const rawSignatureResult = await account.signer.signRaw(rawMessage)
+
+      console.log("Signature received: ", rawSignatureResult)
+    }
+  </script>
+</body>
+
+</html>
