@@ -37,6 +37,3 @@ config.ts
 
 # Ignore slintignore
 .eslintignore
-
-# Ignore the result
-lib
