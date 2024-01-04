@@ -5,9 +5,6 @@ import type { SignerResult } from "@polkadot/api/types/index.js"
 import { AccessCredentials } from "./AccessCredentials"
 import { PlutonicationModal } from "./components/PlutonicationModal"
 
-// import { PlutonicationModal } from "./PlutonicationModal"
-// import { PlutonicationModal } from "./components/PlutonicationModal"
-
 export interface PlutonicationInjected extends Injected {
   disconnect: () => void
 }
@@ -72,6 +69,7 @@ export async function initializePlutonicationDAppClient(
         return signerResult
       },
       async signRaw(raw: SignerPayloadRaw): Promise<SignerResult> {
+
         // requesting signature from wallet
         socket.emit("sign_raw", { Data: raw, Room: accessCredentials.key })
         const signerResult = await new Promise<SignerResult>((resolve) => {
@@ -96,35 +94,40 @@ export async function initializePlutonicationDAppClientWithModal(
   onReceivePubkey: (receivedPubkey: string) => void,
 ): Promise<PlutonicationInjected> {
 
-  //
-  // TODO: Show Plutonication modal QR code
-  //
-  // pass the url from accessCredentials
-  //
+  // Show Plutonication modal QR code
+  
+  const modal = getPlutonicationModal()
 
-  // The following 2 lines is just an idea of how it could be implemented 
-  // const plutonicationModal: PlutonicationModal = document.getElementsByTagName("plutonication-modal")[0] as PlutonicationModal
-  // plutonicationModal.open(accessCredentials)
-  // const plutonicationModal = new PlutonicationModal();
-  // plutonicationModal.connectedCallback(accessCredentials);
-  //----------------------------------------------------
-  console.log("abriendo modal")
-  // const modal = new ModalComponent();
-  const modal = document.getElementById('modalComponent') as PlutonicationModal;
-  modal.openModal(accessCredentials);
+  modal.openModal(accessCredentials)
 
-
+  // Return the initialized Plutonication Injected account
   return await initializePlutonicationDAppClient(
     accessCredentials,
     (receivedPubkey: string): void => {
 
-      //
-      // TODO: Hide Plutonication modal QR code
-      //
+      // Hide Plutonication modal
+      modal.closeModal()
+
       onReceivePubkey(receivedPubkey)
-      console.log("Hidding modal");
-      // plutonicationModal.hideModal();
-      modal.closeModal();
     }
   )
+}
+
+function getPlutonicationModal(): PlutonicationModal {
+  const plutonicationModals = document.getElementsByTagName('plutonication-modal')
+
+  if (plutonicationModals.length == 0) {
+    throw new Error(`You have not included any Plutonication modal.
+    Please include <plutonication-modal></plutonication-modal> in your HTML code.`)
+  }
+
+  if (plutonicationModals.length != 1) {
+    console.warn(`You have included too many Plutonication modals.
+      Please remove some of the <plutonication-modal></plutonication-modal>  in your HTML code to improve performance.
+      \n
+      In rare cases, this may cause the modal to not appear as you want to.
+    `)
+  }
+
+  return plutonicationModals[0] as PlutonicationModal;
 }
