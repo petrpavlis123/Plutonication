@@ -3,7 +3,10 @@ import type { Injected, InjectedAccount } from "@polkadot/extension-inject/types
 import type { SignerPayloadJSON, SignerPayloadRaw } from "@polkadot/types/types"
 import type { SignerResult } from "@polkadot/api/types/index.js"
 import { AccessCredentials } from "./AccessCredentials"
-import { PlutonicationModal } from "./components/PlutonicationModal"
+import { ModalComponent } from "./components/PlutonicationModal"
+
+// import { PlutonicationModal } from "./PlutonicationModal"
+// import { PlutonicationModal } from "./components/PlutonicationModal"
 
 export interface PlutonicationInjected extends Injected {
   disconnect: () => void
@@ -88,10 +91,6 @@ export async function initializePlutonicationDAppClient(
   }
 }
 
-export function test(){
-  console.log("Test click")
-}
-
 export async function initializePlutonicationDAppClientWithModal(
   accessCredentials: AccessCredentials,
   onReceivePubkey: (receivedPubkey: string) => void,
@@ -104,8 +103,15 @@ export async function initializePlutonicationDAppClientWithModal(
   //
 
   // The following 2 lines is just an idea of how it could be implemented 
-  const plutonicationModal: PlutonicationModal = document.getElementsByTagName("plutonication-modal")[0] as PlutonicationModal
-  plutonicationModal.open(accessCredentials)
+  // const plutonicationModal: PlutonicationModal = document.getElementsByTagName("plutonication-modal")[0] as PlutonicationModal
+  // plutonicationModal.open(accessCredentials)
+  // const plutonicationModal = new PlutonicationModal();
+  // plutonicationModal.connectedCallback(accessCredentials);
+  //----------------------------------------------------
+  console.log("abriendo modal")
+  // const modal = new ModalComponent();
+  const modal = document.getElementById('modalComponent') as ModalComponent;
+  modal.openModal(accessCredentials);
 
 
   return await initializePlutonicationDAppClient(
@@ -115,8 +121,10 @@ export async function initializePlutonicationDAppClientWithModal(
       //
       // TODO: Hide Plutonication modal QR code
       //
-
       onReceivePubkey(receivedPubkey)
+      console.log("Hidding modal");
+      // plutonicationModal.hideModal();
+      modal.closeModal();
     }
   )
 }

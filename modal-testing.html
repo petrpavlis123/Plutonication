@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <!-- <button id="generateCredentials" onclick="initialize()">Generate Access Credentials</button> -->
+  <!-- <plutonication-modal id="qrCodeContainer"></plutonication-modal> -->
+
+   <!-- Web Component -->
+   <button  onclick="initialize()">Open modallllllllllll </button>
+   <modal-component id="modalComponent"></modal-component>
+  <script src="lib/plutonication.js"></script>
+
+  <script>
+
+    async function initialize() {
+
+      const accessCredentials = new Plutonication.AccessCredentials(
+        "wss://plutonication-acnha.ondigitalocean.app/",
+        "1",
+        "Galaxy Logic Game",
+        "https://rostislavlitovkin.pythonanywhere.com/logo"
+      );
+      
+      console.log("accessCredentials:", accessCredentials.ToUri());
+      const injected = await Plutonication.initializePlutonicationDAppClientWithModal(accessCredentials, (receivedPubkey) => {
+        console.log("receivedPubkey", receivedPubkey);
+      });
+      console.log("injected", injected);
+    
+
+      // const injected = await Plutonication.initializePlutonicationDAppClientWithModal(accessCredentials, (receivedPubkey) => {
+      //   console.log("receivedPubkey", receivedPubkey);
+      // });
+      // console.log("injected", injected);
+    }
+  </script>
+</body>
+</html>
