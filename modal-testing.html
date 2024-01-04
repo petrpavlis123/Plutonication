@@ -10,7 +10,7 @@
 
 <body>
   <!-- Custom Plutocation modal Web Component -->
-  <plutonication-modal id="modalComponent"></plutonication-modal>
+  <plutonication-modal></plutonication-modal>
 
   <!-- Button for connecting -->
   <button onclick="initialize()">Connect</button>
@@ -43,7 +43,7 @@
 
       console.log("injected", account)
     }
-    
+
     async function signMessage() {
       if (account == null) {
         console.warn("Account has not connected yet.")
