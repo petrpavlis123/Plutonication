@@ -1,5 +1,5 @@
 import * as QRCode from 'qrcode';
-import { AccessCredentials } from 'src/AccessCredentials';
+import { AccessCredentials } from '../AccessCredentials';
 
 export class PlutonicationModal extends HTMLElement {
   private modal: HTMLElement;
