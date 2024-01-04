@@ -58,13 +58,13 @@ import { AccessCredentials } from 'src/AccessCredentials';
 //       style.textContent = `
 //         /* Estilos para el modal */
 //         .modal {
-//           display: none; /* Oculta el modal por defecto */
+//           display: none; 
 //           position: fixed;
 //           top: 0;
 //           left: 0;
 //           width: 100%;
 //           height: 100%;
-//           background-color: rgba(0, 0, 0, 0.5); /* Fondo semitransparente */
+//           background-color: rgba(0, 0, 0, 0.5); 
 //           justify-content: center;
 //           align-items: center;
 //         }
@@ -123,21 +123,18 @@ import { AccessCredentials } from 'src/AccessCredentials';
   
 
 
-export class ModalComponent extends HTMLElement {
+export class PlutonicationModal extends HTMLElement {
     private modal: HTMLElement;
     private qrImage: HTMLImageElement;
   
     constructor() {
       super();
       
-      // Crear el shadow DOM y adjuntar los estilos y el contenido del modal
       const shadow = this.attachShadow({ mode: 'open' });
   
-      // Estilos para el modal
       const style = document.createElement('style');
       style.textContent = `
       @import url('https://fonts.googleapis.com/css2?family=Inter:wght@500&family=Lexend:wght@500&family=Roboto&display=swap');
-        /* Estilos para el modal */
         .modal {
             display: none; /* Oculta el modal por defecto */
             position: fixed;
@@ -145,7 +142,7 @@ export class ModalComponent extends HTMLElement {
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0, 0, 0, 0.5); /* Fondo semitransparente */
+            background-color: rgba(0, 0, 0, 0.5); 
             justify-content: center;
             align-items: center;
         }
@@ -161,7 +158,7 @@ export class ModalComponent extends HTMLElement {
         }
         
         .modal-content .scan-qr-title {
-            margin-bottom: 10px; /* Espaciado inferior para separar el título */
+            margin-bottom: 10px; 
         }
         
         .modal-content .close {
@@ -169,14 +166,13 @@ export class ModalComponent extends HTMLElement {
             font-size: 28px;
             font-weight: bold;
             align-self: flex-end; /* Colocar el botón de cierre al final del contenedor */
-            margin-left: auto; /* Empujar el botón hacia la derecha */
+            margin-left: auto; 
         }
         
         .modal-content .qr-code-container {
             display: flex;
             justify-content: center;
             align-items: center;
-            /* Agrega cualquier estilo adicional necesario para el contenedor del código QR */
         }
         
         .close {
@@ -218,7 +214,7 @@ export class ModalComponent extends HTMLElement {
       //QR code element
         this.qrImage = document.createElement('img');
         this.qrImage.setAttribute('alt', 'QR Code');
-        this.qrImage.style.display = 'none'; // Initially hide the QR code
+        this.qrImage.style.display = 'none'; 
         this.modal.querySelector('.qr-code-container')?.appendChild(this.qrImage);
       
       // Abrir y cerrar el modal
@@ -231,11 +227,11 @@ export class ModalComponent extends HTMLElement {
     openModal(accessCredentials: AccessCredentials): void {
         const qrData = accessCredentials.ToUri();
         try {
-            QRCode.toDataURL(qrData, { width: 250 }) // Generate QR code data URL
+            QRCode.toDataURL(qrData, { width: 250 }) 
                 .then(url => {
                     this.qrImage.src = url;
-                    this.qrImage.style.display = 'block'; // Show the QR code
-                    this.modal.style.display = 'flex'; // Show the modal
+                    this.qrImage.style.display = 'block'; 
+                    this.modal.style.display = 'flex'; 
                 })
                 .catch(error => {
                     console.error('Error generating QR code:', error);
@@ -251,5 +247,5 @@ export class ModalComponent extends HTMLElement {
     }
   }
   
-  customElements.define('modal-component', ModalComponent);
+  customElements.define('plutonication-modal', PlutonicationModal);
   

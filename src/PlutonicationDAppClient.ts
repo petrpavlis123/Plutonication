@@ -3,7 +3,7 @@ import type { Injected, InjectedAccount } from "@polkadot/extension-inject/types
 import type { SignerPayloadJSON, SignerPayloadRaw } from "@polkadot/types/types"
 import type { SignerResult } from "@polkadot/api/types/index.js"
 import { AccessCredentials } from "./AccessCredentials"
-import { ModalComponent } from "./components/PlutonicationModal"
+import { PlutonicationModal } from "./components/PlutonicationModal"
 
 // import { PlutonicationModal } from "./PlutonicationModal"
 // import { PlutonicationModal } from "./components/PlutonicationModal"
@@ -110,7 +110,7 @@ export async function initializePlutonicationDAppClientWithModal(
   //----------------------------------------------------
   console.log("abriendo modal")
   // const modal = new ModalComponent();
-  const modal = document.getElementById('modalComponent') as ModalComponent;
+  const modal = document.getElementById('modalComponent') as PlutonicationModal;
   modal.openModal(accessCredentials);
 
 
