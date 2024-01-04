@@ -1,9 +1,4 @@
-export { AccessCredentials } from "./src/AccessCredentials"
-export {
-    initializePlutonicationDAppClient,
-    test,
-    initializePlutonicationDAppClientWithModal,
-    PlutonicationInjected,
-} from "./src/PlutonicationDAppClient"
-export { initializePlutonicationWalletClient } from "./src/PlutonicationWalletClient"
-export { PlutonicationModal } from "./src/components/PlutonicationModal"
+export { AccessCredentials } from "./src/AccessCredentials";
+export { initializePlutonicationDAppClientWithModal, initializePlutonicationDAppClient } from "./src/PlutonicationDAppClient";
+export { PlutonicationModal } from "./src/components/PlutonicationModal";
+export { initializePlutonicationWalletClient } from "./src/PlutonicationWalletClient";
