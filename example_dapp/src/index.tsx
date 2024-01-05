@@ -10,6 +10,9 @@ const root = ReactDOM.createRoot(
 root.render(
   <React.StrictMode>
     <App />
+    <script src="../node_modules/@plutonication/lib/index.js"></script>
+    
+
   </React.StrictMode>
 );
 
