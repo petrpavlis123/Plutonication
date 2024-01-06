@@ -34,7 +34,7 @@
     "checkJs": true,
     "skipLibCheck": true
   },
-  "include": ["./**/*.ts"],
+  "include": ["./**/*.ts", "./global.d.ts"],
   "exclude": [
     "./node_modules/**/*",
     "./tests/*",
