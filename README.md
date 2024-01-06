@@ -4,7 +4,6 @@ Plutonication is a TypeScript library for create a communication between dapps a
 
 
 ## Requirements
-
 - Node.js and npm installed on your system.
 
 ## Instalation
@@ -21,99 +20,50 @@ npm i @plutonication/plutonication
 ## Usage
 The overall structure of Plutonication is designed to be as little intrusive as possible.
 
-If you are building a dApp, you will want to interact with PlutonicationDAppClient static class.
+If you are building a dApp, you will want to interact with initializePlutonicationDAppClientWithModal functionality.
 
 Here is how:
 
 In a react application you can use it like this:
 
-#### Import PlutonicationDAppClient
 ```javascript
-import { PlutonicationDAppClient, AccessCredentials, PlutonicationQrPopUp } from '@plutonication/plutonication';
+import {AccessCredentials, initializePlutonicationDAppClientWithModal} from "@plutonication/plutonication";
 ```
 
-#### Initialize the Connection and send transactions
-To access the initializeAsync and SendPayloadAsync methods, you need to instantiate the AccessCredentials with the necessary information and also create an instance of PlutonicationDAppClient
+To access the initializePlutonicationDAppClientWithModal function, you need to instantiate the AccessCredentials with the necessary information, and you need to use the Plutonication modal web component to get the QR for make the connection:
+
 ```javascript
-// Access credentials are used to show correct info to the wallet.
-const accessCredentials = new AccessCredentials(
+// Import the functionalities from the package
+import {AccessCredentials, initializePlutonicationDAppClientWithModal} from "@plutonication/plutonication";
+
+// Provide the correct acces cfedentials
+ const accessCredentials = new AccessCredentials(
   "wss://plutonication-acnha.ondigitalocean.app/",
   "1",
-  "Galaxy Logic Game",
-  "https://rostislavlitovkin.pythonanywhere.com/logo"
+  "Plutonication test",
+  "https://rostislavlitovkin.pythonanywhere.com/plutowalleticonwhite"
 );
 
-// Instantiate the PlutonicationDAppClient class
-const dappClient = new PlutonicationDAppClient(accessCredentials);
-
-//  Initialize the conection
-void (async (): Promise<void> => {
-  try {
-    // Initialize the connection 
-    dappClient.initialize();
-    // Receive pub key from wallet
-    dappClient.receivePubKey();
-    // Send request payloads to the wallet
-    dappClient.sendJsonPayload(payload);
-    dappClient.sendRawPayload(rawMessage);
-
-  } catch (error) {
-    console.error("Error:", error);
+// Get the qr code to make the connection
+await initializePlutonicationDAppClientWithModal(
+  accessCredentials,
+  (receivedPubkey) => {
+    console.log("receivedPubkey", receivedPubkey);
   }
-})();
-
-```
-
-After you can send the payloads back to the dapp signed:
-```javascript
-// Access credentials are used to show correct info to the wallet.
-const accessCredentials = new AccessCredentials(
-  "wss://plutonication-acnha.ondigitalocean.app/",
-  "1",
-  "Galaxy Logic Game",
-  "https://rostislavlitovkin.pythonanywhere.com/logo"
 );
 
-// Instantiate the PlutonicationWalletClient class
-const walletClient = new PlutonicationWalletClient(accessCredentials);
-
-void (async (): Promise<void> => {
-  try {
-    // Initialize the connection
-    walletClient.initialize();
-    // Send public key to the dapp
-    walletClient.sendPublicKey("5GQWXj...");
-    // Send signature to the payload request to the wallet
-    walletClient.sendSignedPayload("0x3e17cafeb04e69...");
-    walletClient.sendSignedRaw("0x3e17cafeb04e69....");
-  } catch (error) {
-    console.error("Error:", error);
-  }
-})();
-
+// Use Plutonication modal web component to render the QR
+<plutonication-modal></plutonication-modal>
 ```
 
-#### Plutonication Qr PopUp
-You can use the Qr PopUp like this in a reactjs application:
+With pure HTML using the bundle file plutonication.js, like this:
 ```javascript
-export default function App() {
-  return (
-    <PlutonicationQrPopUp />
-      // Rest of your app...
-  )
-}
-```
-
-### Build the package
-
-```
-npm i
-
-npm run build
+  <!-- Custom Plutocation modal Web Component -->
+  <plutonication-modal></plutonication-modal>
+  <script src="node_modules/@plutonication/plutonication/lib/plutonication.js"></script>
 ```
 
 ### Testing
-
 ```
 cd tests
 
@@ -123,21 +73,121 @@ npx playwright test
 ```
 
 ### Problem / Motivation
+
 Currently, there is no way to connect a wallet to more exotic devices, like gaming console and wearables.
 
 ## How it works
-
 The private key is always saved in your wallet on your phone and is never sent anywhere. You need to pair the dApp with the wallet. To do so, the wallet needs to receive a special link with information needed to establish the connection. The wallet can receive this link, for example, by scanning a QR code. Once the link is received, the dApp and the wallet will get paired via websockets to establish a stable connection between different platforms. After the connection is established, the wallet is ready to receive any Extrinsics, which it can then sign and send back to the dApp.
 
-## Execution
-To run your application, simply execute your TypeScript file containing the usage code. Ensure that Node.js is installed on your system, and if you haven't already, compile your TypeScript code to JavaScript using the TypeScript Compiler (tsc).
-
-establish the connection.
-
-Run your application with:
+## Some usage examples
+Simple example for ReactJs:
 ```javascript
-node your_application.js
+function ExampleDapp() {
+  let account; // This is the Injected account object that will connect via Plutonication
+
+  const initialize = async () => {
+    // Provide the acces credentials information to show correct info to the wallet
+    const accessCredentials = new AccessCredentials(
+      "wss://plutonication-acnha.ondigitalocean.app/",
+      "1",
+      "Plutonication test",
+      "https://rostislavlitovkin.pythonanywhere.com/plutowalleticonwhite"
+    );
+
+    // Use initializePlutonicationDAppClientWithModal to connect through the modal
+    account = await initializePlutonicationDAppClientWithModal(
+      accessCredentials,
+      (receivedPubkey) => {
+        console.log("receivedPubkey", receivedPubkey);
+      }
+    );
+  };
+
+  // After succesfully connect you can sign the message
+  const signMessage = async () => {
+
+    const rawMessage = {
+      address: account.address,
+      data: "0x3c42797465733e48656c6c6f20537562737472617465206d6573736167653c2f42797465733e",
+      type: "bytes",
+    }
+
+    const rawSignatureResult = await account.signer.signRaw(rawMessage)
+  };
+
+  return (
+    <div>
+        <!-- Plutonication modal web component -->
+      <plutonication-modal></plutonication-modal>
+      <button onClick={initialize}>Connect</button>
+      <button onClick={signMessage}>Sign message</button>
+    </div>
+  );
+};
+
+export default ExampleDapp;
 ```
+
+Simple example for html use:
+```javascript
+
+// Your html file
+<body>
+  <!-- Custom Plutocation modal Web Component -->
+  <plutonication-modal></plutonication-modal>
+
+  <!-- Button for connecting -->
+  <button onclick="initialize()">Connect</button>
+
+  <!-- Button for requesting a message signature -->
+  <button onclick="signMessage()">Sign message</button>
+
+  <script src="node_modules/@plutonication/plutonication/lib/plutonication.js"></script>
+
+  <script>
+    let account // This is the Injected account object that will connect via Plutonication
+
+    async function initialize() {
+
+      const accessCredentials = new Plutonication.AccessCredentials(
+        "wss://plutonication-acnha.ondigitalocean.app/",
+        "100",
+        "Plutonication test",
+        "https://rostislavlitovkin.pythonanywhere.com/plutowalleticonwhite"
+      )
+
+      console.log("accessCredentials:", accessCredentials.ToUri());
+      
+      account = await Plutonication.initializePlutonicationDAppClientWithModal(
+        accessCredentials,
+        (receivedPubkey) => {
+          console.log("receivedPubkey", receivedPubkey);
+        },
+      )
+
+      console.log("injected", account)
+    }
+
+    async function signMessage() {
+      if (account == null) {
+        console.warn("Account has not connected yet.")
+        return;
+      }
+
+      const rawMessage = {
+        address: account.address,
+        data: "0x3c42797465733e48656c6c6f20537562737472617465206d6573736167653c2f42797465733e",
+        type: "bytes",
+      }
+
+      const rawSignatureResult = await account.signer.signRaw(rawMessage)
+
+      console.log("Signature received: ", rawSignatureResult)
+    }
+  </script>
+</body>
+```
+
 
 ### Plutonication Server
 - Used for reliable establishing of connection.
