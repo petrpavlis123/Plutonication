@@ -9,7 +9,6 @@ import { u8aToHex, hexToU8a } from '@polkadot/util';
 
 const accessCredentials = new AccessCredentials(
   "wss://plutonication-acnha.ondigitalocean.app/",
-  "1",
   "Plutonication test",
   "https://rostislavlitovkin.pythonanywhere.com/plutowalleticonwhite"
 );
@@ -28,7 +27,7 @@ async function getAlice() {
 }
 
 test('AccessCredentials to uri', async () => {
-  expect(accessCredentials.ToUri()).toBe(accessCredentials.ToUri())
+  expect(accessCredentials.ToUri()).toBe(`plutonication:?url=wss%3A%2F%2Fplutonication-acnha.ondigitalocean.app%2F&key=${accessCredentials.key}&name=Plutonication%20test&icon=https%3A%2F%2Frostislavlitovkin.pythonanywhere.com%2Fplutowalleticonwhite`)
 });
 
 test('Communication between dApp and Wallet', async () => {

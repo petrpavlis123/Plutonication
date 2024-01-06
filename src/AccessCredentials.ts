@@ -5,10 +5,10 @@ class AccessCredentials {
   public name?: string;
   public icon?: string;
 
-  constructor(url?: string, key?: string, name?: string, icon?: string) {
-    this.url = url || this.ToUri();
-    this.key = key || AccessCredentials.GenerateKey();
-    this.name = name;
+  constructor(url: string, name?: string, icon?: string) {
+    this.url = url;
+    this.key = AccessCredentials.GenerateKey();
+    this.name = name ;
     this.icon = icon;
   }
   
