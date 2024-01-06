@@ -24,6 +24,3 @@ src/
 *.log
 *.md
 *.bak
-
-# Include .map files
-!*.map
