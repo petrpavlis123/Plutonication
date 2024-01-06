@@ -21,8 +21,6 @@ coverage/
 # Others
 node_modules/
 assets/
-src/
-index.ts
 *.log
 *.md
 *.bak
