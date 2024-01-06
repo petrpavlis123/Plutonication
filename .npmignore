@@ -20,6 +20,8 @@ coverage/
 
 # Others
 node_modules/
+src/
+index.ts
 assets/
 *.log
 *.md

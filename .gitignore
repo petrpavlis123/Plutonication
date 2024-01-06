@@ -3,6 +3,7 @@ node_modules/
 
 # Ignore build output and compiled JavaScript/TypeScript files
 !webpack.config.js
+*.js.map
 
 # Ignore editor/IDE specific files
 .vscode/
@@ -36,3 +37,6 @@ config.ts
 
 # Ignore slintignore
 .eslintignore
+
+# Ignore the result
+lib
