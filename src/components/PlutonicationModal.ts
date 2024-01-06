@@ -75,7 +75,7 @@ export class PlutonicationModal extends HTMLElement {
     `;
     shadow.appendChild(style);
 
-    // Contenido del modal
+    // Modal element
     this.modal = document.createElement('div');
     this.modal.classList.add('modal');
     this.modal.innerHTML = `
@@ -94,7 +94,7 @@ export class PlutonicationModal extends HTMLElement {
     this.qrImage.style.display = 'none';
     this.modal.querySelector('.qr-code-container')?.appendChild(this.qrImage);
 
-    // Abrir y cerrar el modal
+    // Close the modal
     const closeButton = this.modal.querySelector('.close');
     closeButton?.addEventListener('click', () => {
       this.closeModal();

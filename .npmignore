@@ -1,9 +1,26 @@
-node_modules/
-build/
+# Config files
+.gitignore
+.editorconfig
+.eslintignore
+.eslintrc
+.eslintrc.cjs
+.prettierignore
+.prettierrc
+babel.config.js
+tsconfig.json
+webpack.config.js
+
+# Tests files
+__tests__
+test/
+tests/
+*.test.js
+*.spec.js
 coverage/
+
+# Others
+node_modules/
+src/
 *.log
 *.md
 *.bak
-test/
-tests/
-__tests__/

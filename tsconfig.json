@@ -1,6 +1,5 @@
 {
   "compilerOptions": {
-    // project options
     "lib": [
       "ESNext",
       "dom"
