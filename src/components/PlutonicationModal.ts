@@ -1,5 +1,6 @@
 import * as QRCode from 'qrcode';
-import { AccessCredentials } from 'src/AccessCredentials';
+import { AccessCredentials } from '../AccessCredentials';
+import  { DOMAttributes }  from 'react';
 
 export class PlutonicationModal extends HTMLElement {
   private modal: HTMLElement;
@@ -124,4 +125,16 @@ export class PlutonicationModal extends HTMLElement {
   }
 }
 
+// Define the html web component
 customElements.define('plutonication-modal', PlutonicationModal);
+
+// Extend the JSX namespace
+type CustomElement<T> = Partial<T & DOMAttributes<T> & { children: any }>;
+
+declare global {
+  namespace JSX {
+    interface IntrinsicElements {
+      ['plutonication-modal']: CustomElement<PlutonicationModal>;
+    }
+  }
+}
