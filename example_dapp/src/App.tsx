@@ -36,6 +36,10 @@ function App() {
   };
 
   const signMessage = async () => {
+    if (account == null) {
+      console.warn("Account has not connected yet.")
+      return;
+    }
 
     const rawMessage = {
       address: account.address,
