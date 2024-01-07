@@ -4,7 +4,7 @@
   "description": "TypeScript version of C# plutonication library",
   "main": "./lib/index.js",
   "module": "./lib/index.js",
-  "types": "./types",
+  "types": "./lib/types",
   "scripts": {
     "build": "webpack --config webpack.config.js && tsc"
   },
