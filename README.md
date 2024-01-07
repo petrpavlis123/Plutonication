@@ -27,14 +27,14 @@ Here is how:
 In a react application you can use it like this:
 
 ```javascript
-import {AccessCredentials, initializePlutonicationDAppClientWithModal} from "@plutonication/plutonication";
+import {AccessCredentials, initializePlutonicationDAppClientWithModal} from "@plutonication/plutonication/lib";
 ```
 
 To access the initializePlutonicationDAppClientWithModal function, you need to instantiate the AccessCredentials with the necessary information, and you need to use the Plutonication modal web component to get the QR for make the connection:
 
 ```javascript
 // Import the functionalities from the package
-import {AccessCredentials, initializePlutonicationDAppClientWithModal} from "@plutonication/plutonication";
+import {AccessCredentials, initializePlutonicationDAppClientWithModal} from "@plutonication/plutonication/lib";
 
 // Provide the correct acces cfedentials
  const accessCredentials = new AccessCredentials(
@@ -126,6 +126,21 @@ function ExampleDapp() {
 };
 
 export default ExampleDapp;
+```
+If you are working in a typescript dapp, make the types declaration to use the web component succesfully:
+```javascript
+import  { DOMAttributes }  from 'react';
+import { PlutonicationModa l} from "@plutonication/plutonication/lib";
+
+type CustomElement<T> = Partial<T & DOMAttributes<T> & { children: any }>;
+
+declare global {
+  namespace JSX {
+    interface IntrinsicElements {
+      ['plutonication-modal']: CustomElement<PlutonicationModal>;
+    }
+  }
+}
 ```
 
 Simple example for html use:
