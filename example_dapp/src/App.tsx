@@ -1,8 +1,19 @@
 import './App.css'
-import {AccessCredentials, initializePlutonicationDAppClientWithModal} from "@plutonication/plutonication";
+import  { DOMAttributes }  from 'react';
+import {AccessCredentials, initializePlutonicationDAppClientWithModal, PlutonicationModal} from "@plutonication/plutonication/lib";
+
+type CustomElement<T> = Partial<T & DOMAttributes<T> & { children: any }>;
+
+declare global {
+  namespace JSX {
+    interface IntrinsicElements {
+      ['plutonication-modal']: CustomElement<PlutonicationModal>;
+    }
+  }
+}
 
 function App() {
-  let account;
+  let account:any;
 
   const initialize = async () => {
     const accessCredentials = new AccessCredentials(
