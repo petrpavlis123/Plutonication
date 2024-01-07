@@ -1,12 +1,12 @@
 {
   "name": "@plutonication/plutonication",
-  "version": "1.0.79",
+  "version": "1.0.80",
   "description": "TypeScript version of C# plutonication library",
   "main": "./lib/index.js",
   "module": "./lib/index.js",
   "types": "./types",
   "scripts": {
-    "build": "webpack --config webpack.config.js"
+    "build": "webpack --config webpack.config.js && tsc"
   },
   "dependencies": {
     "@babel/core": "^7.23.7",
