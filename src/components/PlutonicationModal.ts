@@ -124,4 +124,4 @@ export class PlutonicationModal extends HTMLElement {
   }
 }
 
-customElements.define('plutonication-modal', PlutonicationModal);
+customElements.define('Plutonication-modal', PlutonicationModal);

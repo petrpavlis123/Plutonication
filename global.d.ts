@@ -1,10 +1,10 @@
-import { PlutonicationModal } from "@plutonication/plutonication";
 import React from "react";
+import { PlutonicationModal } from "lib/src/components/PlutonicationModal";
 
 declare global {
   namespace JSX {
     interface IntrinsicElements {
-      'plutonication-modal': React.DetailedHTMLProps<React.HTMLAttributes<PlutonicationModal>, PlutonicationModal>;
+      'Plutonication-modal': React.DetailedHTMLProps<React.HTMLAttributes<PlutonicationModal>, PlutonicationModal>;
     }
   }
 }
