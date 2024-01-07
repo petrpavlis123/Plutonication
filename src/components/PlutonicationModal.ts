@@ -12,7 +12,11 @@ export class PlutonicationModal extends HTMLElement {
 
     const style = document.createElement('style');
     style.textContent = `
-      @import url('https://fonts.googleapis.com/css2?family=Inter:wght@500&family=Lexend:wght@500&family=Roboto&display=swap');
+      @import url('https://fonts.googleapis.com/css2?family=Inter:wght@500&family=Lexend:wght@500&family=Libre+Franklin:wght@100&family=Open+Sans&family=Roboto&display=swap');
+
+      * {
+
+      }
 
       .modal {
         display: none; /* Hide the modal by default */
@@ -24,19 +28,22 @@ export class PlutonicationModal extends HTMLElement {
         background-color: rgba(0, 0, 0, 0.5); 
         justify-content: center;
         align-items: center;
+        
       }
       
       .modal-content {
-        background-color: white;
+        background-color: #0e1110;
         border-radius: 5px;
         width: 350px; /* Modal width */
         display: flex;
         flex-direction: column;
         align-items: center;
+        padding: 0 30px;
+        border-radius: 1rem;
       }
       
       .modal-content .scan-qr-title {
-        margin-bottom: 10px; 
+        margin-bottom: 1rem;
       }
       
       .modal-content .close {
@@ -55,7 +62,7 @@ export class PlutonicationModal extends HTMLElement {
       
       .close {
         position: relative;
-        top: 15px;
+        top: 22px;
         right: 15px;
       }
       .scan-qr-title{
@@ -68,9 +75,28 @@ export class PlutonicationModal extends HTMLElement {
 
       .close:hover,
       .close:focus {
-        color: black;
+        color: white;
         text-decoration: none;
         cursor: pointer;
+      }
+
+      .qr-code-container {
+        border-radius: 1rem;
+      }
+
+      img {
+        border-radius: 1rem;
+      }
+
+      .scan-qr-title, .scan-qr-text  {
+        color: white;
+        font-size: 1rem;
+        font-weight: bolder;
+        font-family: 'Roboto', sans-serif;
+        font-family: 'Inter', sans-serif;
+        font-family: 'Lexend', sans-serif;
+        font-family: 'Libre Franklin', sans-serif;
+        font-family: 'Open Sans', sans-serif;
       }
     `;
     shadow.appendChild(style);
@@ -81,7 +107,7 @@ export class PlutonicationModal extends HTMLElement {
     this.modal.innerHTML = `
         <div class="modal-content">
             <span class="close">&times;</span>
-            <h3 class="scan-qr-title" id="scan-qr-title">Plutonication</h3>
+            <p class="scan-qr-title" id="scan-qr-title">Plutonication</p>
             <div class="qr-code-container"></div>
             <p class="scan-qr-text" id="scan-qr-text">Scan this QR with your phone.</p>
         </div>
