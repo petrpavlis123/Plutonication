@@ -28,9 +28,7 @@
     // "noUncheckedIndexedAccess": true, // accessing index must always check for undefined
     "noUnusedLocals": true, // Report errors on unused local variables.
     "noUnusedParameters": true, // Report errors on unused parameters in functions
-    // Allowing package to be used in js proyects
-    "allowJs": true,
-    "checkJs": true,
+    "allowJs": false,
     "skipLibCheck": true
   },
   "include": ["./**/*.ts", "./global.d.ts"],
