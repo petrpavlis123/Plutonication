@@ -1,4 +1,3 @@
-// 
 /**
  * Class to use correct acces credential information in the wallet
  */
@@ -21,13 +20,17 @@ class AccessCredentials {
     this.icon = icon;
   }
   
+   /**
+   * Helper method that generates a random key.
+   * @returns random key
+   */
   static GenerateKey(): string {
     return Date.now().toString();
   }
 
   /**
    * Converts the credentials into a URI string to be used in the Plutonication application.
-   * @returns {string} - The URI string generated from the credentials.
+   * @returns The URI string generated from the credentials.
    */
   ToUri(): string {
     const queryParams: string[] = [

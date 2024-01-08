@@ -1,7 +1,5 @@
-// @packages
 import { io } from "socket.io-client";
 import { AccessCredentials } from "./AccessCredentials";
-
 import type { SignerResult} from "@polkadot/api/types/index.js"
 import type { SignerPayloadJSON, SignerPayloadRaw } from "@polkadot/types/types"
 
@@ -17,7 +15,7 @@ interface PlutonicationWallet {
  * @param {string} pubkey - The public key associated with the wallet.
  * @param {(payload: SignerPayloadJSON) => Promise<void>} onSignPayload - Callback function to handle payload signing.
  * @param {(raw: SignerPayloadRaw) => Promise<void>} onSignRaw - Callback function to handle raw signing.
- * @returns {Promise<PlutonicationWallet>} - A Promise resolving to the initialized Plutonication wallet client.
+ * @returns A Promise resolving to the initialized Plutonication wallet client.
  */
 export async function initializePlutonicationWalletClient(
   accessCredentials: AccessCredentials,
