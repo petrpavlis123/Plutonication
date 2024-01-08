@@ -9,9 +9,18 @@ function App() {
   let publicKey: string;
 
   const initialize = async () => {
+
+    // Specify your dApp info here
     const accessCredentials = new AccessCredentials(
+      // Address of Plutonication server
+      // Feel free to use this one
+      // Learn more: https://plutonication-acnha.ondigitalocean.app/docs/javascript
       "wss://plutonication-acnha.ondigitalocean.app/",
+
+      // dApp name
       "Plutonication test",
+
+      // dApp icon
       "https://rostislavlitovkin.pythonanywhere.com/plutowalleticonwhite",
     );
 
@@ -29,11 +38,14 @@ function App() {
   };
 
   const signMessage = async () => {
+
+    // Check that the account is connected
     if (account == null) {
       console.warn("Account has not connected yet.")
       return;
     }
 
+    // Check that the account can sign messages
     if (account.signer.signRaw == null){
       console.warn("Signer property is not present.")
       return;
@@ -51,18 +63,24 @@ function App() {
   };
 
   const signBalancesTransfer = async () => {
+
+    // Check that the account is connected
     if (account == null) {
       console.warn("Account has not connected yet.")
       return;
     }
 
-    if (account.signer.signRaw == null){
+    // Check that the account can sign messages
+    if (account.signer.signPayload == null){
       console.warn("Signer property is not present.")
       return;
     }
 
+    // Connect to the chain
     const api = await ApiPromise.create({ provider: new WsProvider("wss://ws.test.azero.dev") });
 
+    // The actuall balance transfer.
+    // Part of the code taken from: https://polkadot.js.org/docs/extension/usage
     api.tx.balances
       .transfer('5C5555yEXUcmEJ5kkcCMvdZjUo7NGJiQJMS7vZXEeoMhj3VQ', 10**12)
       .signAndSend(publicKey, { signer: account.signer }, (status: any) => { });
@@ -70,7 +88,8 @@ function App() {
 
   return (
     <div>
-      <plutonication-modal></plutonication-modal>
+      {/* You need to include the <plutonication-modal /> in order to display the QR code popup. */}
+      <plutonication-modal />
       <button onClick={initialize}>Connect</button>
       <button onClick={signMessage}>Sign message</button>
       <button onClick={signBalancesTransfer}>Sign balances_transfer</button>
