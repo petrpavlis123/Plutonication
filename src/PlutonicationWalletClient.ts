@@ -11,6 +11,14 @@ interface PlutonicationWallet {
   disconnect: () => void
 }
 
+/**
+ * Handles communication with the Plutonication server, sending and receiving payloads and raw signatures.
+ * @param {AccessCredentials} accessCredentials - The credentials required for connecting to the Plutonication server.
+ * @param {string} pubkey - The public key associated with the wallet.
+ * @param {(payload: SignerPayloadJSON) => Promise<void>} onSignPayload - Callback function to handle payload signing.
+ * @param {(raw: SignerPayloadRaw) => Promise<void>} onSignRaw - Callback function to handle raw signing.
+ * @returns {Promise<PlutonicationWallet>} - A Promise resolving to the initialized Plutonication wallet client.
+ */
 export async function initializePlutonicationWalletClient(
   accessCredentials: AccessCredentials,
   pubkey: string,
