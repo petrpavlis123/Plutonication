@@ -155,7 +155,7 @@ export class PlutonicationModal extends HTMLElement {
 customElements.define('plutonication-modal', PlutonicationModal);
 
 // Extend the JSX namespace
-type CustomElement<T> = Partial<T & DOMAttributes<T> & { children: any }>;
+type CustomElement<T> = Partial<T & DOMAttributes<T>>;
 
 declare global {
   namespace JSX {
