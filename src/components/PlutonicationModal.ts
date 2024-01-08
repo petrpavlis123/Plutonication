@@ -2,10 +2,18 @@ import * as QRCode from 'qrcode';
 import { AccessCredentials } from '../AccessCredentials';
 import  { DOMAttributes }  from 'react';
 
+/**
+ * "QR Modal used to connect the dapp to the Plutonication server.
+ * @extends HTMLElement
+ */
 export class PlutonicationModal extends HTMLElement {
   private modal: HTMLElement;
   private qrImage: HTMLImageElement;
 
+  /**
+ * Constructor.
+ * Creates a new modal and sets up its elements.
+ */
   constructor() {
     super();
 
@@ -14,10 +22,6 @@ export class PlutonicationModal extends HTMLElement {
     const style = document.createElement('style');
     style.textContent = `
       @import url('https://fonts.googleapis.com/css2?family=Inter:wght@500&family=Lexend:wght@500&family=Libre+Franklin:wght@100&family=Open+Sans&family=Roboto&display=swap');
-
-      * {
-
-      }
 
       .modal {
         display: none; /* Hide the modal by default */
@@ -128,6 +132,10 @@ export class PlutonicationModal extends HTMLElement {
     });
   }
 
+  /**
+   * Opens the modal and displays the QR code generated with the access credentials information.
+   * @param {AccessCredentials} accessCredentials - Acces cedentials to generate the QR.
+   */
   openModal(accessCredentials: AccessCredentials): void {
     const qrData = accessCredentials.ToUri();
     try {
@@ -145,13 +153,16 @@ export class PlutonicationModal extends HTMLElement {
     }
   }
 
+  /**
+   * Closes the modal along with the QR code.
+   */
   closeModal(): void {
     this.modal.style.display = 'none';
     this.qrImage.style.display = 'none';
   }
 }
 
-// Define the html web component
+// Defines the html web component
 customElements.define('plutonication-modal', PlutonicationModal);
 
 // Extend the JSX namespace

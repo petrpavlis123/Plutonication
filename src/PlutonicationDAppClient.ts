@@ -9,6 +9,12 @@ export interface PlutonicationInjected extends Injected {
   disconnect: () => void
 }
 
+/**
+ * Initializes the Plutonication DApp client connection.
+ * @param {AccessCredentials} accessCredentials - The credentials required for connecting to the Plutonication server.
+ * @param {(receivedPubkey: string) => void} onReceivePubkey - Callback function to handle the received public key.
+ * @returns A Promise resolving to the initialized Plutonication Injected account.
+ */
 export async function initializePlutonicationDAppClient(
   accessCredentials: AccessCredentials,
   onReceivePubkey: (receivedPubkey: string) => void,
@@ -89,6 +95,13 @@ export async function initializePlutonicationDAppClient(
   }
 }
 
+/**
+ * Shows the modal's QR code and handles the connection with the Plutonication server.
+ * @param {AccessCredentials} accessCredentials - The credentials required for connecting to the Plutonication server.
+ * @param {(receivedPubkey: string) => void} onReceivePubkey - Callback function to handle the received public key.
+ * @returns A Promise resolving to the initialized Plutonication Injected account.
+ * @throws Throws an error if no or multiple PlutonicationModal components are found in the DOM.
+ */
 export async function initializePlutonicationDAppClientWithModal(
   accessCredentials: AccessCredentials,
   onReceivePubkey: (receivedPubkey: string) => void,
@@ -112,6 +125,11 @@ export async function initializePlutonicationDAppClientWithModal(
   )
 }
 
+/**
+ * Retrieves the PlutonicationModal web component from the DOM.
+ * @returns The PlutonicationModal web component.
+ * @throws Throws an error if no or multiple PlutonicationModal components are found in the DOM.
+ */
 function getPlutonicationModal(): PlutonicationModal {
   const plutonicationModals = document.getElementsByTagName('plutonication-modal')
 
