@@ -2,7 +2,6 @@
 
 Plutonication is a TypeScript library for create a communication between dapps and wallets across platforms
 
-
 ## Requirements
 - Node.js and npm installed on your system.
 
@@ -13,33 +12,32 @@ npm i @plutonication/plutonication
 ```
 
 ## Other versions
-- C#:  https://github.com/cisar2218/Plutonication/tree/main
+- C# - https://github.com/cisar2218/Plutonication/tree/main
 - Kotlin - planned
 - Swift - planned
 
 ## Usage
 The overall structure of Plutonication is designed to be as little intrusive as possible.
 
-If you are building a dApp, you will want to interact with initializePlutonicationDAppClientWithModal functionality.
+If you are building a dApp, you will want to interact with `initializePlutonicationDAppClientWithModal` functionality.
 
 Here is how:
 
 In a react application you can use it like this:
 
 ```javascript
-import {AccessCredentials, initializePlutonicationDAppClientWithModal} from "@plutonication/plutonication";
+import { AccessCredentials, initializePlutonicationDAppClientWithModal } from "@plutonication/plutonication";
 ```
 
 To access the initializePlutonicationDAppClientWithModal function, you need to instantiate the AccessCredentials with the necessary information, and you need to use the Plutonication modal web component to get the QR for make the connection:
 
 ```javascript
 // Import the functionalities from the package
-import {AccessCredentials, initializePlutonicationDAppClientWithModal} from "@plutonication/plutonication";
+import { AccessCredentials, initializePlutonicationDAppClientWithModal } from "@plutonication/plutonication";
 
 // Provide the correct acces cfedentials
  const accessCredentials = new AccessCredentials(
   "wss://plutonication-acnha.ondigitalocean.app/",
-  "1",
   "Plutonication test",
   "https://rostislavlitovkin.pythonanywhere.com/plutowalleticonwhite"
 );
@@ -64,6 +62,7 @@ With pure HTML using the bundle file plutonication.js, like this:
 ```
 
 ### Testing
+
 ```
 cd tests
 
@@ -72,12 +71,22 @@ npm i
 npx playwright test
 ```
 
-### Problem / Motivation
+### Docker
 
-Currently, there is no way to connect a wallet to more exotic devices, like gaming console and wearables.
+The following docker file runs a react sample dApp, which can be used for testing all plutonication dApp functionalities.
+
+```
+cd example_dapp
+
+docker build -t plutonication-react-dapp-example . 
+
+docker run -p 3000:3000 plutonication-react-dapp-example
+```
 
 ## How it works
-The private key is always saved in your wallet on your phone and is never sent anywhere. You need to pair the dApp with the wallet. To do so, the wallet needs to receive a special link with information needed to establish the connection. The wallet can receive this link, for example, by scanning a QR code. Once the link is received, the dApp and the wallet will get paired via websockets to establish a stable connection between different platforms. After the connection is established, the wallet is ready to receive any Extrinsics, which it can then sign and send back to the dApp.
+The private key is always saved in your wallet on your phone and is never sent anywhere.
+
+You need to pair the dApp with the wallet. To do so, the wallet needs to receive a special link with information needed to establish the connection. The wallet can receive this link, for example, by scanning a QR code. Once the link is received, the dApp and the wallet will get paired via websockets to establish a stable connection between different platforms. After the connection is established, the wallet is ready to receive any Extrinsics, which it can then sign and send back to the dApp.
 
 ## Some usage examples
 Simple example for ReactJs:
@@ -200,22 +209,14 @@ Simple example for html use:
 ### dApp
 - needs to have access to either: Plutonication Native / Plutonication Extension
 
-### Plutonication Native
-- A simple package that allows the dApp get connected with the Mobile Wallet.
-- Connects the dApp with the Plutonication server.
-- Helps to generate a QR code for the Wallet to 
-
-### Plutonication Extension
-a polkadot.js extension that works with any existing dApp that supports polkadot.js extension.
-Connects the dApp with the Plutonication server.
-Generate a QR code for the Wallet to establish the connection.
-
 ## Limitations
 - both devices need to support internet connection
 
 ## dApps utilising Plutonication
 - [Plutonication Extension](https://github.com/RostislavLitovkin/PlutonicationExtension)
 - [Galaxy Logic Game](https://github.com/RostislavLitovkin/galaxylogicgamemaui)
+
+Feel free to add your own project by making a PR.
 
 ## Wallets utilising Plutonication
 - [PlutoWallet](https://github.com/RostislavLitovkin/PlutoWallet)
