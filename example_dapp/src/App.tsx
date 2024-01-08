@@ -1,16 +1,5 @@
 import './App.css'
-import  { DOMAttributes }  from 'react';
-import {AccessCredentials, initializePlutonicationDAppClientWithModal, PlutonicationModal} from "@plutonication/plutonication/lib";
-
-type CustomElement<T> = Partial<T & DOMAttributes<T> & { children: any }>;
-
-declare global {
-  namespace JSX {
-    interface IntrinsicElements {
-      ['plutonication-modal']: CustomElement<PlutonicationModal>;
-    }
-  }
-}
+import { AccessCredentials, initializePlutonicationDAppClientWithModal } from "@plutonication/plutonication";
 
 function App() {
   let account:any;
@@ -18,16 +7,15 @@ function App() {
   const initialize = async () => {
     const accessCredentials = new AccessCredentials(
       "wss://plutonication-acnha.ondigitalocean.app/",
-      "1",
       "Plutonication test",
-      "https://rostislavlitovkin.pythonanywhere.com/plutowalleticonwhite"
+      "https://rostislavlitovkin.pythonanywhere.com/plutowalleticonwhite",
     );
 
     console.log("accessCredentials:", accessCredentials.ToUri());
 
     account = await initializePlutonicationDAppClientWithModal(
       accessCredentials,
-      (receivedPubkey) => {
+      (receivedPubkey: string) => {
         console.log("receivedPubkey", receivedPubkey);
       }
     );
