@@ -2,78 +2,44 @@
 
 Plutonication is a TypeScript library for create a communication between dapps and wallets across platforms
 
-## Requirements
+# Requirements
+
 - Node.js and npm installed on your system.
 
-## Instalation
+The package uses **node v18**
 
-```javascript
+# Instalation
+
+NPM package: https://www.npmjs.com/package/@plutonication/plutonication
+
+```
 npm i @plutonication/plutonication
 ```
 
-## Other versions
-- C# - https://github.com/cisar2218/Plutonication/tree/main
-- Kotlin - planned
-- Swift - planned
+# Other versions
 
-## Usage
+- C# - https://github.com/cisar2218/Plutonication/tree/main
+
+# Usage
+
 The overall structure of Plutonication is designed to be as little intrusive as possible.
 
-If you are building a dApp, you will want to interact with `initializePlutonicationDAppClientWithModal` functionality.
+A comprehensive guide adding Plutonication to your dApp / Wallet can be found here: https://plutonication-acnha.ondigitalocean.app/docs/javascript.
 
-Here is how:
+# React dApp example
 
-In a react application you can use it like this:
+In the `example_dapp` folder, you can find a typescript React application that implements Plutonication.
 
-```javascript
-import { AccessCredentials, initializePlutonicationDAppClientWithModal } from "@plutonication/plutonication";
-```
+### React dApp docs
 
-To access the initializePlutonicationDAppClientWithModal function, you need to instantiate the AccessCredentials with the necessary information, and you need to use the Plutonication modal web component to get the QR for make the connection:
+A detailed description of the Plutonication implementation can be found:
 
-```javascript
-// Import the functionalities from the package
-import { AccessCredentials, initializePlutonicationDAppClientWithModal } from "@plutonication/plutonication";
-
-// Provide the correct acces cfedentials
- const accessCredentials = new AccessCredentials(
-  "wss://plutonication-acnha.ondigitalocean.app/",
-  "Plutonication test",
-  "https://rostislavlitovkin.pythonanywhere.com/plutowalleticonwhite"
-);
-
-// Get the qr code to make the connection
-await initializePlutonicationDAppClientWithModal(
-  accessCredentials,
-  (receivedPubkey) => {
-    console.log("receivedPubkey", receivedPubkey);
-  }
-);
-
-// Use Plutonication modal web component to render the QR
-<plutonication-modal></plutonication-modal>
-```
-
-With pure HTML using the bundle file plutonication.js, like this:
-```javascript
-  <!-- Custom Plutocation modal Web Component -->
-  <plutonication-modal></plutonication-modal>
-  <script src="node_modules/@plutonication/plutonication/lib/plutonication.js"></script>
-```
-
-### Testing
-
-```
-cd tests
-
-npm i
-
-npx playwright test
-```
+1) https://plutonication-acnha.ondigitalocean.app/docs/react-example
+2) in the `src/app.ts` file.
 
 ### Docker
 
-The following docker file runs a react sample dApp, which can be used for testing all plutonication dApp functionalities.
+The following docker file runs the sample React dApp, which can be used for testing all plutonication dApp functionalities.
 
 ```
 cd example_dapp
@@ -83,150 +49,88 @@ docker build -t plutonication-react-dapp-example .
 docker run -p 3000:3000 plutonication-react-dapp-example
 ```
 
-## How it works
+### Run locally
+
+```
+cd example_dapp
+
+# Install the dApp dependencies
+npm i
+
+npm start
+```
+
+# How Plutonication works
+
 The private key is always saved in your wallet on your phone and is never sent anywhere.
 
 You need to pair the dApp with the wallet. To do so, the wallet needs to receive a special link with information needed to establish the connection. The wallet can receive this link, for example, by scanning a QR code. Once the link is received, the dApp and the wallet will get paired via websockets to establish a stable connection between different platforms. After the connection is established, the wallet is ready to receive any Extrinsics, which it can then sign and send back to the dApp.
 
-## Some usage examples
-Simple example for ReactJs:
-```javascript
-function ExampleDapp() {
-  let account; // This is the Injected account object that will connect via Plutonication
+To get a more in-depth details of the underlying backend, read this guide: https://plutonication-acnha.ondigitalocean.app/docs/flask-server.
 
-  const initialize = async () => {
-    // Provide the acces credentials information to show correct info to the wallet
-    const accessCredentials = new AccessCredentials(
-      "wss://plutonication-acnha.ondigitalocean.app/",
-      "1",
-      "Plutonication test",
-      "https://rostislavlitovkin.pythonanywhere.com/plutowalleticonwhite"
-    );
+# Build the package locally
 
-    // Use initializePlutonicationDAppClientWithModal to connect through the modal
-    account = await initializePlutonicationDAppClientWithModal(
-      accessCredentials,
-      (receivedPubkey) => {
-        console.log("receivedPubkey", receivedPubkey);
-      }
-    );
-  };
+```
+# Install all dependencies
+npm i
 
-  // After succesfully connect you can sign the message
-  const signMessage = async () => {
-
-    const rawMessage = {
-      address: account.address,
-      data: "0x3c42797465733e48656c6c6f20537562737472617465206d6573736167653c2f42797465733e",
-      type: "bytes",
-    }
-
-    const rawSignatureResult = await account.signer.signRaw(rawMessage)
-  };
-
-  return (
-    <div>
-        <!-- Plutonication modal web component -->
-      <plutonication-modal></plutonication-modal>
-      <button onClick={initialize}>Connect</button>
-      <button onClick={signMessage}>Sign message</button>
-    </div>
-  );
-};
-
-export default ExampleDapp;
+npm run build
 ```
 
-Simple example for html use:
-```javascript
+# Testing
 
-// Your html file
-<body>
-  <!-- Custom Plutocation modal Web Component -->
-  <plutonication-modal></plutonication-modal>
+### Unit tests
+The provided tests showcase how Plutonication can be implemented for both dApps and Wallets.
 
-  <!-- Button for connecting -->
-  <button onclick="initialize()">Connect</button>
+```
+cd tests
 
-  <!-- Button for requesting a message signature -->
-  <button onclick="signMessage()">Sign message</button>
+# Install all testing dependencies
+npm i
 
-  <script src="node_modules/@plutonication/plutonication/lib/plutonication.js"></script>
-
-  <script>
-    let account // This is the Injected account object that will connect via Plutonication
-
-    async function initialize() {
-
-      const accessCredentials = new Plutonication.AccessCredentials(
-        "wss://plutonication-acnha.ondigitalocean.app/",
-        "100",
-        "Plutonication test",
-        "https://rostislavlitovkin.pythonanywhere.com/plutowalleticonwhite"
-      )
-
-      console.log("accessCredentials:", accessCredentials.ToUri());
-      
-      account = await Plutonication.initializePlutonicationDAppClientWithModal(
-        accessCredentials,
-        (receivedPubkey) => {
-          console.log("receivedPubkey", receivedPubkey);
-        },
-      )
-
-      console.log("injected", account)
-    }
-
-    async function signMessage() {
-      if (account == null) {
-        console.warn("Account has not connected yet.")
-        return;
-      }
-
-      const rawMessage = {
-        address: account.address,
-        data: "0x3c42797465733e48656c6c6f20537562737472617465206d6573736167653c2f42797465733e",
-        type: "bytes",
-      }
-
-      const rawSignatureResult = await account.signer.signRaw(rawMessage)
-
-      console.log("Signature received: ", rawSignatureResult)
-    }
-  </script>
-</body>
+npx playwright test
 ```
 
-### Plutonication Server
-- Used for reliable establishing of connection.
-- Passes payloads between Wallets and dApps.
+### E2E testing with Pluto wallet
 
-### Mobile Wallet
-- Has access to the private key
-- signs the payloads and sends them back to the dApp.
-- Never exposes the private key
+Firstly, you will need to run the sample React dApp that can be used for testing.
 
-### dApp
-- needs to have access to either: Plutonication Native / Plutonication Extension
+```
+cd example_dapp
 
-## Limitations
+# Install the dApp dependencies
+npm i
+
+npm start
+```
+
+Then, you will need to get Pluto wallet on your phone. There are multiple ways to get it:
+1) Download it from Google Play (for Android phones): https://play.google.com/store/apps/details?id=com.rostislavlitovkin.plutowallet
+2) Build and deploy it locally from this repo (for all platforms): https://github.com/rostislavLitovkin/plutowallet
+
+After installation completes, click on the QR code scanner icon on the top-right corner of the screen to open the universal QR code scanner. Then scan the Plutonication QR modal and accept the connection. PlutoWallet and the dApp will successfully pair. PlutoWallet is now ready to receive any transaction requests.
+
+If you are not sure about any of these steps, you can also follow this video guide, that showcases the whole process of connecting your PlutoWallet to the dApp and signing a transaction request: ~~~~~~~~ 
+
+# Limitations
+
 - both devices need to support internet connection
 
-## dApps utilising Plutonication
+# dApps utilising Plutonication
 - [Plutonication Extension](https://github.com/RostislavLitovkin/PlutonicationExtension)
 - [Galaxy Logic Game](https://github.com/RostislavLitovkin/galaxylogicgamemaui)
 
 Feel free to add your own project by making a PR.
 
-## Wallets utilising Plutonication
+# Wallets utilising Plutonication
 - [PlutoWallet](https://github.com/RostislavLitovkin/PlutoWallet)
 
 Feel free to add your own project by making a PR.
 
-## Inspiration
+# Inspiration
 - [https://walletconnect.com/](https://walletconnect.com/)
 
-## Contributions
+# Contributions
 Contributions are welcome. If you wish to contribute to the project, follow these steps:
 
 1. Fork the repository.
@@ -235,5 +139,5 @@ Contributions are welcome. If you wish to contribute to the project, follow thes
 4. Push your changes to your fork: git push origin feature/new-feature.
 5. Open a Pull Request in the original repository.
 
-## License
-This project is licensed under the MIT License. 
+# License
+This project is licensed under the MIT License.
