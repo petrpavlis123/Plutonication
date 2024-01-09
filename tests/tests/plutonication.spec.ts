@@ -72,13 +72,13 @@ test('Communication between dApp and Wallet', async () => {
           
           const signature = alice.sign(message)
 
-          walletClient.send_payload_signature({ signature: u8aToHex(signature), id: 0 })
+          walletClient.sendPayloadSignature({ signature: u8aToHex(signature), id: 0 })
         },
         async (raw: SignerPayloadRaw) => {
           expect(raw.address).toBe("5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY")
           console.log("Received raw: " + raw)
           const signature = alice.sign(hexToU8a(raw.data))
-          walletClient.send_raw_signature({ signature: u8aToHex(signature), id: 0 })
+          walletClient.sendRawSignature({ signature: u8aToHex(signature), id: 0 })
         })
 
       resolve(walletClient)
