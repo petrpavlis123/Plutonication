@@ -110,7 +110,7 @@ Then, you will need to get Pluto wallet on your phone. There are multiple ways t
 
 After installation completes, click on the QR code scanner icon on the top-right corner of the screen to open the universal QR code scanner. Then scan the Plutonication QR modal and accept the connection. PlutoWallet and the dApp will successfully pair. PlutoWallet is now ready to receive any transaction requests.
 
-If you are not sure about any of these steps, you can also follow this video guide, that showcases the whole process of connecting your PlutoWallet to the dApp and signing a transaction request: ~~~~~~~~ 
+If you are not sure about any of these steps, you can also follow this video guide, that showcases the whole process of connecting your PlutoWallet to the dApp and signing a transaction request: https://youtu.be/lVVcgNs7KRk?si=X_SohjoVUprai1r1
 
 # Limitations
 
