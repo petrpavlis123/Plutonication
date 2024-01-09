@@ -4,8 +4,8 @@ import type { SignerResult} from "@polkadot/api/types/index.js"
 import type { SignerPayloadJSON, SignerPayloadRaw } from "@polkadot/types/types"
 
 interface PlutonicationWallet {
-  send_payload_signature: (signature: SignerResult) => void
-  send_raw_signature: (singature: SignerResult) => void
+  sendPayloadSignature: (signature: SignerResult) => void
+  sendRawSignature: (singature: SignerResult) => void
   disconnect: () => void
 }
 
@@ -54,10 +54,10 @@ export async function initializePlutonicationWalletClient(
   socket.emit("pubkey", { Data: pubkey, Room: accessCredentials.key })
 
   return {
-    send_payload_signature(signerResult: SignerResult): void {
+    sendPayloadSignature(signerResult: SignerResult): void {
       socket.emit("payload_signature", { Data: signerResult, Room: accessCredentials.key });
     },
-    send_raw_signature(signerResult: SignerResult): void {
+    sendRawSignature(signerResult: SignerResult): void {
       socket.emit("raw_signature", { Data: signerResult, Room: accessCredentials.key } );
     },
     disconnect(): void {
