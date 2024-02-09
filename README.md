@@ -1,6 +1,6 @@
 # Plutonication
 
-Plutonication is a TypeScript library for create a communication between dapps and wallets across platforms
+Plutonication is a TypeScript library to create a communication between dapps and wallets across platforms
 
 # Requirements
 
