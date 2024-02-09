@@ -24,7 +24,7 @@ npm i @plutonication/plutonication
 
 The overall structure of Plutonication is designed to be as little intrusive as possible.
 
-A comprehensive guide adding Plutonication to your dApp / Wallet can be found here: https://plutonication-acnha.ondigitalocean.app/docs/javascript.
+A comprehensive guide for adding Plutonication to your dApp / Wallet can be found here: https://plutonication-acnha.ondigitalocean.app/docs/javascript.
 
 # React dApp example
 
