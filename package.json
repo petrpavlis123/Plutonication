@@ -8,6 +8,9 @@
   "scripts": {
     "build": "webpack --config webpack.config.js && tsc"
   },
+  "files": [
+
+  ],
   "dependencies": {
     "@babel/core": "^7.23.7",
     "@babel/plugin-proposal-export-default-from": "^7.23.3",

@@ -20,8 +20,9 @@ coverage/
 
 # Others
 node_modules/
-./src/
-./example_dapp/
+src/
+example_dapp/
+.github/
 index.ts
 *.log
 *.md
