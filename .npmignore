@@ -20,7 +20,10 @@ coverage/
 
 # Others
 node_modules/
-src/
+src/components/PlutonicationModal.ts
+src/AccessCredentials.ts
+src/PlutonicationDAppClient.ts
+src/PlutonicationWalletClient.ts
 example_dapp/
 .github/
 index.ts
