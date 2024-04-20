@@ -1,5 +1,5 @@
 import { io } from "socket.io-client"
-import type { Injected, InjectedAccount } from "@polkadot/extension-inject/types"
+import type { Injected, InjectedAccount, InjectedWindow } from "@polkadot/extension-inject/types"
 import type { SignerPayloadJSON, SignerPayloadRaw } from "@polkadot/types/types"
 import type { SignerResult } from "@polkadot/api/types/index.js"
 import { AccessCredentials } from "./AccessCredentials"
@@ -48,8 +48,7 @@ export async function initializePlutonicationDAppClient(
     })
   })
 
-  // Return the Injected account
-  return {
+  const injected: PlutonicationInjected = {
     accounts: {
       // eslint-disable-next-line @typescript-eslint/require-await
       async get(_anyType?: boolean): Promise<InjectedAccount[]> {
@@ -93,6 +92,17 @@ export async function initializePlutonicationDAppClient(
       socket.emit("disconnect");
     }
   }
+
+  const win = window as Window & InjectedWindow;
+
+  win.injectedWeb3 = {
+    'plutonication': {
+      version: '1.0.0',
+      enable: async (_originName: string) => injected,
+    }
+  };
+  
+  return injected
 }
 
 /**
