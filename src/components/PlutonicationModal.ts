@@ -37,6 +37,7 @@ export class PlutonicationModal extends HTMLElement {
       }
       
       .modal-content {
+        z-index: 2147483640;
         background-color: #0e1110;
         border-radius: 5px;
         width: 350px; /* Modal width */
