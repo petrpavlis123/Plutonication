@@ -24,6 +24,11 @@ body {
   border: 1px solid white;
   border-radius: 1rem;
 
+  .plutonication__qr-title {
+    text-align: center;
+  }
+  
+
   .plutonication__qr-title,
   .plutonication__social-media-container p,
   .plutonication__wallets-container p,
@@ -68,10 +73,10 @@ body {
 
     }
 
-    .plutonication__qr-title-container {
-      display: flex;
-      justify-content: space-between;
-    }
+    // .plutonication__qr-title-container {
+    //   display: flex;
+    //   justify-content: space-between;
+    // }
 
     .plutonication__qr-content {
       display: flex;
@@ -251,7 +256,10 @@ body {
           }
         }
       }
+    }
 
+    .plutonication__wallets-btn-container-hidden {
+      display: none;
     }
 
   .plutonication__social-media-container{

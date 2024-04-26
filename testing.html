@@ -9,9 +9,9 @@
   </head>
 <body>
   <main class="plutonication__component">
+    <p class="plutonication__qr-title">Plutonication</p>
     <div class="plutonication__qr-container">
       <!-- <img src="images/arrow-back.svg" alt="back" width="20" height="20"> -->
-      <p class="plutonication__qr-title">Plutonication</p>
       <div id="content" class="plutonication__qr-content">
         <div id="qr-code" class="plutonication__qr-code"></div>
       </div>
@@ -48,9 +48,28 @@
           <img src="images/trust-wallet.svg" alt="Github" width="50" height="50">
           <span class="plutonication__wallets-item-description">Trust</span>
         </div>
-
       </div>
     </div>
+    <div class="plutonication__wallets-btn-container plutonication__wallets-btn-container-hidden">
+      <button data-platform="android" class="plutonication__wallets-btn-download">
+          <div class="plutonication__wallets-btn-content">
+              <img src="images/google-play.svg" alt="google" width="30" height="30"/>
+              <div>
+                  <p class="plutonication__wallets-btn-p1">Get in on</p>
+                  <p class="plutonication__wallets-btn-p2">Google Play</p>
+              </div>
+          </div>
+      </button>
+      <button data-platform="ios" class="plutonication__wallets-btn-download"> 
+          <div class="plutonication__wallets-btn-content">
+              <img src="images/apple-icon.svg" alt="apple" width="30" height="30"/>
+              <div>
+                  <p class="plutonication__wallets-btn-p1">Download on the</p>
+                  <p class="plutonication__wallets-btn-p2">App Store</p>
+              </div>
+          </div>
+      </button>
+  </div>
     <div id="additional-info" class="plutonication__social-media-container">
         <a href="https://plutonication.com/">Docs</a>
         <a href="https://github.com/rostislavLitovkin/plutonication" target="_blank"><img src="images/github.svg" alt="Github" width="20" height="20"></a>
