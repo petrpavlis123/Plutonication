@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plutonication</title>
+    <link rel="stylesheet" href="lib/main.css">
+    <script src="lib/plutonication.js"></script>
+  </head>
+<body>
+  <main class="plutonication__component">
+    <div class="plutonication__qr-container">
+      <!-- <img src="images/arrow-back.svg" alt="back" width="20" height="20"> -->
+      <p class="plutonication__qr-title">Plutonication</p>
+      <div id="content" class="plutonication__qr-content">
+        <div id="qr-code" class="plutonication__qr-code"></div>
+      </div>
+      <!-- <p class="scan-qr-text" id="scan-qr-text">Scan this QR with your phone.</p> -->
+    </div>
+    <div id="wallets" class="plutonication__wallets-container">
+      <p>Supported Wallets:</p>
+      <div class="plutonication__wallets-content">
+        <div href="me.rainbow" id="wallet1" class="plutonication__wallets-item">
+          <img src="images/rainbow-wallet.png" alt="Github" width="50" height="50">
+          <span class="plutonication__wallets-item-description">Rainbow</span>
+        </div>
+        <div href="io.metamask" id="wallet1" class="plutonication__wallets-item"> 
+          <img src="images/metamask-wallet.png" alt="Github" width="50" height="50">
+          <span class="plutonication__wallets-item-description">Metamask</span>
+        </div>
+        <div href="com.wallet.crypto.trustapp" id="wallet2" class="plutonication__wallets-item">
+          <img src="images/trust-wallet.svg" alt="Github" width="50" height="50">
+          <span class="plutonication__wallets-item-description">Trust</span>
+        </div>
+        <div id="showMoreWallets" class="plutonication__wallets-item-plus">
+          <img src="images/plus-icon.svg" alt="Más" width="30" height="30">
+          <span class="plutonication__wallets-item-description"></span>
+        </div>
+        <div href="www.wallet1.com" id="wallet1" class="plutonication__wallets-item plutonication__wallets-item-hidden"> 
+          <img src="images/metamask-wallet.png" alt="Github" width="50" height="50">
+          <span class="plutonication__wallets-item-description">Metamask</span>
+        </div>
+        <div href="www.wallet1.com" id="wallet1" class="plutonication__wallets-item plutonication__wallets-item-hidden">
+          <img src="images/rainbow-wallet.png" alt="Github" width="50" height="50">
+          <span class="plutonication__wallets-item-description">Rainbow</span>
+        </div>
+        <div href="www.wallet2.com" id="wallet2" class="plutonication__wallets-item plutonication__wallets-item-hidden">
+          <img src="images/trust-wallet.svg" alt="Github" width="50" height="50">
+          <span class="plutonication__wallets-item-description">Trust</span>
+        </div>
+
+      </div>
+    </div>
+    <div id="additional-info" class="plutonication__social-media-container">
+        <a href="https://plutonication.com/">Docs</a>
+        <a href="https://github.com/rostislavLitovkin/plutonication" target="_blank"><img src="images/github.svg" alt="Github" width="20" height="20"></a>
+        <a href="https://t.me/+CN8Ux4dPAZ8yZWU0" target="_blank"><img src="images/telegram.svg" alt="Telegram" width="20" height="20"></a>
+        <a href="https://plutonication.com/" target="_blank"><img src="images/question-mark.svg" alt="Help" width="20" height="20"></a>
+    </div>
+    
+  </main>
+</body>
+</html>
