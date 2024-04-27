@@ -23,6 +23,10 @@ export class PlutonicationModal extends HTMLElement {
     shadow.innerHTML = template.default;
 
     // Adding css
+    const baseTag = document.createElement('base');
+    baseTag.href = '/';
+    shadow.appendChild(baseTag);
+    
     const styleElement = document.createElement('link');
     styleElement.rel = 'stylesheet';
     styleElement.href = 'lib/main.css'; 
@@ -36,11 +40,11 @@ export class PlutonicationModal extends HTMLElement {
   }
 
   connectedCallback() {
-    const accessCredentials = new AccessCredentials(
-        "wss://plutonication-acnha.ondigitalocean.app/",
-        "Plutonication test",
-        "https://rostislavlitovkin.pythonanywhere.com/plutowalleticonwhite"
-    );
+    // const accessCredentials = new AccessCredentials(
+    //     "wss://plutonication-acnha.ondigitalocean.app/",
+    //     "Plutonication test",
+    //     "https://rostislavlitovkin.pythonanywhere.com/plutowalleticonwhite"
+    // );
     
     // Generating QRcode with acces credentials
     // this.generateQRCode(accessCredentials.ToUri());
@@ -129,8 +133,8 @@ export class PlutonicationModal extends HTMLElement {
    * Opens the modal and displays the QR code generated with the access credentials information.
    * @param {AccessCredentials} accessCredentials - Acces cedentials to generate the QR.
    */
-  openModal(accessCredentials): void {
-    this.modal.style.display = 'flex';
+  openModal(accessCredentials: AccessCredentials): void {
+    
     // const qrData = accessCredentials.ToUri();
     try {
       // QRCode.toDataURL(qrData, { width: 250 })
@@ -143,28 +147,29 @@ export class PlutonicationModal extends HTMLElement {
       //     console.error('Error generating QR code:', error);
       //   });
       this.generateQRCode(accessCredentials.ToUri());
+      this.modal.style.display = 'flex';
     } catch (error) {
       console.error('Error generating QR code:', error);
     }
   }
 
-  openExtension(): void {
-    this.modal.style.display = 'block';
-    this.modal.style.padding = '0';
-    // const qrData = accessCredentials.ToUri();
-    // try {
-    //   QRCode.toDataURL(qrData, { width: 250 })
-    //     .then(url => {
-    //       this.qrImage.src = url;
-    //       this.qrImage.style.display = 'block';
-    //       this.modal.style.display = 'flex';
-    //     })
-    //     .catch(error => {
-    //       console.error('Error generating QR code:', error);
-    //     });
-    // } catch (error) {
-    //   console.error('Error generating QR code:', error);
-    // }
+  openExtension(accessCredentials: AccessCredentials): void {
+    try {
+      // QRCode.toDataURL(qrData, { width: 250 })
+      //   .then(url => {
+      //     this.qrImage.src = url;
+      //     this.qrImage.style.display = 'block';
+      //     this.modal.style.display = 'flex';
+      //   })
+      //   .catch(error => {
+      //     console.error('Error generating QR code:', error);
+      //   });
+      this.generateQRCode(accessCredentials.ToUri());
+      this.modal.style.display = 'block';
+      this.modal.style.padding = '0';
+    } catch (error) {
+      console.error('Error generating QR code:', error);
+    }
   }
 
   /**

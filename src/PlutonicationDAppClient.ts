@@ -122,8 +122,6 @@ export async function initializePlutonicationDAppClientWithModal(
   console.log("modal", modal);
 
   modal.openModal(accessCredentials)
-    // modal.openModal()
-    // modal.openExtension();
 
   // Return the initialized Plutonication Injected account
   return await initializePlutonicationDAppClient(
@@ -147,7 +145,7 @@ export async function initializePlutonicationDAppClientWithModalForExtension(
   const modal = getPlutonicationModal()
   console.log("modal", modal);
   // modal.openModal(accessCredentials)
-     modal.openExtension();
+     modal.openExtension(accessCredentials);
 
   // Return the initialized Plutonication Injected account
   return await initializePlutonicationDAppClient(
