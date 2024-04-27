@@ -14,7 +14,7 @@ module.exports = {
     globalObject: 'this'
   },
   resolve: {
-    extensions: [".ts", ".js"],
+    extensions: [".ts", ".js", ".html", ".scss"],
   },
   module: {
     rules: [
