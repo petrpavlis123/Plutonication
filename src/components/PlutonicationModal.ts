@@ -24,7 +24,6 @@ export class PlutonicationModal extends HTMLElement {
 
     const styleElement = document.createElement('link');
     styleElement.rel = 'stylesheet';
-    styleElement.type = 'text/css';
     styleElement.href = 'lib/main.css'; 
     shadow.appendChild(styleElement);
 

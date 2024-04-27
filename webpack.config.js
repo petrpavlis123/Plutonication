@@ -47,6 +47,11 @@ module.exports = {
             'sass-loader'
         ]
     },
+    {
+      test: /\.css$/,
+      use: ['style-loader', 'css-loader'],
+      include: path.resolve(__dirname, '/'), 
+    },
       {
         test: /\.html$/,
         exclude: /node_modules/,
