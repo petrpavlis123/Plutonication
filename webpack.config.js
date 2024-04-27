@@ -75,6 +75,14 @@ module.exports = {
           from: path.resolve(__dirname, './images'),
           to: path.resolve(__dirname, 'lib/images'),
         },
+        {
+          from: path.resolve(__dirname, './src/components/plutonication-modal.html'),
+          to: path.resolve(__dirname, 'lib/src/components/plutonication-modal.html'),
+        },
+        {
+          from: path.resolve(__dirname, './src/components/plutonication-modal.scss'),
+          to: path.resolve(__dirname, 'lib/src/components/plutonication-modal.scss'),
+        },
       ],
     }),
     new MiniCssExtractPlugin({

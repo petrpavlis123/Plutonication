@@ -7,7 +7,7 @@ import  { DOMAttributes }  from 'react';
  * @extends HTMLElement
  */
 
-const template = require('../../plutonication-modal.html');
+const template = require('./plutonication-modal.html');
 export class PlutonicationModal extends HTMLElement {
   private modal: HTMLElement;
   private plusButton: HTMLElement;
