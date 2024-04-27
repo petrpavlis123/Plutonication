@@ -22,20 +22,17 @@ export class PlutonicationModal extends HTMLElement {
     const shadow = this.attachShadow({ mode: 'open' });
     shadow.innerHTML = template.default;
 
-    // Adding css
-    // const baseTag = document.createElement('base');
-    // baseTag.href = '/';
-    // shadow.appendChild(baseTag);
-
-    // const styleElement = document.createElement('link');
-    // styleElement.rel = 'stylesheet';
-    // styleElement.href = 'lib/main.css'; 
-    // shadow.appendChild(styleElement);
+    const styleElement = document.createElement('link');
+    styleElement.rel = 'stylesheet';
+    styleElement.type = 'text/css';
+    styleElement.href = 'lib/main.css'; 
+    shadow.appendChild(styleElement);
 
     // Adding js
     const scriptElement = document.createElement('script');
     scriptElement.src = 'lib/plutonication.js'; 
     shadow.appendChild(scriptElement);
+
 
   }
 
