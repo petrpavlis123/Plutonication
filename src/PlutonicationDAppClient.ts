@@ -120,7 +120,8 @@ export async function initializePlutonicationDAppClientWithModal(
   // Show Plutonication modal QR code
   const modal = getPlutonicationModal()
 
-  modal.openModal(accessCredentials)
+  // modal.openModal(accessCredentials)
+    modal.openModal()
 
   // Return the initialized Plutonication Injected account
   return await initializePlutonicationDAppClient(

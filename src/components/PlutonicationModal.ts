@@ -7,15 +7,11 @@ import  { DOMAttributes }  from 'react';
  * @extends HTMLElement
  */
 
-const template = require('../../testing.html');
-// require('./plutonication-modal.scss');
+const template = require('./plutonication-modal.html');
 export class PlutonicationModal extends HTMLElement {
   private modal: HTMLElement;
-  private qrImage: HTMLImageElement;
   private plusButton: HTMLElement;
-
-  // private originalWalletsContent: string;
-  private additionalWallets: NodeListOf<HTMLElement>;
+  private initialContent: string;
 
   /**
  * Constructor.
@@ -26,6 +22,19 @@ export class PlutonicationModal extends HTMLElement {
 
     const shadow = this.attachShadow({ mode: 'open' });
     shadow.innerHTML = template.default;
+    this.initialContent = template.default;
+
+    // Adding css
+    const styleElement = document.createElement('link');
+    styleElement.rel = 'stylesheet';
+    styleElement.href = 'lib/main.css'; 
+    shadow.appendChild(styleElement);
+
+    // Adding js
+    const scriptElement = document.createElement('script');
+    scriptElement.src = 'lib/plutonication.js'; 
+    shadow.appendChild(scriptElement);
+
   }
 
   connectedCallback() {
@@ -40,9 +49,7 @@ export class PlutonicationModal extends HTMLElement {
 
     //  Showing more wallets when clic the plus btn
     this.plusButton = this.shadowRoot.getElementById('showMoreWallets');
-    console.log("this.plusButton",this.plusButton);
     this.plusButton.addEventListener('click', () => {
-      console.log("MOSTRANDO WALLETS");
       this.showMoreWallets();
     });
 
@@ -50,23 +57,32 @@ export class PlutonicationModal extends HTMLElement {
     const walletItems = this.shadowRoot.querySelectorAll('.plutonication__wallets-item');
     walletItems.forEach(walletItem => {
       walletItem.addEventListener('click', () => {
-          // Lógica para cambiar el contenido y mostrar los botones de descarga
           this.showWalletDownloadButtons(walletItem);
       });
-  });
+    });
+
+    this.modal = this.shadowRoot.querySelector('.plutonication__component') as HTMLElement;
+    console.log("this.modal.style.display", this.modal.style.display);
+
+
+    // Close modal clicking the btn
+    const closeButton = this.shadowRoot.querySelector('.close');
+    closeButton.addEventListener('click', () => {
+      this.closeModal();
+    });
+    
+
   }
 
   // Function to generate the QR code with the accesCredentials
   async generateQRCode(inputText: string) {
     // const inputText = 'plutonication:?url=wss%3A%2F%2Fplutonication-acnha.ondigitalocean.app%2F&key=1710194226878&name=Plutonication%20test&icon=https%3A%2F%2Frostislavlitovkin.pythonanywhere.com%2Fplutowalleticonwhite'; 
-    console.log("Generating QR Code");
     const qrCodeContainer = this.shadowRoot.getElementById('qr-code');
 
     try {
         const qrCodeDataURL = await QRCode.toDataURL(inputText);
         const qrCodeImage = document.createElement('img');
         qrCodeImage.src = qrCodeDataURL;
-        console.log("qrCodeContainer", qrCodeContainer);
         if (qrCodeContainer) {
             qrCodeContainer.innerHTML = '';
             qrCodeContainer.appendChild(qrCodeImage);
@@ -85,7 +101,6 @@ export class PlutonicationModal extends HTMLElement {
   }
 
   showWalletDownloadButtons(walletItem: Element) {
-    console.log("walletItem", walletItem);
     const qrContainer = this.shadowRoot.querySelector(".plutonication__qr-container");
     const walletsContainer = this.shadowRoot.querySelector(".plutonication__wallets-container");
     const title = this.shadowRoot.querySelector(".plutonication__qr-title");
@@ -98,11 +113,8 @@ export class PlutonicationModal extends HTMLElement {
     qrContainer.innerHTML = "";
     walletsContainer.innerHTML = "";
     title.textContent = description;
-    console.log("document.title", document.title);
-    console.log("description", description);
     downloadBtns.classList.remove("plutonication__wallets-btn-container-hidden");
     downloadBtns.addEventListener('click', () => {
-      // Lógica para cambiar el contenido y mostrar los botones de descarga
       downloadBtns.classList.add("plutonication__wallets-btn-container-hidden");
       qrContainer.innerHTML = qrCotainerInitialContent;
       this.generateQRCode(walletUrl);
@@ -119,45 +131,30 @@ export class PlutonicationModal extends HTMLElement {
    * Opens the modal and displays the QR code generated with the access credentials information.
    * @param {AccessCredentials} accessCredentials - Acces cedentials to generate the QR.
    */
-  openModal(accessCredentials: AccessCredentials): void {
-    const qrData = accessCredentials.ToUri();
-    this.additionalWallets = document.querySelectorAll('.plutonication__wallets-content div:nth-child(n+5)');
-    console.log("additionalWallets", this.additionalWallets);
-    this.additionalWallets.forEach(wallet => {
-      wallet.style.display = 'none';
-    });
-    try {
-      QRCode.toDataURL(qrData, { width: 250 })
-        .then(url => {
-          this.qrImage.src = url;
-          this.qrImage.style.display = 'block';
-          this.modal.style.display = 'flex';
-        })
-        .catch(error => {
-          console.error('Error generating QR code:', error);
-        });
-    
-    } catch (error) {
-      console.error('Error generating QR code:', error);
-    }
+  openModal(): void {
+    this.modal.style.display = 'flex';
+    // const qrData = accessCredentials.ToUri();
+    // try {
+    //   QRCode.toDataURL(qrData, { width: 250 })
+    //     .then(url => {
+    //       this.qrImage.src = url;
+    //       this.qrImage.style.display = 'block';
+    //       this.modal.style.display = 'flex';
+    //     })
+    //     .catch(error => {
+    //       console.error('Error generating QR code:', error);
+    //     });
+    // } catch (error) {
+    //   console.error('Error generating QR code:', error);
+    // }
   }
-
-
-hideQRCode() {
-  const qrCodeContainer = document.getElementById('qr-code');
-  if (qrCodeContainer) {
-      qrCodeContainer.style.display = 'none';
-  }
-}
 
   /**
    * Closes the modal along with the QR code.
    */
   closeModal(): void {
     this.modal.style.display = 'none';
-    this.qrImage.style.display = 'none';
   }
-  
 }
 
 // Defines the html web component
