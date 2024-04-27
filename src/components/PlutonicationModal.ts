@@ -11,7 +11,6 @@ const template = require('./plutonication-modal.html');
 export class PlutonicationModal extends HTMLElement {
   private modal: HTMLElement;
   private plusButton: HTMLElement;
-  private initialContent: string;
 
   /**
  * Constructor.
@@ -22,7 +21,6 @@ export class PlutonicationModal extends HTMLElement {
 
     const shadow = this.attachShadow({ mode: 'open' });
     shadow.innerHTML = template.default;
-    this.initialContent = template.default;
 
     // Adding css
     const styleElement = document.createElement('link');
