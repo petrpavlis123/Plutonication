@@ -119,9 +119,35 @@ export async function initializePlutonicationDAppClientWithModal(
 
   // Show Plutonication modal QR code
   const modal = getPlutonicationModal()
+  console.log("modal", modal);
 
   // modal.openModal(accessCredentials)
     modal.openModal()
+    // modal.openExtension();
+
+  // Return the initialized Plutonication Injected account
+  return await initializePlutonicationDAppClient(
+    accessCredentials,
+    (receivedPubkey: string): void => {
+
+      // Hide Plutonication modal
+      modal.closeModal()
+
+      onReceivePubkey(receivedPubkey)
+    }
+  )
+}
+
+export async function initializePlutonicationDAppClientWithModalForExtension(
+  accessCredentials: AccessCredentials,
+  onReceivePubkey: (receivedPubkey: string) => void,
+): Promise<PlutonicationInjected> {
+
+  // Show Plutonication modal QR code
+  const modal = getPlutonicationModal()
+  console.log("modal", modal);
+  // modal.openModal(accessCredentials)
+     modal.openExtension();
 
   // Return the initialized Plutonication Injected account
   return await initializePlutonicationDAppClient(

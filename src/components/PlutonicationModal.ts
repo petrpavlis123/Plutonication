@@ -147,6 +147,25 @@ export class PlutonicationModal extends HTMLElement {
     // }
   }
 
+  openExtension(): void {
+    this.modal.style.display = 'block';
+    this.modal.style.padding = '0';
+    // const qrData = accessCredentials.ToUri();
+    // try {
+    //   QRCode.toDataURL(qrData, { width: 250 })
+    //     .then(url => {
+    //       this.qrImage.src = url;
+    //       this.qrImage.style.display = 'block';
+    //       this.modal.style.display = 'flex';
+    //     })
+    //     .catch(error => {
+    //       console.error('Error generating QR code:', error);
+    //     });
+    // } catch (error) {
+    //   console.error('Error generating QR code:', error);
+    // }
+  }
+
   /**
    * Closes the modal along with the QR code.
    */
