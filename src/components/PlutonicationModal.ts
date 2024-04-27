@@ -43,7 +43,7 @@ export class PlutonicationModal extends HTMLElement {
     );
     
     // Generating QRcode with acces credentials
-    this.generateQRCode(accessCredentials.ToUri());
+    // this.generateQRCode(accessCredentials.ToUri());
 
     //  Showing more wallets when clic the plus btn
     this.plusButton = this.shadowRoot.getElementById('showMoreWallets');
@@ -129,22 +129,23 @@ export class PlutonicationModal extends HTMLElement {
    * Opens the modal and displays the QR code generated with the access credentials information.
    * @param {AccessCredentials} accessCredentials - Acces cedentials to generate the QR.
    */
-  openModal(): void {
+  openModal(accessCredentials): void {
     this.modal.style.display = 'flex';
     // const qrData = accessCredentials.ToUri();
-    // try {
-    //   QRCode.toDataURL(qrData, { width: 250 })
-    //     .then(url => {
-    //       this.qrImage.src = url;
-    //       this.qrImage.style.display = 'block';
-    //       this.modal.style.display = 'flex';
-    //     })
-    //     .catch(error => {
-    //       console.error('Error generating QR code:', error);
-    //     });
-    // } catch (error) {
-    //   console.error('Error generating QR code:', error);
-    // }
+    try {
+      // QRCode.toDataURL(qrData, { width: 250 })
+      //   .then(url => {
+      //     this.qrImage.src = url;
+      //     this.qrImage.style.display = 'block';
+      //     this.modal.style.display = 'flex';
+      //   })
+      //   .catch(error => {
+      //     console.error('Error generating QR code:', error);
+      //   });
+      this.generateQRCode(accessCredentials.ToUri());
+    } catch (error) {
+      console.error('Error generating QR code:', error);
+    }
   }
 
   openExtension(): void {

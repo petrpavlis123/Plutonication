@@ -121,8 +121,8 @@ export async function initializePlutonicationDAppClientWithModal(
   const modal = getPlutonicationModal()
   console.log("modal", modal);
 
-  // modal.openModal(accessCredentials)
-    modal.openModal()
+  modal.openModal(accessCredentials)
+    // modal.openModal()
     // modal.openExtension();
 
   // Return the initialized Plutonication Injected account
