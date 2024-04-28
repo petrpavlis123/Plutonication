@@ -143,7 +143,6 @@ export async function initializePlutonicationDAppClientWithModalForExtension(
 
   // Show Plutonication modal QR code
   const modal = getPlutonicationModal()
-  console.log("modal", modal);
   // modal.openModal(accessCredentials)
      modal.openExtension(accessCredentials);
 
@@ -151,9 +150,6 @@ export async function initializePlutonicationDAppClientWithModalForExtension(
   return await initializePlutonicationDAppClient(
     accessCredentials,
     (receivedPubkey: string): void => {
-
-      // Hide Plutonication modal
-      modal.closeModal()
 
       onReceivePubkey(receivedPubkey)
     }
