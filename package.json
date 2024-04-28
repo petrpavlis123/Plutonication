@@ -1,6 +1,6 @@
 {
   "name": "@plutonication/plutonication",
-  "version": "1.0.109",
+  "version": "1.0.110",
   "description": "TypeScript version of C# plutonication library",
   "main": "./lib/index.js",
   "module": "./lib/index.js",
@@ -27,6 +27,7 @@
     "sass-loader": "^14.2.1",
     "socket.io": "^4.7.2",
     "socket.io-client": "^4.7.2",
+    "style-loader": "^4.0.0",
     "ts-loader": "^9.5.1",
     "tsify": "^5.0.4",
     "webpack": "^5.89.0"

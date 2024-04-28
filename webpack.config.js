@@ -39,19 +39,24 @@ module.exports = {
           },
         },
       },
-      {
-        test: /\.(sa|sc)ss$/,
-        use: [
-            MiniCssExtractPlugin.loader,
-            'css-loader',
-            'sass-loader'
-        ]
-    },
+    //   {
+    //     test: /\.(sa|sc)ss$/,
+    //     use: [
+    //         MiniCssExtractPlugin.loader,
+    //         'css-loader',
+    //         'sass-loader'
+    //     ]
+    // },
     {
-      test: /\.css$/,
-      use: ['style-loader', 'css-loader'],
-      include: path.resolve(__dirname, '/'), 
+      test: /\.scss$/,
+      use: [
+        // MiniCssExtractPlugin.loader,
+        'style-loader', // Embeber CSS en JavaScript
+        'css-loader',
+        'sass-loader',
+      ],
     },
+    
       {
         test: /\.html$/,
         exclude: /node_modules/,
