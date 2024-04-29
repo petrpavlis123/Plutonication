@@ -1,4 +1,3 @@
-
 export const htmlTemplate: string = `
 <!DOCTYPE html>
 <html lang="en">
