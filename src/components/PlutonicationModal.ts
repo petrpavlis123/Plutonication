@@ -100,12 +100,6 @@ export class PlutonicationModal extends HTMLElement {
     
     this.connectedCallback();
     
-    // this.modal.style.display = 'block';
-    // this.modal.style.padding = '0';
-    // this.closeBtn.style.display = 'none';
-    // console.log("style", style);
-    // console.log("this.modal.style.display", this.modal.style.display);
-    
   }
 
 
