@@ -113,8 +113,9 @@ export const cssStyles: string = `
 }
 
 .plutonication__component-override-styles {
-  display: block;
+  display: flex;
   padding: 0;
+  background-color: white;
 }
 
 .plutonication__component > div {
