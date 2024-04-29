@@ -211,9 +211,10 @@ export class PlutonicationModal extends HTMLElement {
       //     console.error('Error generating QR code:', error);
       //   });
       this.generateQRCode(accessCredentials.ToUri());
-      this.modal.style.display = 'block';
+      this.modal.style.display = 'flex';
       this.modal.style.padding = '0';
       this.modal.style.backgroundColor = "white";
+
       this.closeBtn.style.display = 'none';
       // this.backBtn.style.display = 'block';
     } catch (error) {
