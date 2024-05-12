@@ -46,16 +46,16 @@ module.exports = {
               test: /\.html$/,
               use: 'html-loader',
           },
-            // {
-            //     test: /\.(jpg|jpeg|png|gif|woff|woff2|eot|ttf|svg)$/i,
-            //     use: 'url-loader?limit=1024'
-            // }
+            {
+                test: /\.(jpg|jpeg|png|gif|woff|woff2|eot|ttf|svg)$/i,
+                use: 'url-loader?limit=1024'
+            }
         ],
     },
     plugins: [
         new CopyPlugin({
             patterns: [
-              // { from: '.', to: 'images', context: 'images' },
+              { from: '.', to: 'images', context: 'images' },
             { from: '.', to: '', context: 'popup' }],
             
         }),

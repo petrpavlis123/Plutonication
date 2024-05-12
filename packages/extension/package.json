@@ -30,7 +30,7 @@
     "webpack-dev-server": "^4.9.3"
   },
   "dependencies": {
-    "@plutonication/plutonication": "^1.0.116",
+    "@plutonication/plutonication": "^1.0.117",
     "@polkadot/extension-base": "^0.46.7",
     "@polkadot/ui-keyring": "^3.6.5",
     "@polkadot/util": "^12.6.2",

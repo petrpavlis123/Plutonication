@@ -22,18 +22,9 @@ document.addEventListener('DOMContentLoaded', async() => {
     extensionContent.style.width = "350px";
     extensionContent.style.height = "460px";
 
-    const modal = document.querySelector(".plutonication__component") as HTMLElement;
-    // modal.style.backgroundColor = "transparent";
+    // const modal = document.querySelector(".plutonication__component") as HTMLElement;
 
     initialize();
-    // const walletContainer = document.getElementById('wallets');
-    // if (walletContainer) {
-    //     originalWalletsContent = walletContainer.innerHTML;
-    // }
-    // generateQRCode(accessCredentials.ToUri());
-    // setupWalletLinks();
-    // setupShowMoreWallets();
-    // inject();
 });
 
 let account; // This is the Injected account object that will connect via Plutonication
