@@ -1,0 +1,24 @@
+{
+    "manifest_version": 3,
+    "version": "1.0",
+    "name": "Plutonication extension (polkadot.js)",
+    "short_name": "Plutonication extension (polkadot.js)",
+    "description": "Manage your Polkadot accounts outside of dapps. Injects the accounts and allows signing transactions for a specific account.",
+    "icons": {
+        "16": "images/appicon.png",
+        "48": "images/appicon.png",
+        "128": "images/appicon.png"
+    },
+    "permissions": [
+        "activeTab",
+        "scripting",
+        "storage"
+    ],
+
+    "action": {
+        "default_popup": "lib/popup.html"
+    },
+    "background": {
+        "service_worker": "lib/background.js"
+    }
+  }
