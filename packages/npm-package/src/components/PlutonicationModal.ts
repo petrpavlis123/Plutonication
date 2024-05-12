@@ -17,24 +17,24 @@ const accessCredentials = new AccessCredentials(
   "https://rostislavlitovkin.pythonanywhere.com/plutowalleticonwhite"
 )
 
-const walletsInformation = [
-  {
-    "description": "",
-    "downloadAndroid": "https://play.google.com/store/apps/details?id=com.rostislavlitovkin.plutowallet",
-    "downloadIOS": null,
-    "github": "https://github.com/rostislavLitovkin/plutowallet",
-    "icon": "https://rostislavlitovkin.pythonanywhere.com/plutowalleticonwhite",
-    "name": "PlutoWallet"
-  },
-  {
-    "description": "Test description",
-    "downloadAndroid": null,
-    "downloadIOS": null,
-    "github": "https://github.com/rostislavLitovkin/Nothing",
-    "icon": "https://rostislavlitovkin.pythonanywhere.com/image",
-    "name": "Other test wallet"
-  }
-]
+// const walletsInformation = [
+//   {
+//     "description": "",
+//     "downloadAndroid": "https://play.google.com/store/apps/details?id=com.rostislavlitovkin.plutowallet",
+//     "downloadIOS": null,
+//     "github": "https://github.com/rostislavLitovkin/plutowallet",
+//     "icon": "https://rostislavlitovkin.pythonanywhere.com/plutowalleticonwhite",
+//     "name": "PlutoWallet"
+//   },
+//   {
+//     "description": "Test description",
+//     "downloadAndroid": null,
+//     "downloadIOS": null,
+//     "github": "https://github.com/rostislavLitovkin/Nothing",
+//     "icon": "https://rostislavlitovkin.pythonanywhere.com/image",
+//     "name": "Other test wallet"
+//   }
+// ]
 export class PlutonicationModal extends HTMLElement {
   private modal: HTMLElement;
   private plusButton: HTMLElement;
@@ -64,7 +64,7 @@ export class PlutonicationModal extends HTMLElement {
 
   }
 
-  connectedCallback() {
+  async connectedCallback() {
     
     // Initializing some elements
     this.modal = this.shadowRoot.querySelector('.plutonication__component');
@@ -72,7 +72,7 @@ export class PlutonicationModal extends HTMLElement {
     this.backBtn = this.shadowRoot.querySelector('.back');
 
     // Adding wallets content into the HTML
-    this.addWalletsContent();
+    await this.addWalletsContent();
 
     //  Showing more wallets when clic the plus btn
     this.plusButton = this.shadowRoot.getElementById('showMoreWallets');
@@ -116,22 +116,20 @@ export class PlutonicationModal extends HTMLElement {
 
   async addWalletsContent() {
     try {
-      // Fetching api with wallets content
-      // const walletInfo = await this.fetchData('https://plutonication.com/supported-wallets');
-      const walletInfo = walletsInformation;
+      //Fetching api with wallets content
+      const walletInfo = await this.fetchData('https://plutonication.com/supported-wallets');
+      // const walletInfo = walletsInformation;
 
       // Adding that content into the html
       const walletsContainer = this.shadowRoot.querySelector('.plutonication__wallets-content');
 
       walletInfo.forEach((wallet, index) => {
-        // Crear el elemento de la billetera
         const walletItem = document.createElement('div');
         walletItem.className = 'plutonication__wallets-item';
         // walletItem.href = wallet.href;
         walletItem.id = `wallet${index + 1}`;
         walletItem.setAttribute('data-download-android', wallet.downloadAndroid);
 
-        // Crear la imagen
         const img = document.createElement('img');
         img.src = wallet.icon;
         img.alt = "wallet icon";
@@ -151,6 +149,7 @@ export class PlutonicationModal extends HTMLElement {
 
         walletsContainer.appendChild(walletItem);
       });
+      console.log("walletsContainer after added: ", walletsContainer);
 
       if (walletInfo.length > 3) {
         const showMoreWallets = document.createElement('div');
@@ -195,7 +194,6 @@ export class PlutonicationModal extends HTMLElement {
     this.connectedCallback();
     
   }
-
 
   /**
    * Generate the QRCode in base an input text
