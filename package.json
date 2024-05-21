@@ -1,6 +1,6 @@
 {
   "name": "plutonication",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Plutonication project that includes the npm TypeScript package and extension ",
   "engines": {
     "node": ">=18.14"
