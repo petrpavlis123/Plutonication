@@ -39,41 +39,24 @@ module.exports = {
           },
         },
       },
-    //   {
-    //     test: /\.(sa|sc)ss$/,
-    //     use: [
-    //         MiniCssExtractPlugin.loader,
-    //         'css-loader',
-    //         'sass-loader'
-    //     ]
-    // },
-    {
-      test: /\.scss$/,
-      use: [
-        // MiniCssExtractPlugin.loader,
-        'style-loader', // Embeber CSS en JavaScript
-        'css-loader',
-        'sass-loader',
-      ],
-    },
-    
+      {
+        test: /\.scss$/,
+        use: [
+          'style-loader',
+          'css-loader',
+          'sass-loader',
+        ],
+      },
       {
         test: /\.html$/,
         exclude: /node_modules/,
         use: 'html-loader',
       },
       {
-        test: /\.(png|jpe?g|gif)$/i,
+        test: /\.(png|jpe?g|gif|svg)$/i,
         type: 'asset/resource',
         generator: {
           filename: 'images/[name][ext]',
-        },
-      },
-      {
-        test: /\.svg$/i,
-        type: 'asset/resource', 
-        generator: {
-          filename: 'images/[name][ext]', 
         },
       },
     ],
@@ -87,9 +70,11 @@ module.exports = {
         },
       ],
     }),
+    // new HtmlWebpackPlugin({
+    //   template: './index.html',
+    // }),
     new MiniCssExtractPlugin({
-        filename: '[name].css',
+      filename: '[name].css',
     }),
-
-]
+  ],
 };
