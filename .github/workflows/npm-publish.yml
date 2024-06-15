@@ -20,6 +20,7 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: '18.x'
+      - run: cd packages/npm-package && npm install
       - run: cd packages/npm-package/tests && npm install && npx playwright test 
 
   build:
