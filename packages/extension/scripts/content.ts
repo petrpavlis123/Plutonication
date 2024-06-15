@@ -9,3 +9,4 @@ window.addEventListener('message', (event) => {
     chrome.runtime.sendMessage({ type: 'OPEN_POPUP', data: event.data.data });
   }
 });
+

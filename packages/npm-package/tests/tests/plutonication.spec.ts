@@ -3,7 +3,7 @@ import { AccessCredentials } from '../../src/AccessCredentials';
 import { ApiPromise, WsProvider, Keyring } from "@polkadot/api";
 import { cryptoWaitReady } from '@polkadot/util-crypto'
 import { initializePlutonicationDAppClient } from '../../src/PlutonicationDAppClient';
-import { initializePlutonicationWalletClient } from '../../src/PlutonicationWalletClient';
+import { PlutonicationWallet, initializePlutonicationWalletClient } from '../../src/PlutonicationWalletClient';
 import type { SignerPayloadJSON, SignerPayloadRaw } from "@polkadot/types/types"
 import { u8aToHex, hexToU8a } from '@polkadot/util';
 
@@ -42,9 +42,11 @@ test('Communication between dApp and Wallet', async () => {
     expect(pubkey).toBe("5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY")
   }
 
-  const [dAppClient, _walletClient] = await Promise.all([
+  let dAppConnectionConfirmation = false
+
+  const [dAppClient, walletClient] = await Promise.all([
     initializePlutonicationDAppClient(accessCredentials, onReceivePubkey),
-    new Promise(async (resolve) => {
+    new Promise<PlutonicationWallet>(async (resolve) => {
       // Wait 3 second
       await new Promise(resolve => setTimeout(resolve, 3000))
 
@@ -79,14 +81,21 @@ test('Communication between dApp and Wallet', async () => {
           console.log("Received raw: " + raw)
           const signature = alice.sign(hexToU8a(raw.data))
           walletClient.sendRawSignature({ signature: u8aToHex(signature), id: 0 })
-        })
+        },
+        undefined,
+        () => {
+          dAppConnectionConfirmation = true
+        }
+      )
 
       resolve(walletClient)
     }),
   ]);
 
-  // Wait 2 second
-  await new Promise(resolve => setTimeout(resolve, 2000))
+  // Wait 4 second
+  await new Promise(resolve => setTimeout(resolve, 4000))
+
+  expect(dAppConnectionConfirmation).toBeTruthy()
   
   // Test payload message signing
   const payload: SignerPayloadJSON = {
@@ -135,4 +144,143 @@ test('Communication between dApp and Wallet', async () => {
 
     expect(alice.verify(rawMessage.data, hexToU8a(rawSignatureResult.signature), alice.publicKey)).toBeTruthy();
   }
+
+  await dAppClient.disconnect()
+  await walletClient.disconnect()
+});
+
+test('Disconnect dApp', async () => {
+  const alice = await getAlice()
+
+  function onReceivePubkey(pubkey: string) {
+    // Ensure that the received key is right
+    expect(pubkey).toBe("5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY")
+  }
+
+  let dAppConnectionConfirmation = false
+  let dAppDisconnected = false
+  let walletDisconnected = false
+
+  const [dAppClient, walletClient] = await Promise.all([
+    initializePlutonicationDAppClient(
+      accessCredentials,
+      onReceivePubkey,
+      () => {
+        walletDisconnected = true
+      }
+    ),
+    new Promise<PlutonicationWallet>(async (resolve) => {
+      // Wait 3 second
+      await new Promise(resolve => setTimeout(resolve, 3000))
+
+      // Connect the PlutonicationWalletClient after PlutonicationDAppClient.
+      // They need to run in paralel however.
+      // Typically, they would run on different devices/apps in paralel.
+      const walletClient = await initializePlutonicationWalletClient(
+        accessCredentials,
+        alice.address,
+        async (_payload: SignerPayloadJSON) => { 
+
+        },
+        async (raw: SignerPayloadRaw) => {
+          expect(raw.address).toBe("5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY")
+          console.log("Received raw: " + raw)
+          const signature = alice.sign(hexToU8a(raw.data))
+          walletClient.sendRawSignature({ signature: u8aToHex(signature), id: 0 })
+        },
+        undefined,
+        () => {
+          dAppConnectionConfirmation = true
+        },
+        () => {
+          dAppDisconnected = true
+        }
+      )
+
+      resolve(walletClient)
+    }),
+  ]);
+
+  // Wait 4 second
+  await new Promise(resolve => setTimeout(resolve, 4000))
+
+  expect(dAppConnectionConfirmation).toBeTruthy()
+  
+  await dAppClient.disconnect()
+
+  // Wait 2 second
+  await new Promise(resolve => setTimeout(resolve, 2000))
+
+  expect(dAppDisconnected).toBeTruthy()
+  expect(walletDisconnected).toBeFalsy()
+
+  await walletClient.disconnect()
+});
+
+test('Disconnect Wallet', async () => {
+  const alice = await getAlice()
+
+  function onReceivePubkey(pubkey: string) {
+    // Ensure that the received key is right
+    expect(pubkey).toBe("5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY")
+  }
+
+  let dAppConnectionConfirmation = false
+  let dAppDisconnected = false
+  let walletDisconnected = false
+
+  const [dAppClient, walletClient] = await Promise.all([
+    initializePlutonicationDAppClient(
+      accessCredentials,
+      onReceivePubkey,
+      () => {
+        walletDisconnected = true
+      }
+    ),
+    new Promise<PlutonicationWallet>(async (resolve) => {
+      // Wait 3 second
+      await new Promise(resolve => setTimeout(resolve, 3000))
+
+      // Connect the PlutonicationWalletClient after PlutonicationDAppClient.
+      // They need to run in paralel however.
+      // Typically, they would run on different devices/apps in paralel.
+      const walletClient = await initializePlutonicationWalletClient(
+        accessCredentials,
+        alice.address,
+        async (_payload: SignerPayloadJSON) => { 
+
+        },
+        async (raw: SignerPayloadRaw) => {
+          expect(raw.address).toBe("5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY")
+          console.log("Received raw: " + raw)
+          const signature = alice.sign(hexToU8a(raw.data))
+          walletClient.sendRawSignature({ signature: u8aToHex(signature), id: 0 })
+        },
+        undefined,
+        () => {
+          dAppConnectionConfirmation = true
+        },
+        () => {
+          dAppDisconnected = true
+        }
+      )
+
+      resolve(walletClient)
+    }),
+  ]);
+
+  // Wait 4 second
+  await new Promise(resolve => setTimeout(resolve, 4000))
+
+  expect(dAppConnectionConfirmation).toBeTruthy()
+  
+  await walletClient.disconnect()
+
+  // Wait 2 second
+  await new Promise(resolve => setTimeout(resolve, 2000))
+
+  expect(dAppDisconnected).toBeFalsy()
+  expect(walletDisconnected).toBeTruthy()
+
+  await dAppClient.disconnect()
 });
