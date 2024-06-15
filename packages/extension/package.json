@@ -16,11 +16,8 @@
     "browser-sync": "^2.27.10",
     "browser-sync-webpack-plugin": "^2.3.0",
     "copy-webpack-plugin": "^11.0.0",
-    "css-loader": "^6.7.1",
     "html-loader": "^5.0.0",
     "mini-css-extract-plugin": "^2.6.1",
-    "node-sass": "^7.0.1",
-    "sass-loader": "^13.0.2",
     "socket.io": "^4.7.2",
     "socket.io-client": "^4.7.2",
     "ts-loader": "^9.3.1",
@@ -30,7 +27,6 @@
     "webpack-dev-server": "^4.9.3"
   },
   "dependencies": {
-    "@plutonication/plutonication": "^1.0.117",
     "@polkadot/extension-base": "^0.46.7",
     "@polkadot/ui-keyring": "^3.6.5",
     "@polkadot/util": "^12.6.2",
