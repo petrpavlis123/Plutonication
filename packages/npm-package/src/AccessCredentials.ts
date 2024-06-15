@@ -6,24 +6,27 @@ class AccessCredentials {
   public key: string;
   public name?: string;
   public icon?: string;
+  public plutoLayout?: string;
 
   /**
    * Constructor of the AccessCredentials class.
    * @param {string} url - URL for the credentials.
    * @param {string} [name] - Optional name for the credentials.
    * @param {string} [icon] - Optional icon for the credentials.
+   * @param {string} [plutoLayout] - Optional plutoLayout for the credentials.
    */
-  constructor(url: string, name?: string, icon?: string) {
+  constructor(url: string, name?: string, icon?: string, plutoLayout?: string) {
     this.url = url;
     this.key = AccessCredentials.GenerateKey();
-    this.name = name ;
+    this.name = name;
     this.icon = icon;
+    this.plutoLayout = plutoLayout;
   }
-  
-   /**
-   * Helper method that generates a random key.
-   * @returns random key
-   */
+
+  /**
+  * Helper method that generates a random key.
+  * @returns random key
+  */
   static GenerateKey(): string {
     return Date.now().toString();
   }
@@ -45,6 +48,11 @@ class AccessCredentials {
     if (this.icon != null) {
       queryParams.push(`icon=${encodeURIComponent(this.icon)}`);
     }
+
+    if (this.plutoLayout != null) {
+      queryParams.push(`plutolayout=${encodeURIComponent(this.plutoLayout)}`);
+    }
+
     return `plutonication:?${queryParams.join("&")}`;
   }
 }
