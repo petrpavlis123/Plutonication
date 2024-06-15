@@ -17,24 +17,6 @@ const accessCredentials = new AccessCredentials(
   "https://rostislavlitovkin.pythonanywhere.com/plutowalleticonwhite"
 )
 
-// const walletsInformation = [
-//   {
-//     "description": "",
-//     "downloadAndroid": "https://play.google.com/store/apps/details?id=com.rostislavlitovkin.plutowallet",
-//     "downloadIOS": null,
-//     "github": "https://github.com/rostislavLitovkin/plutowallet",
-//     "icon": "https://rostislavlitovkin.pythonanywhere.com/plutowalleticonwhite",
-//     "name": "PlutoWallet"
-//   },
-//   {
-//     "description": "Test description",
-//     "downloadAndroid": null,
-//     "downloadIOS": null,
-//     "github": "https://github.com/rostislavLitovkin/Nothing",
-//     "icon": "https://rostislavlitovkin.pythonanywhere.com/image",
-//     "name": "Other test wallet"
-//   }
-// ]
 export class PlutonicationModal extends HTMLElement {
   private modal: HTMLElement;
   private plusButton: HTMLElement;
@@ -43,7 +25,6 @@ export class PlutonicationModal extends HTMLElement {
   private isNpmPackage: boolean;
   private initialContent: string;
   private initialStyles: string;
-
 
   /**
  * Constructor.
@@ -84,10 +65,8 @@ export class PlutonicationModal extends HTMLElement {
 
     // Showing wallet info to download it.
     const walletItems = this.shadowRoot.querySelectorAll('.plutonication__wallets-item');
-    console.log("walletItems", walletItems);
     walletItems.forEach(walletItem => {
       walletItem.addEventListener('click', () => {
-        console.log("walletItem", walletItem)
           this.showWalletDownloadButtons(walletItem);
       });
     });
@@ -118,7 +97,6 @@ export class PlutonicationModal extends HTMLElement {
     try {
       //Fetching api with wallets content
       const walletInfo = await this.fetchData('https://plutonication.com/supported-wallets');
-      // const walletInfo = walletsInformation;
 
       // Adding that content into the html
       const walletsContainer = this.shadowRoot.querySelector('.plutonication__wallets-content');
@@ -126,7 +104,6 @@ export class PlutonicationModal extends HTMLElement {
       walletInfo.forEach((wallet, index) => {
         const walletItem = document.createElement('div');
         walletItem.className = 'plutonication__wallets-item';
-        // walletItem.href = wallet.href;
         walletItem.id = `wallet${index + 1}`;
         walletItem.setAttribute('data-download-android', wallet.downloadAndroid);
 
@@ -149,7 +126,6 @@ export class PlutonicationModal extends HTMLElement {
 
         walletsContainer.appendChild(walletItem);
       });
-      console.log("walletsContainer after added: ", walletsContainer);
 
       if (walletInfo.length > 3) {
         const showMoreWallets = document.createElement('div');
@@ -231,7 +207,6 @@ export class PlutonicationModal extends HTMLElement {
    * @param {walletItem} - Specific wallet item
    */
   showWalletDownloadButtons(walletItem: Element) {
-    console.log("Entrando aqui!")
     if (this.isNpmPackage) {
       this.closeBtn.style.display = 'block';
     } else {
@@ -242,7 +217,6 @@ export class PlutonicationModal extends HTMLElement {
     const walletsContainer = this.shadowRoot.querySelector(".plutonication__wallets-container");
     const title = this.shadowRoot.querySelector(".plutonication__qr-title");
     const description = walletItem.querySelector('.plutonication__wallets-item-description').textContent;
-    // const walletUrl = walletItem.getAttribute('href');
     const downloadBtns = this.shadowRoot.querySelector(".plutonication__wallets-btn-container-hidden");
     const downloadAndroidUrl = walletItem.getAttribute('data-download-android');
 

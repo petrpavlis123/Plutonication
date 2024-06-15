@@ -1,5 +1,5 @@
 import './App.css'
-import { AccessCredentials, initializePlutonicationDAppClientWithModal } from "@plutonication/plutonication";
+import { AccessCredentials, initializePlutonicationDAppClientWithModal, initializePlutonicationDAppClientWithModalForExtension } from "@plutonication/plutonication";
 import type { SignerPayloadRaw } from "@polkadot/types/types"
 import type { Injected } from "@polkadot/extension-inject/types";
 import { ApiPromise, WsProvider } from '@polkadot/api';
@@ -26,7 +26,14 @@ function App() {
 
     console.log("accessCredentials:", accessCredentials.ToUri());
 
-    account = await initializePlutonicationDAppClientWithModal(
+    // account = await initializePlutonicationDAppClientWithModal(
+    //   accessCredentials,
+    //   (receivedPubkey: string) => {
+    //     publicKey = receivedPubkey;
+    //     console.log("receivedPubkey", receivedPubkey);
+    //   }
+    // );
+    account = await initializePlutonicationDAppClientWithModalForExtension(
       accessCredentials,
       (receivedPubkey: string) => {
         publicKey = receivedPubkey;

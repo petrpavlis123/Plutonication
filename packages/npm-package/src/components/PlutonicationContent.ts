@@ -28,7 +28,7 @@ export const htmlTemplate: string = `
       <div class="plutonication__wallets-btn-container plutonication__wallets-btn-container-hidden">
         <button data-platform="android" class="plutonication__wallets-btn-download">
             <div class="plutonication__wallets-btn-content">
-                <img src="./images/google-play.svg" alt="google" width="30" height="30"/>
+                <img src="./images/google-play.png" alt="google" width="30" height="30"/>
                 <div>
                     <p class="plutonication__wallets-btn-p1">Get in on</p>
                     <p class="plutonication__wallets-btn-p2">Google Play</p>
@@ -37,7 +37,7 @@ export const htmlTemplate: string = `
         </button>
         <button data-platform="ios" class="plutonication__wallets-btn-download"> 
             <div class="plutonication__wallets-btn-content">
-                <img src="./images/apple-icon.svg" alt="apple" width="30" height="30"/>
+                <img src="./images/apple-icon.png" alt="apple" width="30" height="30"/>
                 <div>
                     <p class="plutonication__wallets-btn-p1">Download on the</p>
                     <p class="plutonication__wallets-btn-p2">App Store</p>
@@ -47,9 +47,9 @@ export const htmlTemplate: string = `
     </div>
       <div id="additional-info" class="plutonication__social-media-container">
           <a href="https://plutonication.com/">Docs</a>
-          <a href="https://github.com/rostislavLitovkin/plutonication" target="_blank"><img src="./images/github.svg" alt="Github" width="20" height="20"></a>
-          <a href="https://t.me/+CN8Ux4dPAZ8yZWU0" target="_blank"><img src="./images/telegram.svg" alt="Telegram" width="20" height="20"></a>
-          <a href="https://plutonication.com/" target="_blank"><img src="./images/question-mark.svg" alt="Help" width="20" height="20"></a>
+          <a href="https://github.com/rostislavLitovkin/plutonication" target="_blank"><img src="./images/github.png" alt="Github" width="20" height="20"></a>
+          <a href="https://t.me/+CN8Ux4dPAZ8yZWU0" target="_blank"><img src="./images/telegram.png" alt="Telegram" width="20" height="20"></a>
+          <a href="https://plutonication.com/" target="_blank"><img src="./images/question-mark.png" alt="Help" width="20" height="20"></a>
       </div>
       
     </div>
@@ -93,7 +93,7 @@ export const cssStyles: string = `
 .plutonication__component > div {
     background-color: #0e1110;
     border-radius: 5px;
-    width: 300px;
+    width: 320px;
     align-items: center;
     padding: 20px 30px;
     border-radius: 1rem;
@@ -181,7 +181,7 @@ export const cssStyles: string = `
 
 .plutonication__component .plutonication__qr-container .plutonication__qr-content .plutonication__qr-code img {
     height: 200px;
-    width: 200px;
+    width: 220px;
     border-radius: 10px;
     display: block;
     margin: auto;
@@ -194,12 +194,12 @@ export const cssStyles: string = `
 }
 
 .plutonication__component .plutonication__wallets-container p {
-    font-size: .7rem;
+    font-size: .9rem;
 }
 
 .plutonication__component .plutonication__wallets-container .plutonication__wallets-content {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
     column-gap: .5rem;
     row-gap: .5rem;
 }
@@ -212,31 +212,33 @@ export const cssStyles: string = `
     justify-content: center;
     text-align: center;
     text-decoration: none;
-    padding-top: .4rem;
+    padding: 10px 10px 5px 10px; 
     background-color: #393939;
     border-radius: 10px;
+    
 }
 
 .plutonication__component .plutonication__wallets-container .plutonication__wallets-content .plutonication__wallets-item img,
 .plutonication__component .plutonication__wallets-container .plutonication__wallets-content .plutonication__wallets-item-plus img {
     border-radius: 1rem;
+    margin-bottom: 5px;
 }
 
 .plutonication__component .plutonication__wallets-container .plutonication__wallets-content .plutonication__wallets-item .plutonication__wallets-item-description,
 .plutonication__component .plutonication__wallets-container .plutonication__wallets-content .plutonication__wallets-item-plus .plutonication__wallets-item-description {
     display: block;
     text-align: center;
-    font-size: .65rem;
+    font-size: .75rem;
     color: #fff;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-    width: 70px;
+    width: 60px;
 }
 
 .plutonication__component .plutonication__wallets-container .plutonication__wallets-content .plutonication__wallets-item .plutonication__wallets-item-description:hover,
 .plutonication__component .plutonication__wallets-container .plutonication__wallets-content .plutonication__wallets-item-plus .plutonication__wallets-item-description:hover {
-    white-space: normal;
+    // white-space: normal;
     width: auto;
 }
 
@@ -280,7 +282,7 @@ export const cssStyles: string = `
 }
 
 .plutonication__component .plutonication__wallets-btn-container .plutonication__wallets-btn-download .plutonication__wallets-btn-content .plutonication__wallets-btn-p1 {
-    font-size: .7rem;
+    font-size: .8rem;
     text-align: justify;
     margin: 0;
 }
