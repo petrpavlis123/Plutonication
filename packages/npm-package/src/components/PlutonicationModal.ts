@@ -1,15 +1,7 @@
 import QRCode from 'qrcode';
 import { AccessCredentials } from '../AccessCredentials';
-import  { DOMAttributes }  from 'react';
-import { cssStyles, htmlTemplate } from './PlutonicationContent';
-
-/**
- * "QR Modal used to connect the dapp to the Plutonication server.
- * @extends HTMLElement
- */
-
-const template = htmlTemplate;
-const styles = cssStyles;
+import { DOMAttributes } from 'react';
+import plutonicationModal from './plutonication-modal.html';
 
 const accessCredentials = new AccessCredentials(
   "wss://plutonication-acnha.ondigitalocean.app/",
@@ -17,6 +9,10 @@ const accessCredentials = new AccessCredentials(
   "https://rostislavlitovkin.pythonanywhere.com/plutowalleticonwhite"
 )
 
+/**
+ * "QR Modal used to connect the dapp to the Plutonication server.
+ * @extends HTMLElement
+ */
 export class PlutonicationModal extends HTMLElement {
   private modal: HTMLElement;
   private plusButton: HTMLElement;
@@ -27,26 +23,21 @@ export class PlutonicationModal extends HTMLElement {
   private initialStyles: string;
 
   /**
- * Constructor.
- * Creates a new modal and sets up its elements.
- */
+   * Constructor.
+   * Creates a new modal and sets up its elements.
+   */
   constructor() {
     super();
 
     const shadow = this.attachShadow({ mode: 'open' });
-    shadow.innerHTML = template;
+    shadow.innerHTML = plutonicationModal;
 
-    const style = document.createElement('style');
-    style.textContent = styles;
-    shadow.appendChild(style);
 
-    this.initialContent = template;
-    this.initialStyles = styles;
-
+    this.initialContent = plutonicationModal;
   }
 
   async connectedCallback() {
-    
+
     // Initializing some elements
     this.modal = this.shadowRoot.querySelector('.plutonication__component');
     this.closeBtn = this.shadowRoot.querySelector('.close');
@@ -67,7 +58,7 @@ export class PlutonicationModal extends HTMLElement {
     const walletItems = this.shadowRoot.querySelectorAll('.plutonication__wallets-item');
     walletItems.forEach(walletItem => {
       walletItem.addEventListener('click', () => {
-          this.showWalletDownloadButtons(walletItem);
+        this.showWalletDownloadButtons(walletItem);
       });
     });
 
@@ -82,16 +73,16 @@ export class PlutonicationModal extends HTMLElement {
     });
   }
 
-  async  fetchData(urlText: string) {
+  async fetchData(urlText: string) {
     try {
-        const response = await fetch(urlText);
-        const data = await response.json();
-        return data;
+      const response = await fetch(urlText);
+      const data = await response.json();
+      return data;
     } catch (error) {
-        console.error('Error fetching data:', error);
-        return [];
+      console.error('Error fetching data:', error);
+      return [];
     }
-}
+  }
 
   async addWalletsContent() {
     try {
@@ -146,6 +137,7 @@ export class PlutonicationModal extends HTMLElement {
       console.error('Error fetching wallets:', error);
     }
   }
+
   /**
    * Return to the initial view of the modal
    */
@@ -156,7 +148,7 @@ export class PlutonicationModal extends HTMLElement {
     if (!this.isNpmPackage) {
       const elementsToOverride = this.shadowRoot.querySelectorAll('.plutonication__component');
       elementsToOverride.forEach(element => {
-          element.classList.add('plutonication__component-override-styles');
+        element.classList.add('plutonication__component-override-styles');
       });
     }
 
@@ -166,28 +158,28 @@ export class PlutonicationModal extends HTMLElement {
     this.shadowRoot.appendChild(style);
 
     this.generateQRCode(accessCredentials.ToUri());
-    
+
     this.connectedCallback();
-    
+
   }
 
   /**
    * Generate the QRCode in base an input text
-   * * @param {inputText} - Url text of the wallet
+   * @param {inputText} - Url text of the wallet
    */
   async generateQRCode(inputText: string) {
     const qrCodeContainer = this.shadowRoot.getElementById('qr-code');
 
     try {
-        const qrCodeDataURL = await QRCode.toDataURL(inputText);
-        const qrCodeImage = document.createElement('img');
-        qrCodeImage.src = qrCodeDataURL;
-        if (qrCodeContainer) {
-            qrCodeContainer.innerHTML = '';
-            qrCodeContainer.appendChild(qrCodeImage);
-        }
+      const qrCodeDataURL = await QRCode.toDataURL(inputText);
+      const qrCodeImage = document.createElement('img');
+      qrCodeImage.src = qrCodeDataURL;
+      if (qrCodeContainer) {
+        qrCodeContainer.innerHTML = '';
+        qrCodeContainer.appendChild(qrCodeImage);
+      }
     } catch (error) {
-        console.error('Something went wrong generating the QR code:', error);
+      console.error('Something went wrong generating the QR code:', error);
     }
   }
 
@@ -231,7 +223,7 @@ export class PlutonicationModal extends HTMLElement {
       qrContainer.innerHTML = qrCotainerInitialContent;
       this.generateQRCode(downloadAndroidUrl);
     });
-    
+
   }
 
   /**
@@ -251,6 +243,10 @@ export class PlutonicationModal extends HTMLElement {
     }
   }
 
+  /**
+   * Used only for extension
+   * @param {AccessCredentials} accessCredentials - Acces cedentials to generate the QR.
+   */
   openExtension(accessCredentials: AccessCredentials): void {
     this.isNpmPackage = false;
     try {
