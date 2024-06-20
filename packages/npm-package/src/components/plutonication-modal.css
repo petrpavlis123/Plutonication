@@ -189,10 +189,14 @@
 
 .plutonication__component .plutonication__wallets-btn-container {
   display: flex;
-  flex-direction: row;
-  justify-content: space-between;
+  flex-direction: column;
+  justify-content: center;
   align-items: center;
-  height: 200px;
+  gap: 20px;
+  height: 270px;
+  width: 270px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .plutonication__component .plutonication__wallets-btn-container .plutonication__wallets-btn-download {

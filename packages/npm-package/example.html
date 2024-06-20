@@ -3,8 +3,7 @@
 
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport"
-  content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Plutonication example</title>
 </head>
 
@@ -27,18 +26,11 @@
 
       const accessCredentials = new Plutonication.AccessCredentials(
         "wss://plutonication-acnha.ondigitalocean.app/",
-        "Plutonication test",
+        "Plutonication example",
         "https://rostislavlitovkin.pythonanywhere.com/plutowalleticonwhite"
       )
 
       console.log("accessCredentials:", accessCredentials.ToUri());
-      
-      // account = await Plutonication.initializePlutonicationDAppClientWithModal(
-      //   accessCredentials,
-      //   (receivedPubkey) => {
-      //     console.log("receivedPubkey", receivedPubkey);
-      //   },
-      // )
 
       account = await Plutonication.initializePlutonicationDAppClientWithModalForExtension(
         accessCredentials,
