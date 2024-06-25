@@ -4,33 +4,21 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Plutonication</title>
-  <base href="/">
   <link rel="stylesheet" type="text/css" href="plutonication-modal.css">
 </head>
 
 <body>
   <main class="plutonication__component">
     <div>
-      <div class="plutonication__qr-header">
-        <p class="plutonication__qr-title">Plutonication</p>
-        <span class="close">&times;</span>
-        <img class="back" src="../../images/arrow-back.svg" alt="back" width="50" height="50">
+      <div class="plutonication__header">
+        <p class="plutonication__title">Plutonication</p>
+        <img class="plutonication__back" src="../../images/arrow-back.svg" alt="back" width="30" height="30">
       </div>
-      <div class="plutonication__qr-container">
-        <div id="content" class="plutonication__qr-content">
-          <div id="qr-code" class="plutonication__qr-code"></div>
-        </div>
+
+      <div id="qr-code" class="plutonication__qr-code">
+        <!-- QR code -->
       </div>
-      <div id="wallets" class="plutonication__wallets-container">
-        <p>Supported Wallets:</p>
-        <div class="plutonication__wallets-content">
-        </div>
-      </div>
-      <div class="plutonication__wallets-btn-container plutonication__wallets-btn-container-hidden">
-        <img src="../../images/google-play.png" alt="Google Play" width="270" height="80" />
-        <img src="../../images/app-store.svg" alt="App Store" width="270" height="90.25" />
-      </div>
+
       <div id="additional-info" class="plutonication__social-media-container">
         <a href="https://plutonication.com/">Docs</a>
         <a href="https://github.com/rostislavLitovkin/plutonication" target="_blank"><img src="../../images/github.svg"

@@ -145,25 +145,6 @@ export async function initializePlutonicationDAppClientWithModal(
   )
 }
 
-export async function initializePlutonicationDAppClientWithModalForExtension(
-  accessCredentials: AccessCredentials,
-  onReceivePubkey: (receivedPubkey: string) => void,
-  onWalletDisconnected?: () => void
-): Promise<PlutonicationInjected> {
-
-  // Show Plutonication modal QR code
-  const modal = getPlutonicationModal()
-
-  modal.openExtension(accessCredentials);
-
-  // Return the initialized PlutonicationInjected account
-  return await initializePlutonicationDAppClient(
-    accessCredentials,
-    onReceivePubkey,
-    onWalletDisconnected,
-  )
-}
-
 /**
  * Retrieves the PlutonicationModal web component from the DOM.
  * @returns The PlutonicationModal web component.

@@ -32,7 +32,7 @@
 
       console.log("accessCredentials:", accessCredentials.ToUri());
 
-      account = await Plutonication.initializePlutonicationDAppClientWithModalForExtension(
+      account = await Plutonication.initializePlutonicationDAppClientWithModal(
         accessCredentials,
         (receivedPubkey) => {
           console.log("receivedPubkey", receivedPubkey);

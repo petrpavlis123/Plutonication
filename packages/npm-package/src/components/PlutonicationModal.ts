@@ -1,185 +1,138 @@
-import QRCode from 'qrcode';
-import { AccessCredentials } from '../AccessCredentials';
-import { DOMAttributes } from 'react';
-import plutonicationModal from './plutonication-modal.html';
-
-const accessCredentials = new AccessCredentials(
-  "wss://plutonication-acnha.ondigitalocean.app/",
-  "Plutonication test",
-  "https://rostislavlitovkin.pythonanywhere.com/plutowalleticonwhite"
-)
+import QRCode from "qrcode"
+import { AccessCredentials } from "../AccessCredentials"
+import { DOMAttributes } from "react"
+import plutonicationModalMainDesktop from "./plutonication-modal-main-desktop.html"
+import plutonicationModalWalletDownloads from "./plutonication-modal-wallet-downloads.html"
+import plutonicationModalWalletDownloadDesktop from "./plutonication-modal-wallet-download-desktop.html"
+import plutonicationModalConnectionStatus from "./plutonication-modal-connection-status.html"
+import wallet from "./wallet.html"
+import { DownloadWalletDto } from "./DownloadWalletDto"
 
 /**
  * "QR Modal used to connect the dapp to the Plutonication server.
  * @extends HTMLElement
  */
 export class PlutonicationModal extends HTMLElement {
-  private modal: HTMLElement;
-  private plusButton: HTMLElement;
-  private closeBtn: HTMLElement;
-  private backBtn: HTMLElement;
-  private isNpmPackage: boolean;
-  private initialContent: string;
-  private initialStyles: string;
+  private shadow: ShadowRoot
+  private accessCredentials: AccessCredentials
 
   /**
-   * Constructor.
-   * Creates a new modal and sets up its elements.
+   * Creates a new modal.
    */
   constructor() {
-    super();
+    super()
 
-    const shadow = this.attachShadow({ mode: 'open' });
-    shadow.innerHTML = plutonicationModal;
-
-
-    this.initialContent = plutonicationModal;
-  }
-
-  async connectedCallback() {
-
-    // Initializing some elements
-    this.modal = this.shadowRoot.querySelector('.plutonication__component');
-    this.closeBtn = this.shadowRoot.querySelector('.close');
-    this.backBtn = this.shadowRoot.querySelector('.back');
-
-    // Adding wallets content into the HTML
-    await this.addWalletsContent();
-
-    //  Showing more wallets when clic the plus btn
-    this.plusButton = this.shadowRoot.getElementById('showMoreWallets');
-    if (this.plusButton) {
-      this.plusButton.addEventListener('click', () => {
-        this.showMoreWallets();
-      });
-    }
-
-    // Showing wallet info to download it.
-    const walletItems = this.shadowRoot.querySelectorAll('.plutonication__wallets-item');
-    walletItems.forEach(walletItem => {
-      walletItem.addEventListener('click', () => {
-        this.showWalletDownloadButtons(walletItem);
-      });
-    });
-
-    // Close modal clicking the btn
-    this.closeBtn.addEventListener('click', () => {
-      this.closeModal();
-    });
-
-    // Back btn
-    this.backBtn.addEventListener('click', () => {
-      this.backToInitialView();
-    });
-  }
-
-  async fetchData(urlText: string) {
-    try {
-      const response = await fetch(urlText);
-      const data = await response.json();
-      return data;
-    } catch (error) {
-      console.error('Error fetching data:', error);
-      return [];
-    }
-  }
-
-  async addWalletsContent() {
-    try {
-      //Fetching api with wallets content
-      const walletInfo = await this.fetchData('https://plutonication.com/supported-wallets');
-
-      // Adding that content into the html
-      const walletsContainer = this.shadowRoot.querySelector('.plutonication__wallets-content');
-
-      walletInfo.forEach((wallet, index) => {
-        const walletItem = document.createElement('div');
-        walletItem.className = 'plutonication__wallets-item';
-        walletItem.id = `wallet${index + 1}`;
-        walletItem.setAttribute('data-download-android', wallet.downloadAndroid);
-
-        const img = document.createElement('img');
-        img.src = wallet.icon;
-        img.alt = "wallet icon";
-        img.width = 50;
-        img.height = 50;
-
-        const description = document.createElement('span');
-        description.className = 'plutonication__wallets-item-description';
-        description.textContent = wallet.name;
-
-        walletItem.appendChild(img);
-        walletItem.appendChild(description);
-
-        if (index >= 3) {
-          walletItem.classList.add('plutonication__wallets-item-hidden');
-        }
-
-        walletsContainer.appendChild(walletItem);
-      });
-
-      if (walletInfo.length > 3) {
-        const showMoreWallets = document.createElement('div');
-        showMoreWallets.id = 'showMoreWallets';
-        showMoreWallets.className = 'plutonication__wallets-item-plus';
-
-        const plusIcon = document.createElement('img');
-        plusIcon.src = '../../images/plus-icon.svg';
-        plusIcon.alt = 'plus icon';
-        plusIcon.width = 30;
-        plusIcon.height = 30;
-
-        showMoreWallets.appendChild(plusIcon);
-
-        walletsContainer.appendChild(showMoreWallets);
-      }
-    } catch (error) {
-      console.error('Error fetching wallets:', error);
-    }
+    this.shadow = this.attachShadow({ mode: "open" })
   }
 
   /**
-   * Return to the initial view of the modal
+   * Load and show Main view for Desktop
+   * @param accessCredentials used for establishing a correct connection to the PlutonicationServer
    */
-  backToInitialView() {
-    // plutonication__component-override-styles 
-    this.shadowRoot.innerHTML = this.initialContent;
+  private async showMainDesktopView(): Promise<void> {
+    this.shadow.innerHTML = plutonicationModalMainDesktop
 
-    if (!this.isNpmPackage) {
-      const elementsToOverride = this.shadowRoot.querySelectorAll('.plutonication__component');
-      elementsToOverride.forEach(element => {
-        element.classList.add('plutonication__component-override-styles');
-      });
+    // This is loading optimization
+    const modal: HTMLElement = this.shadowRoot.querySelector(".plutonication__component")
+    modal.style.display = "flex"
+
+    // Back button
+    const backbutton = this.shadowRoot.querySelector(".plutonication__back")
+    backbutton.addEventListener("click", () => {
+      this.closeModal()
+    })
+
+    // Unused right now
+    const plusButton = this.shadowRoot.getElementById("showMoreWallets")
+    if (plusButton) {
+      plusButton.addEventListener("click", () => {
+        this.showMoreWallets()
+      })
     }
 
-    // Restoring original styles
-    const style = document.createElement('style');
-    style.textContent = this.initialStyles;
-    this.shadowRoot.appendChild(style);
+    // Load QR code
+    await this.generateQRCode(this.accessCredentials.ToUri())
 
-    this.generateQRCode(accessCredentials.ToUri());
+    // Load supported wallets
+    await this.loadDownloadWallets()
+  }
 
-    this.connectedCallback();
+  /**
+   * Loads the supported wallets
+   */
+  async loadDownloadWallets() {
 
+    //Fetching api with wallets content
+    try {
+      const response = await fetch("https://plutonication.com/supported-wallets")
+
+      const walletInfos: DownloadWalletDto[] = await response.json()
+
+      const walletsContent: HTMLDivElement = this.shadowRoot.querySelector(".plutonication__wallets-content")
+
+      walletInfos.forEach((data: DownloadWalletDto, index: number) => {
+        const walletItem: HTMLDivElement = document.createElement("div")
+
+        walletItem.innerHTML = wallet;
+        walletItem.id = `wallet${index}`
+        walletItem.setAttribute("data-google-play-link", data.downloadAndroid)
+        walletItem.setAttribute("data-app-store-link", data.downloadAndroid)
+
+        const img: HTMLImageElement = walletItem.querySelector(".plutonication__wallet-icon")
+        img.src = data.icon
+
+        const description: HTMLSpanElement = walletItem.querySelector(".plutonication__wallet-description")
+        description.textContent = data.name
+
+        if (index >= 3) {
+          walletItem.classList.add("plutonication__wallets-item-hidden")
+        }
+
+        walletItem.addEventListener("click", () => {
+          this.showWalletDownloads(data)
+        })
+
+        walletsContent.appendChild(walletItem)
+      })
+
+      if (walletInfos.length > 3) {
+        const showMoreWallets = document.createElement("div")
+        showMoreWallets.id = "showMoreWallets"
+        showMoreWallets.className = "plutonication__wallets-item-plus"
+
+        const plusIcon = document.createElement("img")
+        plusIcon.src = "../../images/plus-icon.svg"
+        plusIcon.alt = "plus icon"
+        plusIcon.width = 30
+        plusIcon.height = 30
+
+        showMoreWallets.appendChild(plusIcon)
+
+        walletsContent.appendChild(showMoreWallets)
+      }
+    }
+    catch {
+      // TODO
+
+      return;
+    }
   }
 
   /**
    * Generate the QRCode in base an input text
-   * @param {inputText} - Url text of the wallet
+   * @param {inputText} - text
    */
   async generateQRCode(inputText: string) {
-    const qrCodeContainer = this.shadowRoot.getElementById('qr-code');
+    const qrCodeContainer = this.shadowRoot.getElementById("qr-code")
 
-    try {
-      const qrCodeDataURL = await QRCode.toDataURL(inputText);
-      const qrCodeImage = document.createElement('img');
-      qrCodeImage.src = qrCodeDataURL;
-      if (qrCodeContainer) {
-        qrCodeContainer.innerHTML = '';
-        qrCodeContainer.appendChild(qrCodeImage);
-      }
-    } catch (error) {
-      console.error('Something went wrong generating the QR code:', error);
+    const qrCodeDataURL = await QRCode.toDataURL(inputText)
+    const qrCodeImage = document.createElement("img")
+    qrCodeImage.height = 260
+    qrCodeImage.width = 260
+    qrCodeImage.src = qrCodeDataURL
+    if (qrCodeContainer) {
+      qrCodeContainer.innerHTML = ""
+      qrCodeContainer.appendChild(qrCodeImage)
     }
   }
 
@@ -187,98 +140,114 @@ export class PlutonicationModal extends HTMLElement {
    * Show more wallet options in case there are more than three.
    */
   showMoreWallets() {
-    this.plusButton.style.display = 'none';
-    const moreWalletsItem = this.shadowRoot.querySelectorAll('.plutonication__wallets-item-hidden');
-    moreWalletsItem.forEach(wallet => {
-      wallet.classList.remove('plutonication__wallets-item-hidden');
-    });
+    // TODO
   }
 
   /**
    * Display the download buttons for the wallet for both iOS and Windows
    * @param {walletItem} - Specific wallet item
    */
-  showWalletDownloadButtons(walletItem: Element) {
-    if (this.isNpmPackage) {
-      this.closeBtn.style.display = 'block';
+  showWalletDownloads(walletInfo: DownloadWalletDto) {
+    this.shadow.innerHTML = plutonicationModalWalletDownloads
+
+    // This is loading optimization
+    const modal: HTMLElement = this.shadowRoot.querySelector(".plutonication__component")
+    modal.style.display = "flex"
+
+    // Back button
+    const backbutton = this.shadowRoot.querySelector(".plutonication__back")
+    backbutton.addEventListener("click", () => {
+      this.showMainDesktopView()
+    })
+
+    // Google Play download link
+    const googlePlayLink = this.shadowRoot.getElementById("google-play")
+    if (walletInfo.downloadAndroid) {
+      googlePlayLink.addEventListener("click", () => {
+        this.showWalletDownloadDesktop(walletInfo.downloadAndroid)
+      })
     } else {
-      this.backBtn.style.display = 'block';
+      // TODO
+    }
 
-    };
-    const qrContainer = this.shadowRoot.querySelector(".plutonication__qr-container");
-    const walletsContainer = this.shadowRoot.querySelector(".plutonication__wallets-container");
-    const title = this.shadowRoot.querySelector(".plutonication__qr-title");
-    const description = walletItem.querySelector('.plutonication__wallets-item-description').textContent;
-    const downloadBtns = this.shadowRoot.querySelector(".plutonication__wallets-btn-container-hidden");
-    const downloadAndroidUrl = walletItem.getAttribute('data-download-android');
+    // App Store download link
+    const appStoreLink = this.shadowRoot.getElementById("app-store")
+    if (walletInfo.downloadIOS) {
+       appStoreLink.addEventListener("click", () => {
+        this.showWalletDownloadDesktop(walletInfo.downloadIOS)
+      })
+    } else {
+      // TODO
+    }
+  }
 
-    const qrCotainerInitialContent = qrContainer.innerHTML;
+  /**
+   * Display the download buttons for the wallet for both iOS and Windows
+   * @param {walletItem} - Specific wallet item
+   */
+  showWalletDownloadDesktop(link: string) {
+    this.shadow.innerHTML = plutonicationModalWalletDownloadDesktop
 
-    qrContainer.innerHTML = "";
-    walletsContainer.innerHTML = "";
-    title.textContent = description;
-    downloadBtns.classList.remove("plutonication__wallets-btn-container-hidden");
-    downloadBtns.addEventListener('click', () => {
-      downloadBtns.classList.add("plutonication__wallets-btn-container-hidden");
-      qrContainer.innerHTML = qrCotainerInitialContent;
-      this.generateQRCode(downloadAndroidUrl);
-    });
+    // This is loading optimization
+    const modal: HTMLElement = this.shadowRoot.querySelector(".plutonication__component")
+    modal.style.display = "flex"
 
+    // Back button
+    const backbutton = this.shadowRoot.querySelector(".plutonication__back")
+    backbutton.addEventListener("click", () => {
+      this.showMainDesktopView()
+    })
+
+    this.generateQRCode(link)
+  }
+
+  /**
+   * Shows the connection status when it unexpectedly changes.
+   * Mostly used for telling the user that the connection has failed or the wallet has disconnected.
+   */
+  showConnectionStatus(): void {
+    this.shadow.innerHTML = plutonicationModalConnectionStatus
+
+    // This is loading optimization
+    const modal: HTMLElement = this.shadowRoot.querySelector(".plutonication__component")
+    modal.style.display = "flex"
+
+    // Back button
+    const backbutton = this.shadowRoot.querySelector(".plutonication__back")
+    backbutton.addEventListener("click", () => {
+      this.showMainDesktopView()
+    })
   }
 
   /**
    * Opens the modal and displays the QR code generated with the access credentials information.
-   * @param {AccessCredentials} accessCredentials - Acces cedentials to generate the QR.
+   * @param {AccessCredentials} accessCredentials - used to generate the correct QR.
    */
   openModal(accessCredentials: AccessCredentials): void {
-    this.isNpmPackage = true;
-    try {
-      this.generateQRCode(accessCredentials.ToUri());
-      this.modal.style.display = 'flex';
-      this.closeBtn.style.display = 'block';
-      this.backBtn.style.display = 'none';
+    this.accessCredentials = accessCredentials
 
-    } catch (error) {
-      console.error('Error generating QR code:', error);
-    }
+    // Determine Desktop / Mobile
+    this.showMainDesktopView()
   }
 
   /**
-   * Used only for extension
-   * @param {AccessCredentials} accessCredentials - Acces cedentials to generate the QR.
-   */
-  openExtension(accessCredentials: AccessCredentials): void {
-    this.isNpmPackage = false;
-    try {
-      this.generateQRCode(accessCredentials.ToUri());
-      this.modal.style.display = 'flex';
-      this.modal.style.padding = '0';
-      this.modal.style.backgroundColor = "white";
-      this.closeBtn.style.display = 'none';
-    } catch (error) {
-      console.error('Error generating QR code:', error);
-    }
-  }
-
-  /**
-   * Closes the modal along with the QR code.
+   * Closes the modal
    */
   closeModal(): void {
-    this.modal.style.display = 'none';
-    this.backToInitialView();
+    this.shadow.innerHTML = ""
   }
 }
 
 // Defines the html web component
-customElements.define('plutonication-modal', PlutonicationModal);
+customElements.define("plutonication-modal", PlutonicationModal)
 
-// Extend the JSX namespace
-type CustomElement<T> = Partial<T & DOMAttributes<T>>;
+// Extends the JSX namespace
+type CustomElement<T> = Partial<T & DOMAttributes<T>>
 
 declare global {
   namespace JSX {
     interface IntrinsicElements {
-      ['plutonication-modal']: CustomElement<PlutonicationModal>;
+      ["plutonication-modal"]: CustomElement<PlutonicationModal>
     }
   }
 }
