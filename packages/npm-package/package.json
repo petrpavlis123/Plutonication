@@ -6,7 +6,8 @@
   "module": "./lib/index.js",
   "types": "./lib/types/index.d.ts",
   "scripts": {
-    "build": "webpack --config webpack.config.js && tsc"
+    "build": "webpack --config webpack.config.js",
+    "build-example-dapp": "webpack --config webpack.config.example.js"
   },
   "dependencies": {
     "@babel/core": "^7.23.7",
