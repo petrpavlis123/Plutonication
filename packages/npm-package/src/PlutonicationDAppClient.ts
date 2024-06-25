@@ -19,12 +19,15 @@ export interface PlutonicationInjected extends Injected {
 export async function initializePlutonicationDAppClient(
   accessCredentials: AccessCredentials,
   onReceivePubkey?: (receivedPubkey: string) => void,
+  onError?: () => void,
   onWalletDisconnected?: () => void
 ): Promise<PlutonicationInjected> {
 
   // Connect to the web socket
   const socket = io(accessCredentials.url)
   const roomKey = accessCredentials.key
+
+  socket.on('connect_error', onError)
 
   // Wait for the dApp socket client to connect.
   await new Promise<void>((resolve) => {
@@ -123,6 +126,7 @@ export async function initializePlutonicationDAppClient(
 export async function initializePlutonicationDAppClientWithModal(
   accessCredentials: AccessCredentials,
   onReceivePubkey?: (receivedPubkey: string) => void,
+  onError?: () => void,
   onWalletDisconnected?: () => void
 ): Promise<PlutonicationInjected> {
 
@@ -141,7 +145,16 @@ export async function initializePlutonicationDAppClientWithModal(
 
       onReceivePubkey(receivedPubkey)
     },
-    onWalletDisconnected,
+    () => {
+      modal.showConnectionStatus("Failed to connect")
+
+      if (onError) onError()
+    },
+    () => {
+      modal.showConnectionStatus("Wallet disconnected")
+      
+      if (onWalletDisconnected) onWalletDisconnected()
+    }
   )
 }
 

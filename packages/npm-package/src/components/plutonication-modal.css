@@ -69,6 +69,9 @@
   margin-left: auto;
   margin-right: auto;
   margin-bottom: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .plutonication__component .plutonication__qr-code img {
@@ -92,10 +95,12 @@
   margin: 5px, 0px, 5px, 20px;
 }
 
-.plutonication__component .plutonication__wallets-content .plutonication__connection-failed {
-  position: relative;
-  margin: auto;
+.plutonication__component .plutonication__qr-code .plutonication__connection-status {
   color: red;
+}
+
+.plutonication__component .plutonication__qr-code .plutonication__message {
+  color: white;
 }
 
 .plutonication__component .plutonication__wallets-button-container {
@@ -108,6 +113,15 @@
   width: 270px;
   margin-left: auto;
   margin-right: auto;
+}
+
+.plutonication__component .plutonication__wallets-button-container .plutonication__download-wallet {
+  cursor: pointer;
+}
+
+.plutonication__component .plutonication__wallets-button-container .plutonication__disabled {
+  filter: brightness(50%);
+  cursor: not-allowed;
 }
 
 .plutonication__component .plutonication__social-media-container {

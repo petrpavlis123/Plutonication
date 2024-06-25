@@ -43,6 +43,7 @@ export async function initializePlutonicationWalletClient(
   onSignRaw: (raw: SignerPayloadRaw) => Promise<void>,
   onConnected?: () => void,
   onConfirmDAppConnection?: () => void,
+  onConnectionFailed?: () => void,
   onDAppDisconnected?: () => void,
 ): Promise<PlutonicationWallet> {
 
@@ -66,6 +67,8 @@ export async function initializePlutonicationWalletClient(
 
   //  Handle the dApp disconnection
   socket.on("disconnect", onDAppDisconnected)
+
+  socket.on('connect_failed', onConnectionFailed)
 
   // Wait for the Wallet socket client to connect.
   await new Promise<void>((resolve) => {

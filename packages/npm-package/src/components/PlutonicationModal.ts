@@ -2,11 +2,13 @@ import QRCode from "qrcode"
 import { AccessCredentials } from "../AccessCredentials"
 import { DOMAttributes } from "react"
 import plutonicationModalMainDesktop from "./plutonication-modal-main-desktop.html"
+import plutonicationModalMainMobile from "./plutonication-modal-main-mobile.html"
 import plutonicationModalWalletDownloads from "./plutonication-modal-wallet-downloads.html"
 import plutonicationModalWalletDownloadDesktop from "./plutonication-modal-wallet-download-desktop.html"
 import plutonicationModalConnectionStatus from "./plutonication-modal-connection-status.html"
 import wallet from "./wallet.html"
 import { DownloadWalletDto } from "./DownloadWalletDto"
+import { DeepLinker } from "./DeepLinker"
 
 /**
  * "QR Modal used to connect the dapp to the Plutonication server.
@@ -15,6 +17,7 @@ import { DownloadWalletDto } from "./DownloadWalletDto"
 export class PlutonicationModal extends HTMLElement {
   private shadow: ShadowRoot
   private accessCredentials: AccessCredentials
+  private walletInfos: DownloadWalletDto[]
 
   /**
    * Creates a new modal.
@@ -23,6 +26,8 @@ export class PlutonicationModal extends HTMLElement {
     super()
 
     this.shadow = this.attachShadow({ mode: "open" })
+
+    document.addEventListener('keydown', (event) => event.key === 'Escape' && this.closeModal());
   }
 
   /**
@@ -42,14 +47,6 @@ export class PlutonicationModal extends HTMLElement {
       this.closeModal()
     })
 
-    // Unused right now
-    const plusButton = this.shadowRoot.getElementById("showMoreWallets")
-    if (plusButton) {
-      plusButton.addEventListener("click", () => {
-        this.showMoreWallets()
-      })
-    }
-
     // Load QR code
     await this.generateQRCode(this.accessCredentials.ToUri())
 
@@ -58,63 +55,81 @@ export class PlutonicationModal extends HTMLElement {
   }
 
   /**
+   * Load and show Main view for Desktop
+   * @param accessCredentials used for establishing a correct connection to the PlutonicationServer
+   */
+  private async showMainMobileView(): Promise<void> {
+    this.shadow.innerHTML = plutonicationModalMainMobile
+
+    // This is loading optimization
+    const modal: HTMLElement = this.shadowRoot.querySelector(".plutonication__component")
+    modal.style.display = "flex"
+
+    // Back button
+    const backbutton = this.shadowRoot.querySelector(".plutonication__back")
+    backbutton.addEventListener("click", () => {
+      this.closeModal()
+    })
+  }
+
+  /**
    * Loads the supported wallets
    */
   async loadDownloadWallets() {
 
     //Fetching api with wallets content
-    try {
-      const response = await fetch("https://plutonication.com/supported-wallets")
 
-      const walletInfos: DownloadWalletDto[] = await response.json()
-
-      const walletsContent: HTMLDivElement = this.shadowRoot.querySelector(".plutonication__wallets-content")
-
-      walletInfos.forEach((data: DownloadWalletDto, index: number) => {
-        const walletItem: HTMLDivElement = document.createElement("div")
-
-        walletItem.innerHTML = wallet;
-        walletItem.id = `wallet${index}`
-        walletItem.setAttribute("data-google-play-link", data.downloadAndroid)
-        walletItem.setAttribute("data-app-store-link", data.downloadAndroid)
-
-        const img: HTMLImageElement = walletItem.querySelector(".plutonication__wallet-icon")
-        img.src = data.icon
-
-        const description: HTMLSpanElement = walletItem.querySelector(".plutonication__wallet-description")
-        description.textContent = data.name
-
-        if (index >= 3) {
-          walletItem.classList.add("plutonication__wallets-item-hidden")
-        }
-
-        walletItem.addEventListener("click", () => {
-          this.showWalletDownloads(data)
-        })
-
-        walletsContent.appendChild(walletItem)
-      })
-
-      if (walletInfos.length > 3) {
-        const showMoreWallets = document.createElement("div")
-        showMoreWallets.id = "showMoreWallets"
-        showMoreWallets.className = "plutonication__wallets-item-plus"
-
-        const plusIcon = document.createElement("img")
-        plusIcon.src = "../../images/plus-icon.svg"
-        plusIcon.alt = "plus icon"
-        plusIcon.width = 30
-        plusIcon.height = 30
-
-        showMoreWallets.appendChild(plusIcon)
-
-        walletsContent.appendChild(showMoreWallets)
+    if (!this.walletInfos) {
+      try {
+        const response = await fetch("https://plutonication.com/supported-wallets")
+        this.walletInfos = await response.json()
+      }
+      catch {
+        return;
       }
     }
-    catch {
-      // TODO
 
-      return;
+    const walletsContent: HTMLDivElement = this.shadowRoot.querySelector(".plutonication__wallets-content")
+
+    this.walletInfos.forEach((data: DownloadWalletDto, index: number) => {
+      const walletItem: HTMLDivElement = document.createElement("div")
+
+      walletItem.innerHTML = wallet;
+      walletItem.id = `wallet${index}`
+      walletItem.setAttribute("data-google-play-link", data.downloadAndroid)
+      walletItem.setAttribute("data-app-store-link", data.downloadAndroid)
+
+      const img: HTMLImageElement = walletItem.querySelector(".plutonication__wallet-icon")
+      img.src = data.icon
+
+      const description: HTMLSpanElement = walletItem.querySelector(".plutonication__wallet-description")
+      description.textContent = data.name
+
+      if (index >= 3) {
+        walletItem.classList.add("plutonication__wallets-item-hidden")
+      }
+
+      walletItem.addEventListener("click", () => {
+        this.showWalletDownloads(data)
+      })
+
+      walletsContent.appendChild(walletItem)
+    })
+
+    if (this.walletInfos.length > 3) {
+      const showMoreWallets = document.createElement("div")
+      showMoreWallets.id = "showMoreWallets"
+      showMoreWallets.className = "plutonication__wallets-item-plus"
+
+      const plusIcon = document.createElement("img")
+      plusIcon.src = "../../images/plus-icon.svg"
+      plusIcon.alt = "plus icon"
+      plusIcon.width = 30
+      plusIcon.height = 30
+
+      showMoreWallets.appendChild(plusIcon)
+
+      walletsContent.appendChild(showMoreWallets)
     }
   }
 
@@ -167,17 +182,17 @@ export class PlutonicationModal extends HTMLElement {
         this.showWalletDownloadDesktop(walletInfo.downloadAndroid)
       })
     } else {
-      // TODO
+      googlePlayLink.classList.add("plutonication__disabled");
     }
 
     // App Store download link
     const appStoreLink = this.shadowRoot.getElementById("app-store")
     if (walletInfo.downloadIOS) {
-       appStoreLink.addEventListener("click", () => {
+      appStoreLink.addEventListener("click", () => {
         this.showWalletDownloadDesktop(walletInfo.downloadIOS)
       })
     } else {
-      // TODO
+      appStoreLink.classList.add("plutonication__disabled");
     }
   }
 
@@ -205,7 +220,7 @@ export class PlutonicationModal extends HTMLElement {
    * Shows the connection status when it unexpectedly changes.
    * Mostly used for telling the user that the connection has failed or the wallet has disconnected.
    */
-  showConnectionStatus(): void {
+  showConnectionStatus(message: string): void {
     this.shadow.innerHTML = plutonicationModalConnectionStatus
 
     // This is loading optimization
@@ -217,6 +232,9 @@ export class PlutonicationModal extends HTMLElement {
     backbutton.addEventListener("click", () => {
       this.showMainDesktopView()
     })
+
+    const connectionStatus: HTMLDivElement = this.shadowRoot.querySelector(".plutonication__connection-status")
+    connectionStatus.innerHTML = message
   }
 
   /**
@@ -226,8 +244,13 @@ export class PlutonicationModal extends HTMLElement {
   openModal(accessCredentials: AccessCredentials): void {
     this.accessCredentials = accessCredentials
 
-    // Determine Desktop / Mobile
-    this.showMainDesktopView()
+    const linker = new DeepLinker(
+      () => this.showMainDesktopView(),
+      () => this.showMainMobileView(),
+      () => console.log("fallback")
+    )
+    
+    linker.openURL(accessCredentials.ToUri());
   }
 
   /**
