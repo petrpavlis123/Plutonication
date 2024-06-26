@@ -245,9 +245,8 @@ export class PlutonicationModal extends HTMLElement {
     this.accessCredentials = accessCredentials
 
     const linker = new DeepLinker(
-      () => this.showMainDesktopView(),
       () => this.showMainMobileView(),
-      () => console.log("fallback")
+      () => this.showMainDesktopView(),
     )
     
     linker.openURL(accessCredentials.ToUri());

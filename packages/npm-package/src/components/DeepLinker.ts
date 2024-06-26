@@ -4,54 +4,32 @@
  * @param options 
  */
 export function DeepLinker(
-  onIgnored: () => void,
-  onReturn: () => void,
-  onFallback: () => void,
+  onSuccess: () => void,
+  onFailed: () => void,
 ) {
-  var hasFocus = true;
   var didHide = false;
-
-  // window is blurred when dialogs are shown
-  function onBlur() {
-    hasFocus = false;
-  };
+  var didFail = false;
 
   // document is hidden when native app is shown or browser is backgrounded
   function onVisibilityChange(e) {
     if (e.target.visibilityState === 'hidden') {
-      didHide = true;
+      if (!(didHide || didFail)) {
+        onSuccess();
+
+        didHide = true;
+      }      
     }
   };
 
   // window is focused when dialogs are hidden, or browser comes into view
   function onFocus() {
-    if (didHide) {
-      onReturn();
-
-      didHide = false; // reset
-    } else {
-      // ignore duplicate focus event when returning from native app on
-      // iOS Safari 13.3+
-      if (!hasFocus) {
-        // wait for app switch transition to fully complete - only then is
-        // 'visibilitychange' fired
-        setTimeout(function() {
-          // if browser was not hidden, the deep link failed
-          if (!didHide) {
-            onFallback();
-          }
-        }, 1000);
-      }
-    }
-
-    hasFocus = true;
+    
   };
 
   // add/remove event listeners
   // `mode` can be "add" or "remove"
   function bindEvents(mode) {
     [
-      [window, 'blur', onBlur],
       [document, 'visibilitychange', onVisibilityChange],
       [window, 'focus', onFocus],
     ].forEach(function(conf) {
@@ -69,17 +47,13 @@ export function DeepLinker(
     var dialogTimeout = 500;
 
     setTimeout(function() {
-      if (hasFocus) {
-        onIgnored();
+      if (!didHide) {
+        didFail = true;
+
+        onFailed();
       }
     }, dialogTimeout);
 
-
-    try {
-      window.location = url;
-    }
-    catch {
-      console.log("failed to assign")
-    }
+    window.location = url;
   };
 }
