@@ -1,6 +1,6 @@
 {
   "name": "@plutonication/plutonication",
-  "version": "1.0.122",
+  "version": "1.0.123",
   "description": "TypeScript version of C# plutonication library",
   "main": "./lib/index.js",
   "module": "./lib/index.js",
@@ -14,7 +14,7 @@
     "@babel/plugin-proposal-export-default-from": "^7.23.3",
     "@babel/preset-env": "^7.23.6",
     "@babel/preset-typescript": "^7.23.3",
-    "@polkadot/api": "^10.11.2",
+    "@polkadot/api": "^10.13.1",
     "@polkadot/extension-inject": "^0.46.6",
     "@substrate/connect": "^0.7.34",
     "babel-loader": "^9.1.3",
