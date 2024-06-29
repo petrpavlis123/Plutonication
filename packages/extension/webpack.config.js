@@ -1,75 +1,87 @@
-const CopyPlugin = require('copy-webpack-plugin');
-const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const Dotenv = require('dotenv-webpack');
-const webpack = require('webpack');
-const { blake2AsHex } = require('@polkadot/util-crypto');
+// Copyright 2019-2023 @polkadot/extension authors & contributors
+// SPDX-License-Identifier: Apache-2.0
 
 const path = require('path');
-const outputPath = 'lib';
+const webpack = require('webpack');
+const CopyPlugin = require('copy-webpack-plugin');
+const ManifestPlugin = require('webpack-extension-manifest-plugin');
+
+const { blake2AsHex } = require('@polkadot/util-crypto');
+
+const pkgJson = require('./package.json');
 const manifest = require('./manifest.json');
 
 const EXT_NAME = manifest.short_name;
 
+const packages = [
+    "extension",
+    'plutonication',
+];
+
 const entryPoints = {
-    main: [
-        path.resolve(__dirname, 'popup', 'main.ts'),
-        // path.resolve(__dirname, 'scss', 'main.scss')
-    ],
-    background: path.resolve(__dirname, 'scripts', 'background.ts')
+    background: './src/background.ts',
+    page: './src/page.ts',
+    content: "./src/content.ts",
 };
 
 module.exports = {
+    context: __dirname,
+    devtool: false,
     entry: entryPoints,
-    output: {
-        path: path.join(__dirname, outputPath),
-        filename: '[name].js',
-    },
-    resolve: {
-        extensions: ['.ts', '.js'],
-    },
     module: {
         rules: [
             {
-                test: /\.tsx?$/,
-                loader: 'ts-loader',
+                test: /\.(ts|tsx)$/,
                 exclude: /node_modules/,
+                loader: 'ts-loader',
             },
             {
-                test: /\.(sa|sc)ss$/,
-                use: [
-                    MiniCssExtractPlugin.loader,
-                    'css-loader',
-                    'sass-loader'
-                ]
+                test: /\.html$/,
+                exclude: /node_modules/,
+                use: 'html-loader',
             },
             {
-              test: /\.html$/,
-              use: 'html-loader',
-          },
-            {
-                test: /\.(jpg|jpeg|png|gif|woff|woff2|eot|ttf|svg)$/i,
-                use: 'url-loader?limit=1024'
-            }
-        ],
+                test: /\.(png|jpe?g|gif|svg)$/i,
+                type: 'asset/resource',
+                generator: {
+                    filename: 'images/[name][ext]',
+                },
+            },
+        ]
+    },
+    output: {
+        chunkFilename: '[name].js',
+        filename: '[name].js',
+        globalObject: '(typeof self !== \'undefined\' ? self : this)',
+        path: path.join(__dirname, 'build')
+    },
+    performance: {
+        hints: false
     },
     plugins: [
-        new CopyPlugin({
-            patterns: [
-              { from: '.', to: 'images', context: 'images' },
-            { from: '.', to: '', context: 'popup' }],
-            
-        }),
-        new MiniCssExtractPlugin({
-            filename: '[name].css',
-        }),
-        new Dotenv(),
         new webpack.DefinePlugin({
             'process.env': {
-            //   EXTENSION_PREFIX: JSON.stringify(process.env.EXTENSION_PREFIX || EXT_NAME),
-            EXTENSION_PREFIX: JSON.stringify(EXT_NAME),
-            NODE_ENV: JSON.stringify('production'),
-            PORT_PREFIX: JSON.stringify(blake2AsHex(JSON.stringify(manifest), 64))
+                EXTENSION_PREFIX: JSON.stringify(process.env.EXTENSION_PREFIX || EXT_NAME),
+                NODE_ENV: JSON.stringify('production'),
+                PORT_PREFIX: JSON.stringify(blake2AsHex(JSON.stringify(manifest), 64))
             }
         }),
-    ]
+        new CopyPlugin({ patterns: [{ from: 'public' }] }),
+        new ManifestPlugin({
+            config: {
+                base: manifest,
+                extend: {
+                    version: pkgJson.version.split('-')[0] // remove possible -beta.xx
+                }
+            }
+        })
+    ],
+    resolve: {
+        alias: packages.reduce((alias, p) => ({
+            ...alias,
+            [`@plutonication/${p}`]: path.resolve(__dirname, `../${p}/src`),
+        }),),
+        extensions: ['.ts', ".js", ".html", ".css"],
+    },
+    watch: false
 };

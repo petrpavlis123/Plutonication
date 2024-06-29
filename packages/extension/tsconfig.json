@@ -5,12 +5,10 @@
     "target": "es2017",
     "moduleResolution": "node",
     "skipLibCheck": true,
-    "strict": true
+    "strict": true,
   },
   "include": [
-    "scripts/**/*.tsx",
-    "scripts/**/*.ts",
-    "popup/**/*.ts"
+    "src/**/*.ts",
   ],
   "exclude": [
     "node_modules",

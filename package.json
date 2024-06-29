@@ -6,18 +6,11 @@
     "node": ">=18.14"
   },
   "scripts": {
-    "build": "npm run build-package && npm run build-extension",
-    "build-package": "cd packages/npm-package && npm run build",
-    "build-extension": "cd packages/extension && npm run build"
+    "build": "npm run build-package && cd packages/extension && npm run build",
+    "build-package": "cd packages/plutonication && npm run build",
+    "build-package-example-dapp": "cd packages/plutonication && npm run build-example-dapp"
   },
   "license": "MIT",
-  "dependencies": {
-    "ajv": "^8.13.0"
-  },
-  "devDependencies": {
-    "typescript": "^4.7.4",
-    "webpack": "^5.73.0"
-  },
   "workspaces": [
     "packages/*"
   ]

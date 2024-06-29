@@ -1,0 +1,34 @@
+.plutonication__component .plutonication__wallets-content .plutonication__wallet-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  text-decoration: none;
+  padding: 10px;
+  background-color: #393939;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.plutonication__component .plutonication__wallets-content .plutonication__wallet-container .plutonication__wallet-icon {
+  border-radius: 10px;
+  margin-bottom: 5px;
+}
+
+.plutonication__component .plutonication__wallets-content .plutonication__wallet-container .plutonication__wallet-description {
+  display: block;
+  text-align: center;
+  font-size: 10px;
+  color: #fff;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  width: 60px;
+  margin-top: 5px;
+}
+
+.plutonication__component .plutonication__wallets-content .plutonication__wallet-container .plutonication__wallet-description:hover {
+  width: auto;
+  cursor: pointer;
+}

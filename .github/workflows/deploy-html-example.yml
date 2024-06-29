@@ -2,11 +2,13 @@
 name: Deploy HTML example dApp
 
 on:
-  # Runs on pushes targeting the default branch
-  push:
+  pull_request:
     branches: [
       main,
-      Updating-design
+    ]
+  push:
+    branches: [
+      main
     ]
 
   # Allows you to run this workflow manually from the Actions tab
@@ -36,7 +38,7 @@ jobs:
         uses: actions/checkout@v4
       - name: Setup Pages
         uses: actions/configure-pages@v5
-      - run: cd packages/npm-package && npm install && npm run build-example-dapp
+      - run: cd packages/plutonication && npm install && npm run build-example-dapp
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:

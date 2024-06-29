@@ -4,13 +4,14 @@ on:
   pull_request:
     branches: [
       main,
-      Updating-design
     ]
   push:
     branches: [
       main,
-      Updating-design
     ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
 
 jobs:
   tests:
@@ -20,8 +21,8 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: '18.x'
-      - run: cd packages/npm-package && npm install
-      - run: cd packages/npm-package/tests && npm install && npx playwright test 
+      - run: cd packages/plutonication && npm install
+      - run: cd packages/tests && npm install && npx playwright test 
 
   publish-npm:
     needs: tests
@@ -32,7 +33,7 @@ jobs:
         with:
           node-version: '18.x'
           registry-url: https://registry.npmjs.org/
-      - run: cd packages/npm-package && npm install && npm run build
-      - run: cd packages/npm-package && npm publish
+      - run: cd packages/plutonication && npm install && npm run build
+      - run: cd packages/plutonication && npm publish
         env:
           NODE_AUTH_TOKEN: ${{secrets.NODE_AUTH_TOKEN}}
