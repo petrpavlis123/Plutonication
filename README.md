@@ -23,21 +23,22 @@ A comprehensive guide for adding Plutonication to your dApp / Wallet can be foun
 
 # React dApp example
 
-In the `example_dapp` folder, you can find a typescript React application that implements Plutonication.
+In the `react-example-dapp` folder, you can find a typescript React application that implements Plutonication.
 
 ### React dApp docs
 
 A detailed description of the Plutonication implementation can be found:
 
 1) https://plutonication-acnha.ondigitalocean.app/docs/react-example
-2) in the `src/app.ts` file.
+2) in the `packages/react-example-app/src/app.ts` file.
 
 ### Docker
 
 The following docker file runs the sample React dApp, which can be used for testing all plutonication dApp functionalities.
 
 ```
-cd example_dapp
+cd packages
+cd react-example-dapp
 
 docker build -t plutonication-react-dapp-example . 
 
@@ -47,7 +48,8 @@ docker run -p 3000:3000 plutonication-react-dapp-example
 ### Run locally
 
 ```
-cd example_dapp
+cd packages
+cd react-example-dapp
 
 # Install the dApp dependencies
 npm i
@@ -78,6 +80,7 @@ npm run build
 The provided tests showcase how Plutonication can be implemented for both dApps and Wallets.
 
 ```
+cd packages
 cd tests
 
 # Install all testing dependencies
@@ -91,7 +94,8 @@ npx playwright test
 Firstly, you will need to run the sample React dApp that can be used for testing.
 
 ```
-cd example_dapp
+cd packages
+cd react-example-dapp
 
 # Install the dApp dependencies
 npm i

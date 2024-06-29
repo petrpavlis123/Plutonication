@@ -1,12 +1,11 @@
 const CopyPlugin = require("copy-webpack-plugin");
-const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const path = require("path");
 
 module.exports = {
   mode: "production",
-  entry: './index.ts',
+  entry: './src/index.ts',
   output: {
-    path: path.resolve(__dirname, "../example-dapp/lib"),
+    path: path.resolve(__dirname, '../example-dapp/lib'),
     filename: 'plutonication.js',
     library: 'Plutonication',
     libraryTarget: 'umd',
@@ -23,18 +22,7 @@ module.exports = {
         use: {
           loader: 'babel-loader',
           options: {
-            presets: ['@babel/preset-env', '@babel/preset-typescript'],
-            plugins: ['@babel/plugin-proposal-export-default-from'],
-          },
-        },
-      },
-      {
-        test: /\.(js|jsx)$/,
-        exclude: /node_modules/,
-        use: {
-          loader: 'babel-loader',
-          options: {
-            presets: ['@babel/preset-env'],
+            presets: ['@babel/preset-env', '@babel/preset-typescript']
           },
         },
       },
@@ -60,12 +48,6 @@ module.exports = {
           to: path.resolve(__dirname, 'lib/images'),
         },
       ],
-    }),
-    // new HtmlWebpackPlugin({
-    //   template: './index.html',
-    // }),
-    new MiniCssExtractPlugin({
-      filename: '[name].css',
     }),
   ],
 };
