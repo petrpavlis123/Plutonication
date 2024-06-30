@@ -11,7 +11,7 @@ import plutonicationModalConnectionStatus from "./PlutonicationModalConnectionSt
 import plutonicationModalBase from "./PlutonicationModalBase"
 import wallet from "./Wallet"
 import { DownloadWalletDto } from "./DownloadWalletDto"
-import { DeepLinker } from "./DeepLinker"
+import { DeepLinker, initializeDeepLinker } from "./DeepLinker"
 
 /**
  * "QR Modal used to connect the dapp to the Plutonication server.
@@ -35,7 +35,7 @@ export class PlutonicationModal extends HTMLElement {
 
     this.content = this.shadowRoot?.getElementById("plutonication__content")
 
-    document.addEventListener('keydown', (event) => event.key === 'Escape' && this.closeModal());
+    document.addEventListener('keydown', (event) => event.key === 'Escape' && this.closeModal())
   }
 
   /**
@@ -46,12 +46,12 @@ export class PlutonicationModal extends HTMLElement {
     this.content.innerHTML = plutonicationModalMainDesktop
 
     // This is loading optimization
-    const modal: HTMLMainElement = this.shadowRoot?.getElementById("plutonication__component")
+    const modal: HTMLElement = this.shadowRoot?.getElementById("plutonication__component")
     modal.style.display = "flex"
 
     // Back button
-    const backbutton: HTMLImageElement = this.shadowRoot?.getElementById("plutonication__back")
-    backbutton.addEventListener("click", () => {
+    const backButton: HTMLImageElement = this.shadowRoot?.getElementById("plutonication__back")
+    backButton.addEventListener("click", () => {
       this.closeModal()
     })
 
@@ -74,8 +74,8 @@ export class PlutonicationModal extends HTMLElement {
     modal.style.display = "flex"
 
     // Back button
-    const backbutton = this.shadowRoot.querySelector(".plutonication__back")
-    backbutton.addEventListener("click", () => {
+    const backButton = this.shadowRoot.querySelector(".plutonication__back")
+    backButton.addEventListener("click", () => {
       this.closeModal()
     })
   }
@@ -105,7 +105,7 @@ export class PlutonicationModal extends HTMLElement {
       walletItem.innerHTML = wallet;
       walletItem.id = `wallet${index}`
       walletItem.setAttribute("data-google-play-link", data.downloadAndroid)
-      walletItem.setAttribute("data-app-store-link", data.downloadAndroid)
+      walletItem.setAttribute("data-app-store-link", data.downloadIOS)
 
       const img: HTMLImageElement = walletItem.querySelector(".plutonication__wallet-icon")
       img.src = data.icon
@@ -178,8 +178,8 @@ export class PlutonicationModal extends HTMLElement {
     modal.style.display = "flex"
 
     // Back button
-    const backbutton = this.shadowRoot.querySelector(".plutonication__back")
-    backbutton.addEventListener("click", () => {
+    const backButton = this.shadowRoot.querySelector(".plutonication__back")
+    backButton.addEventListener("click", () => {
       this.showMainDesktopView()
     })
 
@@ -216,8 +216,8 @@ export class PlutonicationModal extends HTMLElement {
     modal.style.display = "flex"
 
     // Back button
-    const backbutton = this.shadowRoot.querySelector(".plutonication__back")
-    backbutton.addEventListener("click", () => {
+    const backButton = this.shadowRoot.querySelector(".plutonication__back")
+    backButton.addEventListener("click", () => {
       this.showMainDesktopView()
     })
 
@@ -236,8 +236,8 @@ export class PlutonicationModal extends HTMLElement {
     modal.style.display = "flex"
 
     // Back button
-    const backbutton = this.shadowRoot.querySelector(".plutonication__back")
-    backbutton.addEventListener("click", () => {
+    const backButton = this.shadowRoot.querySelector(".plutonication__back")
+    backButton.addEventListener("click", () => {
       this.showMainDesktopView()
     })
 
@@ -252,7 +252,7 @@ export class PlutonicationModal extends HTMLElement {
   openModal(accessCredentials: AccessCredentials): void {
     this.accessCredentials = accessCredentials
 
-    const linker = new DeepLinker(
+    const linker: DeepLinker = initializeDeepLinker(
       () => this.showMainMobileView(),
       () => this.showMainDesktopView(),
     )
@@ -266,8 +266,6 @@ export class PlutonicationModal extends HTMLElement {
   closeModal(): void {
     const modal: HTMLMainElement = this.shadowRoot?.getElementById("plutonication__component")
     modal.style.display = "none"
-
-
   }
 }
 

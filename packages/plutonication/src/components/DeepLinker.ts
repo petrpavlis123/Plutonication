@@ -1,15 +1,19 @@
+export interface DeepLinker {
+  destroy: () => void,
+  openURL: (url: string) => void,
+}
+
 /**
  * Source: https://gist.github.com/diachedelic/0d60233dab3dcae3215da8a4dfdcd434
  * Deep link to a native app from a browser, with a fallback
  * @param options 
  */
-export function DeepLinker(
-  this: any, 
+export function initializeDeepLinker(
   onSuccess: () => void,
   onFailed: () => void,
-) {
-  var didHide = false;
-  var didFail = false;
+): DeepLinker {
+  let didHide = false;
+  let didFail = false;
 
   // document is hidden when native app is shown or browser is backgrounded
   function onVisibilityChange(e: any) {
@@ -22,17 +26,11 @@ export function DeepLinker(
     }
   };
 
-  // window is focused when dialogs are hidden, or browser comes into view
-  function onFocus() {
-    
-  };
-
   // add/remove event listeners
   // `mode` can be "add" or "remove"
   function bindEvents(mode: any) {
     [
       [document, 'visibilitychange', onVisibilityChange],
-      [window, 'focus', onFocus],
     ].forEach(function(conf: any) {
       conf[0][mode + 'EventListener'](conf[1], conf[2]);
     });
@@ -41,20 +39,21 @@ export function DeepLinker(
   // add event listeners
   bindEvents('add');
 
-  // expose public API
-  this.destroy = bindEvents.bind(null, 'remove');
-  this.openURL = function(url: string) {
-    // it can take a while for the dialog to appear
-    var dialogTimeout = 500;
+  return {
+    destroy: bindEvents.bind(null, 'remove'),
+    openURL: (url: string) => {
+      // it can take a while for the dialog to appear
+      var dialogTimeout = 500;
 
-    setTimeout(function() {
-      if (!didHide) {
-        didFail = true;
+      setTimeout(function() {
+        if (!didHide) {
+          didFail = true;
 
-        onFailed();
-      }
-    }, dialogTimeout);
+          onFailed();
+        }
+      }, dialogTimeout);
 
-    window.location = url as Location | (string & Location);
-  };
+      window.location = url as Location | (string & Location);
+    }
+  }
 }
