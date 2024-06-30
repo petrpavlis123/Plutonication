@@ -3,12 +3,13 @@
 import QRCode from "qrcode"
 import { AccessCredentials } from "../AccessCredentials"
 import { DOMAttributes } from "react"
-import plutonicationModalMainDesktop from "./plutonication-modal-main-desktop.html"
-import plutonicationModalMainMobile from "./plutonication-modal-main-mobile.html"
-import plutonicationModalWalletDownloads from "./plutonication-modal-wallet-downloads.html"
-import plutonicationModalWalletDownloadDesktop from "./plutonication-modal-wallet-download-desktop.html"
-import plutonicationModalConnectionStatus from "./plutonication-modal-connection-status.html"
-import wallet from "./wallet.html"
+import plutonicationModalMainDesktop from "./PlutonicationModalMainDesktop"
+import plutonicationModalMainMobile from "./PlutonicationModalMainMobile"
+import plutonicationModalWalletDownloads from "./PlutonicationModalWalletDownloads"
+import plutonicationModalWalletDownloadDesktop from "./PlutonicationModalWalletDownloadDesktop"
+import plutonicationModalConnectionStatus from "./PlutonicationModalConnectionStatus"
+import plutonicationModalBase from "./PlutonicationModalBase"
+import wallet from "./Wallet"
 import { DownloadWalletDto } from "./DownloadWalletDto"
 import { DeepLinker } from "./DeepLinker"
 
@@ -18,6 +19,7 @@ import { DeepLinker } from "./DeepLinker"
  */
 export class PlutonicationModal extends HTMLElement {
   private shadow: ShadowRoot
+  private content: HTMLDivElement
   private accessCredentials: AccessCredentials
   private walletInfos: DownloadWalletDto[]
 
@@ -29,6 +31,10 @@ export class PlutonicationModal extends HTMLElement {
 
     this.shadow = this.attachShadow({ mode: "open" })
 
+    this.shadow.innerHTML = plutonicationModalBase
+
+    this.content = this.shadowRoot?.getElementById("plutonication__content")
+
     document.addEventListener('keydown', (event) => event.key === 'Escape' && this.closeModal());
   }
 
@@ -37,14 +43,14 @@ export class PlutonicationModal extends HTMLElement {
    * @param accessCredentials used for establishing a correct connection to the PlutonicationServer
    */
   private async showMainDesktopView(): Promise<void> {
-    this.shadow.innerHTML = plutonicationModalMainDesktop
+    this.content.innerHTML = plutonicationModalMainDesktop
 
     // This is loading optimization
-    const modal: HTMLElement = this.shadowRoot.querySelector(".plutonication__component")
+    const modal: HTMLMainElement = this.shadowRoot?.getElementById("plutonication__component")
     modal.style.display = "flex"
 
     // Back button
-    const backbutton = this.shadowRoot.querySelector(".plutonication__back")
+    const backbutton: HTMLImageElement = this.shadowRoot?.getElementById("plutonication__back")
     backbutton.addEventListener("click", () => {
       this.closeModal()
     })
@@ -61,7 +67,7 @@ export class PlutonicationModal extends HTMLElement {
    * @param accessCredentials used for establishing a correct connection to the PlutonicationServer
    */
   private async showMainMobileView(): Promise<void> {
-    this.shadow.innerHTML = plutonicationModalMainMobile
+    this.content.innerHTML = plutonicationModalMainMobile
 
     // This is loading optimization
     const modal: HTMLElement = this.shadowRoot.querySelector(".plutonication__component")
@@ -165,7 +171,7 @@ export class PlutonicationModal extends HTMLElement {
    * @param {walletItem} - Specific wallet item
    */
   showWalletDownloads(walletInfo: DownloadWalletDto) {
-    this.shadow.innerHTML = plutonicationModalWalletDownloads
+    this.content.innerHTML = plutonicationModalWalletDownloads
 
     // This is loading optimization
     const modal: HTMLElement = this.shadowRoot.querySelector(".plutonication__component")
@@ -203,7 +209,7 @@ export class PlutonicationModal extends HTMLElement {
    * @param {walletItem} - Specific wallet item
    */
   showWalletDownloadDesktop(link: string) {
-    this.shadow.innerHTML = plutonicationModalWalletDownloadDesktop
+    this.content.innerHTML = plutonicationModalWalletDownloadDesktop
 
     // This is loading optimization
     const modal: HTMLElement = this.shadowRoot.querySelector(".plutonication__component")
@@ -223,7 +229,7 @@ export class PlutonicationModal extends HTMLElement {
    * Mostly used for telling the user that the connection has failed or the wallet has disconnected.
    */
   showConnectionStatus(message: string): void {
-    this.shadow.innerHTML = plutonicationModalConnectionStatus
+    this.content.innerHTML = plutonicationModalConnectionStatus
 
     // This is loading optimization
     const modal: HTMLElement = this.shadowRoot.querySelector(".plutonication__component")
@@ -250,7 +256,7 @@ export class PlutonicationModal extends HTMLElement {
       () => this.showMainMobileView(),
       () => this.showMainDesktopView(),
     )
-    
+
     linker.openURL(accessCredentials.ToUri());
   }
 
@@ -258,7 +264,10 @@ export class PlutonicationModal extends HTMLElement {
    * Closes the modal
    */
   closeModal(): void {
-    this.shadow.innerHTML = ""
+    const modal: HTMLMainElement = this.shadowRoot?.getElementById("plutonication__component")
+    modal.style.display = "none"
+
+
   }
 }
 

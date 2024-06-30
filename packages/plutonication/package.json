@@ -1,6 +1,6 @@
 {
   "name": "@plutonication/plutonication",
-  "version": "1.0.124",
+  "version": "1.0.125",
   "authors": [
     "Rostislav Litovkin",
     "Valentina Gómez"
@@ -24,6 +24,7 @@
     "@babel/preset-typescript": "^7.24.7",
     "babel-loader": "^9.1.3",
     "copy-webpack-plugin": "^12.0.2",
+    "file-loader": "^6.2.0",
     "html-loader": "^5.0.0",
     "typescript": "^5.5.2",
     "webpack": "^5.92.1",
