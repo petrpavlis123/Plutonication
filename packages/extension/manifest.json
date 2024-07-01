@@ -1,5 +1,5 @@
 {
-    "author": "Valentina Gómez, Rostislav Litovkin",
+    "author": "Rostislav Litovkin",
     "description": "Connect any Plutonication compatible wallet to any dApp that supports polkadot.js-extensions.",
     "homepage_url": "https://plutonication.com",
     "name": "Plutonication extension (polkadot.js)",

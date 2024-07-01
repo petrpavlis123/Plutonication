@@ -7,12 +7,11 @@ import { AccessCredentials, initializePlutonicationDAppClientWithModal } from '@
 
 const plutonicationUrl = "wss://plutonication-acnha.ondigitalocean.app" // "ws://0.0.0.0:8050/plutonication" 
 
-console.log("here is the inject function")
-
 function inject() {
   injectExtension(enable, {
+    // We use polkadot-js for compatibility
     name: 'polkadot-js',
-    version: "0.46.6-0-x"
+    version: "1.0.0"
   });
 }
 
@@ -29,11 +28,7 @@ async function getFavicon(): Promise<string> {
 }
 
 export async function enable(origin: string): Promise<Injected> {
-  console.log("Favicon Url loading")
-
   const faviconUrl = await getFavicon()
-
-  console.log("Favicon Url: " + faviconUrl)
 
   return await initializePlutonicationDAppClientWithModal(
     new AccessCredentials(

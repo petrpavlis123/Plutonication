@@ -19,7 +19,6 @@ const packages = [
 ];
 
 const entryPoints = {
-    background: './src/background.ts',
     page: './src/page.ts',
     content: "./src/content.ts",
 };
@@ -34,11 +33,6 @@ module.exports = {
                 test: /\.(ts|tsx)$/,
                 exclude: /node_modules/,
                 loader: 'ts-loader',
-            },
-            {
-                test: /\.html$/,
-                exclude: /node_modules/,
-                use: 'html-loader',
             },
             {
                 test: /\.(png|jpe?g|gif|svg)$/i,
