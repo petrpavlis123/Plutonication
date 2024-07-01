@@ -1,14 +1,19 @@
 {
   "name": "plutonication",
-  "version": "1.0.1",
-  "description": "Plutonication project that includes the npm TypeScript package and extension ",
+  "version": "1.0.0",
+  "authors": [
+    "Rostislav Litovkin",
+    "Valentina Gómez"
+  ],
+  "description": "TypeScript library to create a communication between dapps and wallets across platforms",
   "engines": {
     "node": ">=18.14"
   },
   "scripts": {
     "build": "npm run build-package && cd packages/extension && npm run build",
     "build-package": "cd packages/plutonication && npm run build",
-    "build-package-example-dapp": "cd packages/plutonication && npm run build-example-dapp"
+    "build-package-example-dapp": "cd packages/plutonication && npm run build-example-dapp",
+    "test": "cd packages/tests && npx playwright test"
   },
   "license": "MIT",
   "workspaces": [

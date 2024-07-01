@@ -165,6 +165,7 @@ test('Disconnect dApp', async () => {
     initializePlutonicationDAppClient(
       accessCredentials,
       onReceivePubkey,
+      undefined,
       () => {
         walletDisconnected = true
       }
@@ -188,6 +189,7 @@ test('Disconnect dApp', async () => {
           const signature = alice.sign(hexToU8a(raw.data))
           walletClient.sendRawSignature({ signature: u8aToHex(signature), id: 0 })
         },
+        undefined,
         undefined,
         () => {
           dAppConnectionConfirmation = true
@@ -259,9 +261,11 @@ test('Disconnect Wallet', async () => {
           walletClient.sendRawSignature({ signature: u8aToHex(signature), id: 0 })
         },
         undefined,
+        undefined,
         () => {
           dAppConnectionConfirmation = true
         },
+        undefined,
         () => {
           dAppDisconnected = true
         }

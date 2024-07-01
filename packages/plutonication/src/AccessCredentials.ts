@@ -28,7 +28,12 @@ class AccessCredentials {
   * @returns random key
   */
   static GenerateKey(): string {
-    return Date.now().toString();
+    if(typeof crypto !== "undefined"){
+      return crypto.randomUUID()
+    }
+
+    // Used only for tests
+    return Date.now().toString()
   }
 
   /**

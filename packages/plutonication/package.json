@@ -1,6 +1,6 @@
 {
   "name": "@plutonication/plutonication",
-  "version": "1.0.125",
+  "version": "1.0.126",
   "authors": [
     "Rostislav Litovkin",
     "Valentina Gómez"
@@ -11,7 +11,7 @@
     "pluto wallet"
   ],
   "license": "MIT",
-  "description": "TypeScript version of C# plutonication library",
+  "description": "TypeScript library to create a communication between dapps and wallets across platforms",
   "main": "./lib/index.js",
   "module": "./lib/index.js",
   "types": "./lib/types/index.d.ts",

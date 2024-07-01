@@ -1,7 +1,8 @@
 import { io } from "socket.io-client"
 import type { Injected, InjectedAccount, InjectedWindow } from "@polkadot/extension-inject/types"
-import type { SignerPayloadJSON, SignerPayloadRaw } from "@polkadot/types/types"
+import type { SignerPayloadJSON, SignerPayloadRaw, ISubmittableResult } from "@polkadot/types/types"
 import type { SignerResult } from "@polkadot/api/types"
+import type { H256 } from "@polkadot/types/interfaces"
 import { AccessCredentials } from "./AccessCredentials"
 import { PlutonicationModal } from "./components/PlutonicationModal"
 
@@ -13,13 +14,14 @@ export interface PlutonicationInjected extends Injected {
  * Initializes the Plutonication DApp client connection.
  * @param {AccessCredentials} accessCredentials - The credentials required for connecting to the Plutonication server.
  * @param {(receivedPubkey: string) => void} onReceivePubkey - Optional callback function to handle the received public key.
+ * @param {() => void} onConnectionFailed - Optional callback function to handle the dApp connection errors.
  * @param {() => void} onWalletDisconnected - Optional callback function to handle the disconnection of the respective Wallet.
  * @returns A Promise resolving to the initialized PlutonicationInjected account.
  */
 export async function initializePlutonicationDAppClient(
   accessCredentials: AccessCredentials,
   onReceivePubkey?: (receivedPubkey: string) => void,
-  onError?: () => void,
+  onConnectionFailed?: () => void,
   onWalletDisconnected?: () => void
 ): Promise<PlutonicationInjected> {
 
@@ -27,7 +29,7 @@ export async function initializePlutonicationDAppClient(
   const socket = io(accessCredentials.url)
   const roomKey = accessCredentials.key
 
-  onError && socket.on('connect_error', onError)
+  onConnectionFailed && socket.on("connect_error", onConnectionFailed)
 
   // Wait for the dApp socket client to connect.
   await new Promise<void>((resolve) => {
@@ -49,6 +51,13 @@ export async function initializePlutonicationDAppClient(
 
       resolve(receivedPubkey)
     })
+  })
+
+  // still keep in case of a reconnection
+  socket.on("pubkey", (receivedPubkey: string) => {
+    socket.emit("confirm_dapp_connection", { Room: roomKey })
+
+    onReceivePubkey && onReceivePubkey(receivedPubkey)
   })
 
   // Handle the Wallet disconnection
@@ -85,13 +94,15 @@ export async function initializePlutonicationDAppClient(
         socket.emit("sign_raw", { Data: raw, Room: roomKey })
         const signerResult = await new Promise<SignerResult>((resolve) => {
           socket.on("raw_signature", (receivedPayloadSignature: SignerResult) => {
-
             resolve(receivedPayloadSignature)
           })
         })
 
         return signerResult
       },
+      update(id: number, status: H256 | ISubmittableResult): void {
+        socket.emit("update", { Data: { Id: id, Status: status }, Room: roomKey })
+      }
     },
 
     async disconnect(): Promise<void> {
@@ -102,31 +113,31 @@ export async function initializePlutonicationDAppClient(
   }
 
   if (typeof window !== "undefined") {
-    const win = window as Window & InjectedWindow;
+    const win = window as Window & InjectedWindow
 
     win.injectedWeb3 = {
-      'plutonication': {
-        version: '1.0.0',
+      "plutonication": {
+        version: "1.0.0",
         enable: async (_originName: string) => injected,
       }
-    };
+    }
   }
 
   return injected
 }
 
 /**
- * Shows the modal's QR code and handles the connection with the Plutonication server.
+ * Initializes the Plutonication DApp client connection.
  * @param {AccessCredentials} accessCredentials - The credentials required for connecting to the Plutonication server.
  * @param {(receivedPubkey: string) => void} onReceivePubkey - Optional callback function to handle the received public key.
+ * @param {() => void} onConnectionFailed - Optional callback function to handle the dApp connection errors.
  * @param {() => void} onWalletDisconnected - Optional callback function to handle the disconnection of the respective Wallet.
- * @returns A Promise resolving to the initialized Plutonication Injected account.
- * @throws Throws an error if no or multiple PlutonicationModal components are found in the DOM.
+ * @returns A Promise resolving to the initialized PlutonicationInjected account.
  */
 export async function initializePlutonicationDAppClientWithModal(
   accessCredentials: AccessCredentials,
   onReceivePubkey?: (receivedPubkey: string) => void,
-  onError?: () => void,
+  onConnectionFailed?: () => void,
   onWalletDisconnected?: () => void
 ): Promise<PlutonicationInjected> {
 
@@ -148,7 +159,7 @@ export async function initializePlutonicationDAppClientWithModal(
     () => {
       modal.showConnectionStatus("Failed to connect")
 
-      onError && onError()
+      onConnectionFailed && onConnectionFailed()
     },
     () => {
       modal.showConnectionStatus("Wallet disconnected")
@@ -164,7 +175,7 @@ export async function initializePlutonicationDAppClientWithModal(
  * @throws Throws an error if no or multiple PlutonicationModal components are found in the DOM.
  */
 function getPlutonicationModal(): PlutonicationModal {
-  const plutonicationModals = document.getElementsByTagName('plutonication-modal')
+  const plutonicationModals = document.getElementsByTagName("plutonication-modal")
 
   if (plutonicationModals.length == 0) {
     throw new Error(`You have not included any Plutonication modal.
@@ -179,5 +190,5 @@ function getPlutonicationModal(): PlutonicationModal {
     `)
   }
 
-  return plutonicationModals[0] as PlutonicationModal;
+  return plutonicationModals[0] as PlutonicationModal
 }

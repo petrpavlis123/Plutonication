@@ -7,6 +7,13 @@ import { AccessCredentials, initializePlutonicationDAppClientWithModal } from "@
 function App() {
   let account: Injected
   let publicKey: string
+  let api: any
+
+  const connectToApi = async() => {
+    api = await ApiPromise.create({ provider: new WsProvider("wss://ws.test.azero.dev") })
+  }
+
+  connectToApi()
 
   const initialize = async () => {
 
@@ -83,13 +90,10 @@ function App() {
       return
     }
 
-    // Connect to the chain
-    const api = await ApiPromise.create({ provider: new WsProvider("wss://ws.test.azero.dev") })
-    
     // The actuall balance transfer.
     // Part of the code taken from: https://polkadot.js.org/docs/extension/usage
     api.tx.balances
-      .transfer("5C5555yEXUcmEJ5kkcCMvdZjUo7NGJiQJMS7vZXEeoMhj3VQ", 10**12)
+      .transferKeepAlive("5C5555yEXUcmEJ5kkcCMvdZjUo7NGJiQJMS7vZXEeoMhj3VQ", 10**12)
       .signAndSend(publicKey, { signer: account.signer })
   }
 

@@ -1,7 +1,8 @@
-import { io } from "socket.io-client";
-import { AccessCredentials } from "./AccessCredentials";
+import { io } from "socket.io-client"
+import { AccessCredentials } from "./AccessCredentials"
 import type { SignerResult } from "@polkadot/api/types"
-import type { SignerPayloadJSON, SignerPayloadRaw } from "@polkadot/types/types"
+import type { SignerPayloadJSON, SignerPayloadRaw, ISubmittableResult } from "@polkadot/types/types"
+import type { H256 } from "@polkadot/types/interfaces"
 
 export interface PlutonicationWallet {
   /**
@@ -31,8 +32,10 @@ export interface PlutonicationWallet {
  * @param {string} pubkey - The public key associated with the wallet.
  * @param {(payload: SignerPayloadJSON) => Promise<void>} onSignPayload - Callback function to handle payload signing.
  * @param {(raw: SignerPayloadRaw) => Promise<void>} onSignRaw - Callback function to handle raw signing.
+ * @param {(id: number, status: H256 | ISubmittableResult) => void} onUpdate - Receives an update for the extrinsic signed by a `signer.sign`
  * @param {() => void} onConnected - Optional callback function to handle the successful Connection to the Plutonication Server.
  * @param {() => void} onConfirmDAppConnection - Optional callback function to handle the confirmation of the dApp connection to the Plutonication Server.
+ * @param {() => void} onConnectionFailed - Optional callback function to handle the dApp connection errors.
  * @param {() => void} onDAppDisconnected - Optional callback function to handle the disconnection of the respective dApp.
  * @returns A Promise resolving to the initialized Plutonication wallet client.
  */
@@ -41,6 +44,7 @@ export async function initializePlutonicationWalletClient(
   pubkey: string,
   onSignPayload: (payload: SignerPayloadJSON) => Promise<void>,
   onSignRaw: (raw: SignerPayloadRaw) => Promise<void>,
+  onUpdate?: (id: number, status: H256 | ISubmittableResult) => void,
   onConnected?: () => void,
   onConfirmDAppConnection?: () => void,
   onConnectionFailed?: () => void,
@@ -62,13 +66,19 @@ export async function initializePlutonicationWalletClient(
     socket.emit("connect_wallet", { Data: pubkey, Room: roomKey })
   })
 
+  // Receive an update for the extrinsic signed by a `signer.sign`
+  onUpdate && socket.on("update", (data: { Id: number, Status: H256 | ISubmittableResult }) => {
+    onUpdate(data.Id, data.Status)
+  })
+
   // Confirm dApp connection
   onConfirmDAppConnection && socket.on("confirm_dapp_connection", onConfirmDAppConnection)
 
-  //  Handle the dApp disconnection
+  // Handle the dApp disconnection
   onDAppDisconnected && socket.on("disconnect", onDAppDisconnected)
 
-  onConnectionFailed && socket.on('connect_failed', onConnectionFailed)
+  // Handle the Wallet disconnection
+  onConnectionFailed && socket.on("connect_failed", onConnectionFailed)
 
   // Wait for the Wallet socket client to connect.
   await new Promise<void>((resolve) => {
@@ -78,14 +88,15 @@ export async function initializePlutonicationWalletClient(
   // Join the room and expose the pubkey
   socket.emit("connect_wallet", { Data: pubkey, Room: roomKey })
 
+  // At this point, the wallet has successfully connected
   if (onConnected) onConnected()
 
   return {
     async sendPayloadSignature(signerResult: SignerResult): Promise<void> {
-      await socket.emit("payload_signature", { Data: signerResult, Room: roomKey });
+      await socket.emit("payload_signature", { Data: signerResult, Room: roomKey })
     },
     async sendRawSignature(signerResult: SignerResult): Promise<void> {
-      await socket.emit("raw_signature", { Data: signerResult, Room: roomKey });
+      await socket.emit("raw_signature", { Data: signerResult, Room: roomKey })
     },
     async disconnect(): Promise<void> {
       socket.removeAllListeners()
