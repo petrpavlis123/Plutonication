@@ -6,19 +6,11 @@
 /* global chrome */
 
 import '@polkadot/extension-inject/crossenv';
-let faviconUrl: string = ""
-
-async function waitForFavicon(): Promise<string> {
-  while (faviconUrl === "") {
-    await new Promise(resolve => setTimeout(resolve, 1000));
-  }
-  return faviconUrl
-}
 
 chrome.runtime.onMessage.addListener(async function (request, _sender, _sendResponse) {
   if (request.message === "open_popup") {
 
-    faviconUrl = ""
+    let faviconUrl = ""
     await chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
       let tab = tabs[0];
       faviconUrl = tab.favIconUrl || "none";
@@ -27,7 +19,7 @@ chrome.runtime.onMessage.addListener(async function (request, _sender, _sendResp
     let popupURL = chrome.runtime.getURL("index.html") +
       `?key=${encodeURIComponent(request.key)}` +
       `&name=${encodeURIComponent(request.name)}` +
-      `&icon=${encodeURIComponent(await waitForFavicon())}` +
+      `&icon=${encodeURIComponent(faviconUrl)}` +
       `&url=${encodeURIComponent(request.url)}`;
 
     chrome.windows.create({
