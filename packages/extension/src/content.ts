@@ -1,7 +1,7 @@
 // inject our data injector
 const script = document.createElement('script');
 
-script.src = chrome.extension.getURL('page.js');
+script.src = chrome.runtime.getURL('page.js');
 
 script.onload = (): void => {
   // remove the injecting tag when loaded

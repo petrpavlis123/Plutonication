@@ -1,19 +1,10 @@
 {
+    "name": "Plutonication extension (polkadot.js)",
+    "short_name": "Plutonication extension",
     "author": "Rostislav Litovkin",
     "description": "Connect any Plutonication compatible wallet to any dApp that supports polkadot.js-extensions.",
     "homepage_url": "https://plutonication.com",
-    "name": "Plutonication extension (polkadot.js)",
-    "short_name": "Plutonication extension (polkadot.js)",
-    "manifest_version": 2,
-    "permissions": [
-        "storage",
-        "tabs",
-        "<all_urls>"
-    ],
-    "browser_action": {
-        "default_title": "Plutonication extension",
-        "default_popup": "index.html"
-    },
+    "manifest_version": 3,
     "content_scripts": [
         {
             "js": [
@@ -33,7 +24,20 @@
         "128": "images/appicon.png"
     },
     "web_accessible_resources": [
-        "page.js"
+        {
+            "resources": [
+                "page.js",
+                "images/app-store.svg",
+                "images/arrow-back.svg",
+                "images/github.svg",
+                "images/google-play.png",
+                "images/question-mark.svg",
+                "images/telegram.svg"
+            ],
+            "matches": ["<all_urls>"]
+        }
     ],
-    "content_security_policy": "script-src 'self' blob: 'unsafe-eval' 'wasm-eval'; object-src 'self'"
+    "content_security_policy": {
+        "extension_pages": "script-src 'self'; object-src 'self'"
+    }
 }
