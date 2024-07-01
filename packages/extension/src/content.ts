@@ -14,4 +14,9 @@ script.onload = (): void => {
 
 (document.head || document.documentElement).appendChild(script);
 
+if (document.getElementsByTagName("plutonication-modal").length === 0){
+  const plutonicationModal = document.createElement("plutonication-modal")
+  document.body.appendChild(plutonicationModal);
+}
+
 console.log("done")

@@ -270,7 +270,7 @@ export class PlutonicationModal extends HTMLElement {
 }
 
 // Defines the html web component
-customElements.define("plutonication-modal", PlutonicationModal)
+customElements.get("plutonication-modal") || customElements.define("plutonication-modal", PlutonicationModal)
 
 // Extends the JSX namespace
 type CustomElement<T> = Partial<T & DOMAttributes<T>>
