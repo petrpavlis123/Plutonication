@@ -27,11 +27,6 @@ module.exports = {
         },
       },
       {
-        test: /\.html$/,
-        exclude: /node_modules/,
-        use: 'html-loader',
-      },
-      {
         test: /\.(png|jpe?g|gif|svg)$/i,
         type: 'asset/resource',
         generator: {
