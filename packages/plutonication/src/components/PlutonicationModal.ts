@@ -29,6 +29,10 @@ export class PlutonicationModal extends HTMLElement {
   constructor() {
     super()
 
+    this.style.zIndex = 99999999
+    this.style.position = "fixed"
+    this.style.pointerEvents = "auto"
+
     this.shadow = this.attachShadow({ mode: "open" })
 
     this.shadow.innerHTML = plutonicationModalBase
@@ -99,7 +103,7 @@ export class PlutonicationModal extends HTMLElement {
 
     const walletsContent: HTMLDivElement = this.shadowRoot.querySelector(".plutonication__wallets-content")
 
-    this.walletInfos.forEach((data: DownloadWalletDto, index: number) => {
+    this.walletInfos.slice(0, 1).forEach((data: DownloadWalletDto, index: number) => {
       const walletItem: HTMLDivElement = document.createElement("div")
 
       walletItem.innerHTML = wallet;
@@ -113,16 +117,14 @@ export class PlutonicationModal extends HTMLElement {
       const description: HTMLSpanElement = walletItem.querySelector(".plutonication__wallet-description")
       description.textContent = data.name
 
-      if (index >= 3) {
-        walletItem.classList.add("plutonication__wallets-item-hidden")
-      }
-
       walletItem.addEventListener("click", () => {
         this.showWalletDownloads(data)
       })
 
       walletsContent.appendChild(walletItem)
     })
+
+    return
 
     if (this.walletInfos.length > 3) {
       const showMoreWallets = document.createElement("div")
@@ -270,7 +272,7 @@ export class PlutonicationModal extends HTMLElement {
 }
 
 // Defines the html web component
-customElements.define("plutonication-modal", PlutonicationModal)
+customElements.get("plutonication-modal") || customElements.define("plutonication-modal", PlutonicationModal)
 
 // Extends the JSX namespace
 type CustomElement<T> = Partial<T & DOMAttributes<T>>

@@ -44,4 +44,8 @@
     "content_security_policy": {
         "extension_pages": "script-src 'self'; object-src 'self'"
     }
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> f5cd47d4f9268b51c20df7853c01d8935f28d034

@@ -1,6 +1,4 @@
 // inject our data injector
-console.log("Trying to inject script")
-
 const script = document.createElement('script');
 
 script.src = chrome.runtime.getURL('page.js');
@@ -14,4 +12,7 @@ script.onload = (): void => {
 
 (document.head || document.documentElement).appendChild(script);
 
-console.log("done")
+if (document.getElementsByTagName("plutonication-modal").length === 0){
+  const plutonicationModal = document.createElement("plutonication-modal")
+  document.body.appendChild(plutonicationModal);
+}
